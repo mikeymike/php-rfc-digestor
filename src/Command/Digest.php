@@ -37,63 +37,37 @@ class Digest extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $rfcCode = $input->getArgument('rfc');
+        $rfc     = new Rfc($rfcCode);
+        $table   = $this->getHelper('table');
 
-        $rfc = new Rfc($rfcCode);
+        $output->writeln("\n<info>RFC Details</info>");
 
-        $output->writeln('<info>RFC Details</info>');
-
-        $table = $this->getHelper('table');
         $table
             ->setRows($rfc->getDetails());
         $table->render($output);
 
 
-//        // Get URL Arg
-//        $url = $input->getArgument('URL');
-//
-//        $pageContent = file_get_contents($url);
-//
-//        $crawler = new Crawler($pageContent, $url);
-//
-//        $tables = $crawler->filter('form[name="doodle__form"] table');
-//
-//        $tables->each(function(Crawler $table, $i) use ($output) {
-//            $title      = $table->filter('.row0 th')->text();
-//            $rfcColumns = $table->filter('.row1 > *');
-//            $rfcRows    = $table->filter('tr:last-child');
-//
-//            $cols = [];
-//
-//            $rfcColumns->each(function(Crawler $col, $i) use (&$cols) {
-//                $cols[] = $col->text();
-//            });
-//
-//            $rows = [];
-//
-//            $rfcRows->each(function(Crawler $rfcRow, $i) use (&$rows) {
-//                $row = [];
-//
-//                $rfcRow->children()->each(function(Crawler $cell, $i) use (&$row) {
-//
-//                    try {
-//                        $row[] = $cell->text();
-//                    } catch (InvalidArgumentException $e) {
-//
-//                    }
-//                });
-//
-//                $rows[] = $row;
-//            });
-//
-//            $output->writeln('');
-//            $output->writeln(trim($title));
-//
-//            $table = $this->getHelper('table');
-//            $table
-//                ->setHeaders($cols)
-//                ->setRows($rows);
-//            $table->render($output);
-//        });
-    }
+        // TODO: Option to disp users or not
 
+        $output->writeln("\n<info>RFC Votes</info>");
+        $votes = $rfc->getVotes();
+
+        foreach ($votes as $title => $vote) {
+            $output->writeln(sprintf("\n<info>%s</info>", $title));
+            $table->setRows([]);
+            $table
+                ->setHeaders($vote['headers'])
+                ->addRow($vote['counts']);
+            $table->render($output);
+        }
+
+        // Might not contain changelog
+        if ($rfc->getChangeLog()) {
+            $output->writeln("\n<info>RFC Change Log</info>");
+
+            $table
+                ->setRows($rfc->getChangeLog());
+            $table->render($output);
+        }
+    }
 }

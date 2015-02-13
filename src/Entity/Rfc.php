@@ -42,7 +42,7 @@ class Rfc
     /**
      * @var array
      */
-    public $changelog = [];
+    public $changeLog = [];
 
     /**
      * @param string  $rfcPath
@@ -77,16 +77,49 @@ class Rfc
     /**
      * Parse RFC votes
      */
-    public function parseVotes()
+    public function getVotes()
     {
+        if (!$this->votes) {
+            $this->crawler->filter('form[name="doodle__form"] table')->each(function ($table, $i) {
 
+                $title = trim($table->filter('tr.row0 th')->text());
+
+                // Build array for votes table
+                $this->votes[$title]            = [];
+                $this->votes[$title]['headers'] = [];
+                $this->votes[$title]['votes']   = [];
+                $this->votes[$title]['counts']  = [];
+
+                $table->filter('tr.row1 > *')->each(function ($header, $i) use ($title) {
+                    $this->votes[$title]['headers'][] = trim($header->text());
+                });
+
+//                $table->filter('tr:not(.row0):not(.row1):not(:last-child) > *')->each(function ($header, $i) use ($title) {
+//                    $this->votes[$title]['headers'][] = trim($header->text());
+//                });
+
+                $table->filter('tr:last-child > *')->each(function ($header, $i) use ($title) {
+                    $this->votes[$title]['counts'][] = trim($header->text());
+                });
+
+            });
+        }
+
+        return $this->votes;
     }
 
     /**
-     * Parse RFC changelog
+     * Parse RFC change log
      */
-    public function parseChangelog()
+    public function getChangeLog()
     {
+        if (!$this->changeLog) {
+            $this->crawler->filter('h2#changelog + div ul li')->each(function ($change, $i) {
+                $text              = trim($change->text());
+                $this->changeLog[] = explode('-', $text, 2);
+            });
+        }
 
+        return $this->changeLog;
     }
 }
