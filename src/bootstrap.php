@@ -23,6 +23,7 @@ $app = new \Symfony\Component\Console\Application('PHP RFC Digestor', '0.1.0');
 
 $app->addCommands(array(
     new \MikeyMike\RfcDigestor\Command\Digest(),
+    new \MikeyMike\RfcDigestor\Command\Digest\Votes(),
     new \MikeyMike\RfcDigestor\Command\Notify(),
 ));
 
