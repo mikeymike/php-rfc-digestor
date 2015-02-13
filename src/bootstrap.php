@@ -1,5 +1,7 @@
 <?php
 
+ini_set('display_errors', 1);
+
 switch (true) {
     case (file_exists(__DIR__ . '/../vendor/autoload.php')):
         // Installed standalone
