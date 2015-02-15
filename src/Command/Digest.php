@@ -40,7 +40,7 @@ class Digest extends Command
         $rfc     = new Rfc($rfcCode);
         $table   = $this->getHelper('table');
 
-        $output->writeln("\n<info>RFC Details</info>");
+        $output->writeln("\n<comment>RFC Details</comment>");
 
         $table
             ->setRows($rfc->getDetails());
@@ -49,21 +49,21 @@ class Digest extends Command
 
         // TODO: Option to disp users or not
 
-        $output->writeln("\n<info>RFC Votes</info>");
+        $output->writeln("\n<comment>RFC Votes</comment>");
         $votes = $rfc->getVotes();
 
         foreach ($votes as $title => $vote) {
             $output->writeln(sprintf("\n<info>%s</info>", $title));
-            $table->setRows([]);
             $table
                 ->setHeaders($vote['headers'])
+                ->setRows($vote['votes'])
                 ->addRow($vote['counts']);
             $table->render($output);
         }
 
         // Might not contain changelog
         if ($rfc->getChangeLog()) {
-            $output->writeln("\n<info>RFC Change Log</info>");
+            $output->writeln("\n<comment>RFC Change Log</comment>");
 
             $table
                 ->setRows($rfc->getChangeLog());

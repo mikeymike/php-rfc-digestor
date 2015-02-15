@@ -94,9 +94,32 @@ class Rfc
                     $this->votes[$title]['headers'][] = trim($header->text());
                 });
 
-//                $table->filter('tr:not(.row0):not(.row1):not(:last-child) > *')->each(function ($header, $i) use ($title) {
-//                    $this->votes[$title]['headers'][] = trim($header->text());
-//                });
+                // TODO: Resolve performance issue here
+                // Needs to be on a row by row basis
+                $table->filter('tr:not(.row0):not(.row1):not(:last-child)')->each(function ($vote, $i) use ($title) {
+
+                    $row = [];
+
+                    $vote->children()->each(function ($cell, $i) use (&$row, $title) {
+
+                        // Cell is a name
+                        if (count($cell->filter('a')) > 0) {
+                            $row[] = trim($cell->text());
+                            return;
+                        }
+
+                        // Cell is a yes vote
+                        if (count($cell->filter('img')) > 0) {
+                            $row[] = "\xE2\x9C\x93";
+                            return;
+                        }
+
+                        // Cell is a no vote
+                        $row[] = "\xE2\x95\xB3";
+                    });
+
+                    $this->votes[$title]['votes'][] = $row;
+                });
 
                 $table->filter('tr:last-child > *')->each(function ($header, $i) use ($title) {
                     $this->votes[$title]['counts'][] = trim($header->text());
