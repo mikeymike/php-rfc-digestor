@@ -89,14 +89,24 @@ class Rfc
                 $this->votes[$title]['headers'] = [];
                 $this->votes[$title]['votes']   = [];
                 $this->votes[$title]['counts']  = [];
+                $this->votes[$title]['closed']  = false;
+
+                $statusText = $table->filter('tr:last-child td:first-child')->text();
+
+                if (strpos($statusText, 'closed') !== false) {
+                    $this->votes[$title]['closed'] = true;
+                }
 
                 $table->filter('tr.row1 > *')->each(function ($header, $i) use ($title) {
                     $this->votes[$title]['headers'][] = trim($header->text());
                 });
 
-                // TODO: Resolve performance issue here
-                // Needs to be on a row by row basis
-                $table->filter('tr:not(.row0):not(.row1):not(:last-child)')->each(function ($vote, $i) use ($title) {
+                // Exclude count && status rows
+                $rows = $this->votes[$title]['closed']
+                    ? $table->filter('tr:not(.row0):not(.row1):not(:last-child):not(:nth-last-child(2))')
+                    : $table->filter('tr:not(.row0):not(.row1):not(:last-child)');
+
+                $rows->each(function ($vote, $i) use ($title) {
 
                     $row = [];
 
@@ -115,13 +125,19 @@ class Rfc
                         }
 
                         // Cell is a no vote
-                        $row[] = "\xE2\x95\xB3";
+                        $row[] = "";
                     });
 
                     $this->votes[$title]['votes'][] = $row;
                 });
 
-                $table->filter('tr:last-child > *')->each(function ($header, $i) use ($title) {
+                // Counts will either be last or second to last
+                // Depending on whether the voting is completed
+                $counts = $this->votes[$title]['closed']
+                    ? $table->filter('tr:nth-last-child(2) > *')
+                    : $table->filter('tr:last-child > *');
+
+                $counts->each(function ($header, $i) use ($title) {
                     $this->votes[$title]['counts'][] = trim($header->text());
                 });
 

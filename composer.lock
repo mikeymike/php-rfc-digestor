@@ -4,9 +4,42 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4d1ebae9fe22a58e7c244ca52dedc929",
+    "hash": "69969da590fb47b43701a45d5734f7dd",
     "packages": [],
     "packages-dev": [
+        {
+            "name": "chrisboulton/php-diff",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/chrisboulton/php-diff.git",
+                "reference": "98c81c1fc129d5b890fa38646b55ef8f61aacecb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/chrisboulton/php-diff/zipball/98c81c1fc129d5b890fa38646b55ef8f61aacecb",
+                "reference": "98c81c1fc129d5b890fa38646b55ef8f61aacecb",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Diff": "lib/"
+                }
+            },
+            "authors": [
+                {
+                    "name": "Chris Boulton",
+                    "email": "@chrisboulton"
+                }
+            ],
+            "description": "A comprehensive library for generating differences between two hashable objects (strings or arrays).",
+            "support": {
+                "source": "https://github.com/chrisboulton/php-diff/tree/master",
+                "issues": "https://github.com/chrisboulton/php-diff/issues"
+            },
+            "time": "2013-10-23 04:44:50"
+        },
         {
             "name": "doctrine/instantiator",
             "version": "1.0.4",
@@ -1591,7 +1624,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "chrisboulton/php-diff": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
