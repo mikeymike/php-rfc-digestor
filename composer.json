@@ -18,7 +18,8 @@
         "symfony/console": "~2.6",
         "symfony/dom-crawler": "~2.6",
         "symfony/css-selector": "~2.6",
-        "chrisboulton/php-diff": "dev-master"
+        "chrisboulton/php-diff": "dev-master",
+        "northys/css-inliner": "dev-master"
     },
     "autoload" : {
         "psr-4" : {
@@ -32,6 +33,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/chrisboulton/php-diff"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Northys/CSS-Inliner"
         }
     ]
 }

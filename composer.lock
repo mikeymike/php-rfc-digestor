@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "69969da590fb47b43701a45d5734f7dd",
+    "hash": "95baa6d9e1504d2ad09451ddadbf2af6",
     "packages": [],
     "packages-dev": [
         {
@@ -185,6 +185,45 @@
                 "web service"
             ],
             "time": "2014-08-11 04:32:36"
+        },
+        {
+            "name": "northys/css-inliner",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Northys/CSS-Inliner.git",
+                "reference": "6c3b11b959aa0985558d4e0f598fa66bf390e23b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Northys/CSS-Inliner/zipball/6c3b11b959aa0985558d4e0f598fa66bf390e23b",
+                "reference": "6c3b11b959aa0985558d4e0f598fa66bf390e23b",
+                "shasum": ""
+            },
+            "require": {
+                "sabberworm/php-css-parser": "6.0.*",
+                "symfony/css-selector": "~2.5"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "license": [
+                "LGPL"
+            ],
+            "authors": [
+                {
+                    "name": "Jiri Travnicek"
+                }
+            ],
+            "description": "PHP Library that converts css file into html inline styles.",
+            "support": {
+                "source": "https://github.com/Northys/CSS-Inliner/tree/master",
+                "issues": "https://github.com/Northys/CSS-Inliner/issues"
+            },
+            "time": "2014-08-15 20:43:44"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -702,6 +741,47 @@
                 "psr-3"
             ],
             "time": "2012-12-21 11:40:51"
+        },
+        {
+            "name": "sabberworm/php-css-parser",
+            "version": "6.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sabberworm/PHP-CSS-Parser.git",
+                "reference": "ef95a38fe0c0f093f46a25029a4dd2d57ebe847e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sabberworm/PHP-CSS-Parser/zipball/ef95a38fe0c0f093f46a25029a4dd2d57ebe847e",
+                "reference": "ef95a38fe0c0f093f46a25029a4dd2d57ebe847e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Sabberworm\\CSS": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Raphael Schweikert"
+                }
+            ],
+            "description": "Parser for CSS Files written in PHP",
+            "homepage": "http://www.sabberworm.com/blog/2010/6/10/php-css-parser",
+            "keywords": [
+                "css",
+                "parser",
+                "stylesheet"
+            ],
+            "time": "2014-07-03 21:45:17"
         },
         {
             "name": "satooshi/php-coveralls",
@@ -1625,7 +1705,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "chrisboulton/php-diff": 20
+        "chrisboulton/php-diff": 20,
+        "northys/css-inliner": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
