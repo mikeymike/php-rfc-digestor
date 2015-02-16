@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MikeyMike\RfcDigestor\Command;
+namespace MikeyMike\RfcDigestor\Command\Digest;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -10,12 +10,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use MikeyMike\RfcDigestor\Entity\Rfc;
 
 /**
- * Class Digest
- *
- * @package MikeyMike\RfcDigestor
+ * Class Details
  * @author  Michael Woodward <michael@wearejh.com>
  */
-class Digest extends Command
+class Details extends Command
 {
     /**
      * Configure Command
@@ -23,8 +21,8 @@ class Digest extends Command
     public function configure()
     {
         $this
-            ->setName('digest')
-            ->setDescription('Quick view of RFC')
+            ->setName('digest:details')
+            ->setDescription('Quick view of RFC details')
             ->addArgument('rfc', InputArgument::REQUIRED, 'RFC Code e.g. scalar_type_hints');
     }
 
@@ -44,25 +42,5 @@ class Digest extends Command
 
         $table->setRows($rfc->getDetails());
         $table->render($output);
-
-        $output->writeln("\n<comment>RFC Votes</comment>");
-        $votes = $rfc->getVotes();
-
-        foreach ($votes as $title => $vote) {
-            $output->writeln(sprintf("\n<info>%s</info>", $title));
-            $table
-                ->setHeaders($vote['headers'])
-                ->setRows($vote['votes'])
-                ->addRow($vote['counts']);
-            $table->render($output);
-        }
-
-        // Might not contain changelog
-        if ($rfc->getChangeLog()) {
-            $output->writeln("\n<comment>RFC Change Log</comment>");
-
-            $table->setRows($rfc->getChangeLog());
-            $table->render($output);
-        }
     }
 }

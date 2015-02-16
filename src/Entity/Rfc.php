@@ -76,11 +76,12 @@ class Rfc
 
     /**
      * Parse RFC votes
+     * TODO: Split refactor, whatevs
      */
-    public function getVotes()
+    public function getVotes($includeVoters = true)
     {
         if (!$this->votes) {
-            $this->crawler->filter('form[name="doodle__form"] table')->each(function ($table, $i) {
+            $this->crawler->filter('form[name="doodle__form"] table')->each(function ($table, $i) use ($includeVoters) {
 
                 $title = trim($table->filter('tr.row0 th')->text());
 
@@ -101,35 +102,39 @@ class Rfc
                     $this->votes[$title]['headers'][] = trim($header->text());
                 });
 
-                // Exclude count && status rows
-                $rows = $this->votes[$title]['closed']
-                    ? $table->filter('tr:not(.row0):not(.row1):not(:last-child):not(:nth-last-child(2))')
-                    : $table->filter('tr:not(.row0):not(.row1):not(:last-child)');
+                if ($includeVoters) {
+                    // Exclude count && status rows
+                    $rows = $this->votes[$title]['closed']
+                        ? $table->filter('tr:not(.row0):not(.row1):not(:last-child):not(:nth-last-child(2))')
+                        : $table->filter('tr:not(.row0):not(.row1):not(:last-child)');
 
-                $rows->each(function ($vote, $i) use ($title) {
+                    $rows->each(function ($vote, $i) use ($title) {
 
-                    $row = [];
+                        $row = [];
 
-                    $vote->children()->each(function ($cell, $i) use (&$row, $title) {
+                        $vote->children()->each(function ($cell, $i) use (&$row, $title) {
 
-                        // Cell is a name
-                        if (count($cell->filter('a')) > 0) {
-                            $row[] = trim($cell->text());
-                            return;
-                        }
+                            // Cell is a name
+                            if (count($cell->filter('a')) > 0) {
+                                $row[] = trim($cell->text());
 
-                        // Cell is a yes vote
-                        if (count($cell->filter('img')) > 0) {
-                            $row[] = "\xE2\x9C\x93";
-                            return;
-                        }
+                                return;
+                            }
 
-                        // Cell is a no vote
-                        $row[] = "";
+                            // Cell is a yes vote
+                            if (count($cell->filter('img')) > 0) {
+                                $row[] = "\xE2\x9C\x93";
+
+                                return;
+                            }
+
+                            // Cell is a no vote
+                            $row[] = "";
+                        });
+
+                        $this->votes[$title]['votes'][] = $row;
                     });
-
-                    $this->votes[$title]['votes'][] = $row;
-                });
+                }
 
                 // Counts will either be last or second to last
                 // Depending on whether the voting is completed
