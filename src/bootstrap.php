@@ -27,6 +27,7 @@ $app->addCommands(array(
     new \MikeyMike\RfcDigestor\Command\Digest\Details(),
     new \MikeyMike\RfcDigestor\Command\Digest\ChangeLog(),
     new \MikeyMike\RfcDigestor\Command\Notify(),
+    new \MikeyMike\RfcDigestor\Command\RfcList(),
 ));
 
 return $app;
