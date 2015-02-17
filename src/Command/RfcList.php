@@ -13,12 +13,18 @@ use MikeyMike\RfcDigestor\Entity\Rfc;
 /**
  * Class RfcList
  *
+ * TODO: Strip out into service
  * @package MikeyMike\RfcDigestor
  * @author  Michael Woodward <michael@wearejh.com>
  */
 class RfcList extends Command
 {
     public $lists = [];
+
+    /**
+     * @var Crawler
+     */
+    public $crawler;
 
     /**
      * Configure Command
@@ -46,38 +52,43 @@ class RfcList extends Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        if (count($input->getOptions()) === 0 || $this->getOption('voting')) {
+        $this->crawler = new Crawler(file_get_contents('https://wiki.php.net/rfc'));
+
+        if (count(array_filter($input->getOptions())) === 0 || $input->getOption('voting')) {
             $this->getInVoting();
         }
 
-        if ($this->getOption('discussion')) {
+        if ($input->getOption('discussion')) {
             $this->getInDiscussion();
         }
 
-        if ($this->getOption('draft')) {
+        if ($input->getOption('draft')) {
             $this->getInDraft();
         }
 
-        if ($this->getOption('accepted')) {
+        if ($input->getOption('accepted')) {
             $this->getAccepted();
         }
 
-        if ($this->getOption('declined')) {
+        if ($input->getOption('declined')) {
             $this->getDeclined();
         }
 
-        if ($this->getOption('withdrawn')) {
+        if ($input->getOption('withdrawn')) {
             $this->getWithdrawn();
         }
 
-        if ($this->getOption('inactive')) {
+        if ($input->getOption('inactive')) {
             $this->getInactive();
         }
 
         $table = $this->getHelper('table');
         foreach ($this->lists as $title => $list) {
-            $output->writeln(sprintf("\n<comment></comment>", $title));
+            $output->writeln(sprintf("\n<comment>%s</comment>", $title));
 
+            $table->setHeaders([
+                'RFC', 'RFC Code', 'Description'
+            ]);
             $table->setRows($list);
             $table->render($output);
         }
@@ -85,41 +96,57 @@ class RfcList extends Command
 
     public function getInVoting()
     {
-
+        $this->getList('in_voting_phase');
     }
 
     public function getInDiscussion()
     {
-
+        $this->getList('under_discussion');
     }
 
     public function getInDraft()
     {
-
+        $this->getList('in_draft');
     }
 
     public function getAccepted()
     {
-
+        $this->getList('accepted');
     }
 
     public function getDeclined()
     {
-
+        $this->getList('declined');
     }
 
     public function getWithdrawn()
     {
-
+        $this->getList('withdrawn');
     }
 
     public function getInactive()
     {
-
+        $this->getList('inactive');
     }
 
-    public function getList()
+    public function getList($headingId)
     {
+        # List key is the heading
+        $listKey = $this->crawler->filter(sprintf('#%s', $headingId))->eq(0)->text();
 
+        $this->lists[$listKey] = [];
+
+        $this->crawler->filter(sprintf('#%s + div.level2 div.li', $headingId))->each(function($rfc, $i) use ($listKey) {
+
+            $link = $rfc->filter('a')->eq(0);
+
+            $row = [
+                $link->text(),
+                basename($link->attr('href')),
+                str_replace(array("\n","\r\n"), '', $rfc->text())
+            ];
+
+            $this->lists[$listKey][] = $row;
+        });
     }
 }
