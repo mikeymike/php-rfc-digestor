@@ -45,16 +45,18 @@ class Digest extends Command
         $table->setRows($rfc->getDetails());
         $table->render($output);
 
-        $output->writeln("\n<comment>RFC Votes</comment>");
-        $votes = $rfc->getVotes();
 
-        foreach ($votes as $title => $vote) {
-            $output->writeln(sprintf("\n<info>%s</info>", $title));
-            $table
-                ->setHeaders($vote['headers'])
-                ->setRows($vote['votes'])
-                ->addRow($vote['counts']);
-            $table->render($output);
+        if (count($rfc->getVotes()) > 0) {
+            $output->writeln("\n<comment>RFC Votes</comment>");
+
+            foreach ($rfc->getVotes() as $title => $vote) {
+                $output->writeln(sprintf("\n<info>%s</info>", $title));
+                $table
+                    ->setHeaders($vote['headers'])
+                    ->setRows($vote['votes'])
+                    ->addRow($vote['counts']);
+                $table->render($output);
+            }
         }
 
         // Might not contain changelog

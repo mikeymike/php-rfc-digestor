@@ -30,4 +30,6 @@ $app->addCommands(array(
     new \MikeyMike\RfcDigestor\Command\RfcList(),
 ));
 
+$app->setDefaultCommand('list');
+
 return $app;

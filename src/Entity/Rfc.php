@@ -7,6 +7,7 @@ use Symfony\Component\DomCrawler\Crawler;
 /**
  * Class Rfc
  *
+ * TODO: Make this an actual entity, put logic into a service which returns this as an entity
  * @package MikeyMike\RfcDigestor
  * @author  Michael Woodward <michael@wearejh.com>
  */
