@@ -87,7 +87,7 @@ class RfcList extends Command
             $output->writeln(sprintf("\n<comment>%s</comment>", $title));
 
             $table->setHeaders([
-                'RFC', 'RFC Code', 'Description'
+                'RFC', 'RFC Code'
             ]);
             $table->setRows($list);
             $table->render($output);
@@ -142,8 +142,7 @@ class RfcList extends Command
 
             $row = [
                 $link->text(),
-                basename($link->attr('href')),
-                str_replace(array("\n","\r\n"), '', $rfc->text())
+                basename($link->attr('href'))
             ];
 
             $this->lists[$listKey][] = $row;
