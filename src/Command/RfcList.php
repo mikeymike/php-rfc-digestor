@@ -15,7 +15,7 @@ use MikeyMike\RfcDigestor\Entity\Rfc;
  *
  * TODO: Strip out into service
  * @package MikeyMike\RfcDigestor
- * @author  Michael Woodward <michael@wearejh.com>
+ * @author  Michael Woodward <mikeymike.mw@gmail.com>
  */
 class RfcList extends Command
 {

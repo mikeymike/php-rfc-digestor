@@ -13,7 +13,7 @@ use Symfony\Component\DomCrawler\Crawler;
  * Class Notify
  *
  * @package MikeyMike\RfcDigestor\Command
- * @author  Michael Woodward <michael@wearejh.com>
+ * @author  Michael Woodward <mikeymike.mw@gmail.com>
  */
 class Notify extends Command
 {

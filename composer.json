@@ -19,7 +19,8 @@
         "symfony/dom-crawler": "~2.6",
         "symfony/css-selector": "~2.6",
         "chrisboulton/php-diff": "dev-master",
-        "northys/css-inliner": "dev-master"
+        "northys/css-inliner": "dev-master",
+        "noodlehaus/config": "dev-master"
     },
     "autoload" : {
         "psr-4" : {

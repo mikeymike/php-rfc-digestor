@@ -11,7 +11,7 @@ use MikeyMike\RfcDigestor\Entity\Rfc;
 
 /**
  * Class Details
- * @author  Michael Woodward <michael@wearejh.com>
+ * @author  Michael Woodward <mikeymike.mw@gmail.com>
  */
 class Details extends Command
 {

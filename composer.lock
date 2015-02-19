@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "95baa6d9e1504d2ad09451ddadbf2af6",
+    "hash": "2ea7b8ca2f96d2d78fd35f3d68d72be9",
     "packages": [],
     "packages-dev": [
         {
@@ -185,6 +185,63 @@
                 "web service"
             ],
             "time": "2014-08-11 04:32:36"
+        },
+        {
+            "name": "noodlehaus/config",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/noodlehaus/config.git",
+                "reference": "0de1025667ab0d9f876b471c97e57bb99a1bc633"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/noodlehaus/config/zipball/0de1025667ab0d9f876b471c97e57bb99a1bc633",
+                "reference": "0de1025667ab0d9f876b471c97e57bb99a1bc633",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">= 5.3.0",
+                "symfony/yaml": "~2.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Noodlehaus\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jesus A. Domingo",
+                    "homepage": "http://noodlehaus.github.io/",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Hassan Khan",
+                    "homepage": "http://hassankhan.me/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "lightweight configuration file loader that supports PHP, INI, XML, JSON, and YAML files",
+            "homepage": "http://noodlehaus.github.io/config/",
+            "keywords": [
+                "config",
+                "configuration",
+                "ini",
+                "json",
+                "microphp",
+                "unframework",
+                "xml",
+                "yaml"
+            ],
+            "time": "2014-11-27 06:22:12"
         },
         {
             "name": "northys/css-inliner",
@@ -1706,7 +1763,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "chrisboulton/php-diff": 20,
-        "northys/css-inliner": 20
+        "northys/css-inliner": 20,
+        "noodlehaus/config": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

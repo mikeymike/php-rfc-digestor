@@ -3,20 +3,42 @@
 
 namespace MikeyMike\RfcDigestor\Command;
 
+use MikeyMike\RfcDigestor\Service\RfcBuilder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use MikeyMike\RfcDigestor\Entity\Rfc;
 
 /**
  * Class Digest
  *
  * @package MikeyMike\RfcDigestor
- * @author  Michael Woodward <michael@wearejh.com>
+ * @author  Michael Woodward <mikeymike.mw@gmail.com>
  */
 class Digest extends Command
 {
+    /**
+     * @var array
+     */
+    protected $config;
+
+    /**
+     * @var RfcBuilder
+     */
+    protected $rfcBuilder;
+
+    /**
+     * @param array      $config
+     * @param RfcBuilder $rfcBuilder
+     */
+    public function __construct($config = [], RfcBuilder $rfcBuilder)
+    {
+        $this->config       = $config;
+        $this->rfcBuilder   = $rfcBuilder;
+
+        parent::__construct();
+    }
+
     /**
      * Configure Command
      */
@@ -26,6 +48,7 @@ class Digest extends Command
             ->setName('digest')
             ->setDescription('Quick view of RFC')
             ->addArgument('rfc', InputArgument::REQUIRED, 'RFC Code e.g. scalar_type_hints');
+            // TODO: Interactive Fuzzy search
     }
 
     /**
@@ -37,7 +60,7 @@ class Digest extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $rfcCode = $input->getArgument('rfc');
-        $rfc     = new Rfc($rfcCode);
+        $rfc     = $this->rfcBuilder->loadFromWiki($rfcCode);
         $table   = $this->getHelper('table');
 
         $output->writeln("\n<comment>RFC Details</comment>");
@@ -62,7 +85,7 @@ class Digest extends Command
         // Might not contain changelog
         if ($rfc->getChangeLog()) {
             $output->writeln("\n<comment>RFC Change Log</comment>");
-
+            $table->setHeaders([]);
             $table->setRows($rfc->getChangeLog());
             $table->render($output);
         }

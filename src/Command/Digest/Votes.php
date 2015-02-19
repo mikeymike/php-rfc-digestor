@@ -12,7 +12,7 @@ use MikeyMike\RfcDigestor\Entity\Rfc;
 
 /**
  * Class Votes
- * @author  Michael Woodward <michael@wearejh.com>
+ * @author  Michael Woodward <mikeymike.mw@gmail.com>
  */
 class Votes extends Command
 {
