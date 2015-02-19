@@ -93,7 +93,7 @@ class Rfc
                 $this->votes[$title]['counts']  = [];
                 $this->votes[$title]['closed']  = false;
 
-                $statusText = $table->filter('tr:last-child td:first-child')->text();
+                $statusText = $table->filter('tr:last-child td:first-child, tr:last-child th:first-child')->text();
 
                 if (strpos($statusText, 'closed') !== false) {
                     $this->votes[$title]['closed'] = true;
