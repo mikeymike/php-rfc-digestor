@@ -27,8 +27,11 @@ switch (true) {
 }
 
 $app        = new Application('PHP RFC Digestor', '0.1.0');
-$conf       = new Config(realpath('../config.json'));
-$rfcBuilder = new RfcBuilder(new Crawler(), $conf->get('storagePath'));
+$conf       = new Config(realpath(__DIR__ . '/../config.json'));
+$rfcBuilder = new RfcBuilder(
+    new Crawler(),
+    realpath(sprintf('%s/%s', __DIR__, $conf->get('storagePath')))
+);
 
 $app->addCommands(array(
     new Digest($conf, $rfcBuilder),
