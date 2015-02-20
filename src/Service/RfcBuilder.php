@@ -92,6 +92,7 @@ class RfcBuilder
 
         $rfc->setDetails($this->parseDetails());
         $rfc->setChangeLog($this->parseChangeLog());
+        $rfc->setVoteDescription($this->parseVoteDescription());
         $rfc->setVotes($this->parseVotes());
 
         $this->crawler->clear();
@@ -131,6 +132,20 @@ class RfcBuilder
         });
 
         return $changeLog;
+    }
+
+    /**
+     * @return string
+     */
+    private function parseVoteDescription()
+    {
+        try {
+            $description = $this->crawler->filter('#vote + div p:first-child')->text();
+        } catch (\InvalidArgumentException $e) {
+            $description = '';
+        }
+
+        return $description;
     }
 
     /**

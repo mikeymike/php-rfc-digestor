@@ -13,17 +13,22 @@ class Rfc
     /**
      * @var array
      */
-    public $details = [];
+    protected $details = [];
 
     /**
      * @var array
      */
-    public $changeLog = [];
+    protected $changeLog = [];
 
     /**
      * @var array
      */
-    public $votes = [];
+    protected $votes = [];
+
+    /**
+     * @var string
+     */
+    protected $voteDescription = '';
 
     /**
      * @param array $details
@@ -72,5 +77,21 @@ class Rfc
     public function getVotes()
     {
         return $this->votes;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setVoteDescription($description)
+    {
+        $this->voteDescription = $description;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVoteDescription()
+    {
+        return $this->voteDescription;
     }
 }
