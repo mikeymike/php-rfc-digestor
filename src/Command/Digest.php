@@ -68,6 +68,13 @@ class Digest extends Command
         $table->setRows($rfc->getDetails());
         $table->render($output);
 
+        // Might not contain changelog
+        if ($rfc->getChangeLog()) {
+            $output->writeln("\n<comment>RFC Change Log</comment>");
+            $table->setHeaders([]);
+            $table->setRows($rfc->getChangeLog());
+            $table->render($output);
+        }
 
         if (count($rfc->getVotes()) > 0) {
             $output->writeln("\n<comment>RFC Votes</comment>");
@@ -81,14 +88,8 @@ class Digest extends Command
                     ->addRow($vote['counts']);
                 $table->render($output);
             }
-        }
-
-        // Might not contain changelog
-        if ($rfc->getChangeLog()) {
-            $output->writeln("\n<comment>RFC Change Log</comment>");
-            $table->setHeaders([]);
-            $table->setRows($rfc->getChangeLog());
-            $table->render($output);
+        } else {
+            $output->writeln("\n<comment>No votes yet</comment>");
         }
     }
 }
