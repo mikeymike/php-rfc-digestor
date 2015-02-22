@@ -3,6 +3,7 @@
 
 namespace MikeyMike\RfcDigestor\Command\Digest;
 
+use MikeyMike\RfcDigestor\Service\RfcBuilder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,6 +16,28 @@ use MikeyMike\RfcDigestor\Entity\Rfc;
  */
 class ChangeLog extends Command
 {
+    /**
+     * @var array
+     */
+    protected $config;
+
+    /**
+     * @var RfcBuilder
+     */
+    protected $rfcBuilder;
+
+    /**
+     * @param array      $config
+     * @param RfcBuilder $rfcBuilder
+     */
+    public function __construct($config = [], RfcBuilder $rfcBuilder)
+    {
+        $this->config       = $config;
+        $this->rfcBuilder   = $rfcBuilder;
+
+        parent::__construct();
+    }
+
     /**
      * Configure Command
      */
@@ -35,8 +58,18 @@ class ChangeLog extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $rfcCode = $input->getArgument('rfc');
-        $rfc     = new Rfc($rfcCode);
         $table   = $this->getHelper('table');
+
+        // Build RFC
+        $rfc = $this->rfcBuilder
+            ->loadFromWiki($rfcCode)
+            ->loadChangeLog()
+            ->getRfc();
+
+        if (!$rfc->getChangeLog()) {
+            $output->writeln('<error>No change log found!</error>');
+            return;
+        }
 
         $output->writeln("\n<comment>RFC Change Log</comment>");
 

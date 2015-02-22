@@ -30,6 +30,11 @@ class RfcBuilder
     private $storagePath = '';
 
     /**
+     * @var Rfc
+     */
+    private $rfc;
+
+    /**
      * @param Crawler $crawler
      */
     public function __construct(Crawler $crawler, $storagePath)
@@ -46,9 +51,9 @@ class RfcBuilder
      * Load content for RFC from PHP Wiki
      *
      * @param string $rfcCode
-     * @return Rfc
+     * @return self
      */
-    public function loadFromWiki($rfcCode)
+    public function loadFromWiki($rfcCode, $buildAll = false)
     {
         $wikiUrl = sprintf('%s/%s', self::URL_PREFIX, $rfcCode);
         $content = file_get_contents($wikiUrl);
@@ -57,18 +62,18 @@ class RfcBuilder
             throw new InvalidArgumentException(sprintf('No content found at URL %s', $wikiUrl));
         }
 
-        $this->crawler->addHtmlContent($content);
+        $this->buildRfc($content, $buildAll);
 
-        return $this->buildRfc();
+        return $this;
     }
 
     /**
      * Load content for RFC from app storage
      *
      * @param $rfcCode
-     * @return Rfc
+     * @return self
      */
-    public function loadFromStorage($rfcCode)
+    public function loadFromStorage($rfcCode, $buildAll = false)
     {
         $filePath = sprintf('%s/%s.html', $this->storagePath, $rfcCode);
 
@@ -76,9 +81,9 @@ class RfcBuilder
             throw new InvalidArgumentException('No application storage for RFC');
         }
 
-        $this->crawler->addHtmlContent(file_get_contents($filePath));
+        $this->buildRfc(file_get_contents($filePath), $buildAll);
 
-        return $this->buildRfc();
+        return $this;
     }
 
     /**
@@ -86,18 +91,72 @@ class RfcBuilder
      *
      * @return Rfc
      */
-    private function buildRfc()
+    private function buildRfc($content, $buildAll)
     {
-        $rfc = new Rfc();
-
-        $rfc->setDetails($this->parseDetails());
-        $rfc->setChangeLog($this->parseChangeLog());
-        $rfc->setVoteDescription($this->parseVoteDescription());
-        $rfc->setVotes($this->parseVotes());
-
         $this->crawler->clear();
+        $this->crawler->addHtmlContent($content);
 
-        return $rfc;
+        $this->rfc = new Rfc();
+
+        if ($buildAll) {
+            $this->loadDetails();
+            $this->loadVotes();
+            $this->loadChangeLog();
+        }
+    }
+
+    /**
+     * Add details to RFC
+     *
+     * @return self
+     */
+    public function loadDetails()
+    {
+        $this->rfc->setDetails($this->parseDetails());
+
+        return $this;
+    }
+
+    /**
+     * Add votes and vote description to RFC
+     *
+     * @return self
+     */
+    public function loadVotes()
+    {
+        $this->rfc->setVoteDescription($this->parseVoteDescription());
+        $this->rfc->setVotes($this->parseVotes());
+
+        return $this;
+    }
+
+    /**
+     * Add Change Log to RFC
+     *
+     * @return self
+     */
+    public function loadChangeLog()
+    {
+        $this->rfc->setChangeLog($this->parseChangeLog());
+
+        return $this;
+    }
+
+    /**
+     * @param Rfc $rfc
+     */
+    public function setRfc(Rfc $rfc)
+    {
+        $this->rfc = $rfc;
+    }
+
+    /**
+     * @param Rfc $rfc
+     * @return Rfc
+     */
+    public function getRfc()
+    {
+        return $this->rfc;
     }
 
     /**
@@ -145,12 +204,13 @@ class RfcBuilder
             $description = '';
         }
 
-        return $description;
+        return trim($description);
     }
 
     /**
      * @return array
      * TODO: Refactor, really don't like having to pass $votes everywhere
+     * TODO: Resolve major performance hit from DOM Crawler when getting votes
      */
     private function parseVotes()
     {

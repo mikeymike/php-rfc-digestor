@@ -35,9 +35,9 @@ $rfcBuilder = new RfcBuilder(
 
 $app->addCommands(array(
     new Digest($conf, $rfcBuilder),
-    new Digest\Votes(),
-    new Digest\Details(),
-    new Digest\ChangeLog(),
+    new Digest\Votes($conf, $rfcBuilder),
+    new Digest\Details($conf, $rfcBuilder),
+    new Digest\ChangeLog($conf, $rfcBuilder),
     new Command\Notify(),
     new Command\RfcList(),
 ));

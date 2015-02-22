@@ -3,12 +3,12 @@
 
 namespace MikeyMike\RfcDigestor\Command\Digest;
 
+use MikeyMike\RfcDigestor\Service\RfcBuilder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use MikeyMike\RfcDigestor\Entity\Rfc;
 
 /**
  * Class Votes
@@ -16,6 +16,28 @@ use MikeyMike\RfcDigestor\Entity\Rfc;
  */
 class Votes extends Command
 {
+    /**
+     * @var array
+     */
+    protected $config;
+
+    /**
+     * @var RfcBuilder
+     */
+    protected $rfcBuilder;
+
+    /**
+     * @param array      $config
+     * @param RfcBuilder $rfcBuilder
+     */
+    public function __construct($config = [], RfcBuilder $rfcBuilder)
+    {
+        $this->config       = $config;
+        $this->rfcBuilder   = $rfcBuilder;
+
+        parent::__construct();
+    }
+
     /**
      * Configure Command
      */
@@ -37,25 +59,27 @@ class Votes extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $rfcCode = $input->getArgument('rfc');
-        $rfc     = new Rfc($rfcCode);
         $table   = $this->getHelper('table');
 
+        // Build RFC
+        $rfc = $this->rfcBuilder
+            ->loadFromWiki($rfcCode)
+            ->loadVotes()
+            ->getRfc();
+
         $output->writeln("\n<comment>RFC Votes</comment>");
-        $votes = $rfc->getVotes($input->getOption('detailed'));
 
-        foreach ($votes as $title => $vote) {
+        if ($rfc->getVoteDescription()) {
+            $output->writeln(sprintf("\n%s", $rfc->getVoteDescription()));
+        }
+
+        foreach ($rfc->getVotes() as $title => $vote) {
             $output->writeln(sprintf("\n<info>%s</info>", $title));
+
             $table->setHeaders($vote['headers']);
-
-            if ($input->getOption('detailed')) {
-                $table->setRows($vote['votes']);
-            }
-
+            $table->setRows($input->getOption('detailed') ? $vote['votes'] : []);
             $table->addRow($vote['counts']);
             $table->render($output);
-
-            // Reset rows
-            $table->setRows([]);
         }
     }
 }
