@@ -67,7 +67,7 @@ class Rfc
      */
     public function setVotes($votes)
     {
-        // TODO: Validation on vote structure 
+        // TODO: Validation on vote structure
         $this->votes = $votes;
     }
 
