@@ -42,6 +42,4 @@ $app->addCommands(array(
     new Command\RfcList(),
 ));
 
-$app->setDefaultCommand('list');
-
 return $app;

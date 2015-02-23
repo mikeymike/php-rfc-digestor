@@ -31,7 +31,7 @@ class RfcList extends Command
     public function configure()
     {
         $this
-            ->setName('list')
+            ->setName('rfc:list')
             ->setDescription('List RFC, split by sections')
             ->addOption('voting', null, InputOption::VALUE_NONE, 'List RFCs in voting stage')
             ->addOption('discussion', null, InputOption::VALUE_NONE, 'List RFCs under discussion')
@@ -131,13 +131,13 @@ class RfcList extends Command
     public function getList($headingId)
     {
         # List key is the heading
-        $listKey = $this->crawler->filter(sprintf('#%s', $headingId))->eq(0)->text();
+        $listKey = $this->crawler->filter(sprintf('#%s', $headingId))->text();
 
         $this->lists[$listKey] = [];
 
         $this->crawler->filter(sprintf('#%s + div.level2 div.li', $headingId))->each(function($rfc, $i) use ($listKey) {
 
-            $link = $rfc->filter('a')->eq(0);
+            $link = $rfc->filter('a');
 
             $row = [
                 $link->text(),
