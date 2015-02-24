@@ -80,7 +80,9 @@ class Digest extends Command
 
         if (count($rfc->getVotes()) > 0) {
             $output->writeln("\n<comment>RFC Votes</comment>");
-            $output->writeln(sprintf("\n%s", $rfc->getVoteDescription()));
+            if ($rfc->getVoteDescription()) {
+                $output->writeln(sprintf("\n%s", $rfc->getVoteDescription()));
+            }
 
             foreach ($rfc->getVotes() as $title => $vote) {
                 $output->writeln(sprintf("\n<info>%s</info>", $title));

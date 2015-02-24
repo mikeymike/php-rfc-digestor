@@ -3,6 +3,7 @@
 ini_set('display_errors', 1);
 
 use \MikeyMike\RfcDigestor\Command;
+use MikeyMike\RfcDigestor\Command\ActiveRfcVoteSummary;
 use \MikeyMike\RfcDigestor\Command\Digest;
 use \MikeyMike\RfcDigestor\Service\RfcBuilder;
 use \Symfony\Component\DomCrawler\Crawler;
@@ -28,11 +29,8 @@ switch (true) {
 
 $app        = new Application('PHP RFC Digestor', '0.1.0');
 $conf       = new Config(realpath(__DIR__ . '/../config.json'));
-$rfcBuilder = new RfcBuilder(
-    new Crawler(),
-    realpath(sprintf('%s/%s', __DIR__, $conf->get('storagePath')))
-);
-
+$rfcBuilder = new RfcBuilder(realpath(sprintf('%s/%s', __DIR__, $conf->get('storagePath'))));
+$storagePath = realpath(sprintf('%s/%s', __DIR__, $conf->get('storagePath')));
 $app->addCommands(array(
     new Digest($conf, $rfcBuilder),
     new Digest\Votes($conf, $rfcBuilder),
