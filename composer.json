@@ -9,18 +9,17 @@
         }
     ],
     "require" : {
-        "php" : ">=5.4"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "~4.1",
-        "squizlabs/php_codesniffer": "1.4.*",
-        "satooshi/php-coveralls": "~0.6",
+        "php" : ">=5.4",
         "symfony/console": "~2.6",
-        "symfony/dom-crawler": "~2.6",
         "symfony/css-selector": "~2.6",
         "chrisboulton/php-diff": "dev-master",
         "northys/css-inliner": "dev-master",
         "noodlehaus/config": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.1",
+        "squizlabs/php_codesniffer": "1.4.*",
+        "satooshi/php-coveralls": "~0.6"
     },
     "autoload" : {
         "psr-4" : {
