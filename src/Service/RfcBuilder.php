@@ -3,6 +3,7 @@
 namespace MikeyMike\RfcDigestor\Service;
 
 use SebastianBergmann\RecursionContext\InvalidArgumentException;
+use Symfony\Component\CssSelector\CssSelector;
 use Symfony\Component\DomCrawler\Crawler;
 use MikeyMike\RfcDigestor\Entity\Rfc;
 
@@ -20,9 +21,9 @@ class RfcBuilder
     const URL_PREFIX = 'https://wiki.php.net/rfc';
 
     /**
-     * @var Crawler
+     * @var \DomDocument
      */
-    private $crawler;
+    private $document;
 
     /**
      * @var string
@@ -35,16 +36,15 @@ class RfcBuilder
     private $rfc;
 
     /**
-     * @param Crawler $crawler
+     * @param string $storagePath
      */
-    public function __construct(Crawler $crawler, $storagePath)
+    public function __construct($storagePath)
     {
         if (!file_exists($storagePath) || !is_dir($storagePath)) {
             throw new InvalidArgumentException('Storage path does not exist!');
         }
 
-        $this->crawler      = $crawler;
-        $this->storagePath  = rtrim($storagePath, '/');
+        $this->storagePath = rtrim($storagePath, '/');
     }
 
     /**
@@ -56,14 +56,11 @@ class RfcBuilder
     public function loadFromWiki($rfcCode, $buildAll = false)
     {
         $wikiUrl = sprintf('%s/%s', self::URL_PREFIX, $rfcCode);
-        $content = file_get_contents($wikiUrl);
-
-        if (!$content) {
-            throw new InvalidArgumentException(sprintf('No content found at URL %s', $wikiUrl));
-        }
-
-        $this->buildRfc($content, $buildAll);
-
+        libxml_use_internal_errors(true);
+        $this->document = new \DOMDocument();
+        $this->document->loadHTMLFile($wikiUrl);
+        libxml_use_internal_errors(false);
+        $this->buildRfc($buildAll);
         return $this;
     }
 
@@ -89,13 +86,12 @@ class RfcBuilder
     /**
      * Build RFC entity
      *
+     * @param bool $buildAll
+     *
      * @return Rfc
      */
-    private function buildRfc($content, $buildAll)
+    private function buildRfc($buildAll = false)
     {
-        $this->crawler->clear();
-        $this->crawler->addHtmlContent($content);
-
         $this->rfc = new Rfc();
 
         if ($buildAll) {
@@ -151,7 +147,6 @@ class RfcBuilder
     }
 
     /**
-     * @param Rfc $rfc
      * @return Rfc
      */
     public function getRfc()
@@ -168,11 +163,11 @@ class RfcBuilder
     {
         $details = [];
 
-        $this->crawler->filter('.page div:first-of-type li')->each(function ($detail, $i) use (&$details) {
-            $text      = trim($detail->text());
+        $xPath = new \DOMXPath($this->document);
+        foreach( $xPath->query(CssSelector::toXPath('.page div:first-of-type li')) as $node) {
+            $text = trim($node->textContent);
             $details[] = explode(':', $text, 2);
-        });
-
+        }
         return $details;
     }
 
@@ -185,11 +180,11 @@ class RfcBuilder
     {
         $changeLog = [];
 
-        $this->crawler->filter('h2#changelog + div li')->each(function ($change, $i) use (&$changeLog) {
-            $text        = trim($change->text());
+        $xPath = new \DOMXPath($this->document);
+        foreach ($xPath->query(CssSelector::toXPath('h2#changelog + div li')) as $node) {
+            $text = trim($node->textContent);
             $changeLog[] = explode('-', $text, 2);
-        });
-
+        }
         return $changeLog;
     }
 
@@ -198,9 +193,12 @@ class RfcBuilder
      */
     private function parseVoteDescription()
     {
-        try {
-            $description = $this->crawler->filter('#vote + div p:first-child')->text();
-        } catch (\InvalidArgumentException $e) {
+        $xPath      = new \DOMXPath($this->document);
+        $nodeList   = $xPath->query(CssSelector::toXPath('#vote + div p:first-child'));
+
+        if ($nodeList->length > 0) {
+            $description = $nodeList->item(0)->textContent;
+        } else {
             $description = '';
         }
 
@@ -216,9 +214,11 @@ class RfcBuilder
     {
         $votes = [];
 
-        $this->crawler->filter('form[name="doodle__form"] table')->each(function ($table, $i) use (&$votes) {
-
-            $title = trim($table->filter('tr.row0 th')->text());
+        $xPath      = new \DOMXPath($this->document);
+        $nodeList   = $xPath->query(CssSelector::toXPath('form[name="doodle__form"] table'));
+        foreach ($nodeList as $node) {
+            /** @var \DOMNode $node */
+            $title = trim($xPath->query(CssSelector::toXPath('tr.row0 th'), $node)->item(0)->textContent);
 
             // Build array for votes table
             $votes[$title]            = [];
@@ -227,60 +227,60 @@ class RfcBuilder
             $votes[$title]['counts']  = [];
             $votes[$title]['closed']  = false;
 
-            $statusText = $table->filter('tr:last-child td:first-child, tr:last-child th:first-child')->text();
-
+            $statusText = $xPath->query(CssSelector::toXPath('tr:last-child td:first-child, tr:last-child th:first-child'), $node)->item(0)->textContent;
             if (strpos($statusText, 'closed') !== false) {
                 $votes[$title]['closed'] = true;
             }
 
-            $table->filter('tr.row1 > *')->each(function ($header, $i) use ($title, &$votes) {
-                $votes[$title]['headers'][] = trim($header->text());
-            });
+            $headersXPath   = CssSelector::toXPath('tr.row1 > *');
+            $rowXPath       = ($votes[$title]['closed'])
+                ? CssSelector::toXPath('tr:not(.row0):not(.row1):not(:last-child):not(:nth-last-child(2))')
+                : CssSelector::toXPath('tr:not(.row0):not(.row1):not(:last-child)');
 
-            // Exclude count && status rows
-            $rows = $votes[$title]['closed']
-                ? $table->filter('tr:not(.row0):not(.row1):not(:last-child):not(:nth-last-child(2))')
-                : $table->filter('tr:not(.row0):not(.row1):not(:last-child)');
 
-            $rows->each(function ($vote, $i) use ($title, &$votes) {
+            foreach ($xPath->query($headersXPath, $node) as $headerNode) {
+                /** @var \DOMNode $headerNode */
+                $votes[$title]['headers'][] = trim($headerNode->textContent);
+            }
+
+            foreach ($xPath->query($rowXPath, $node) as $rowNode) {
+                /** @var \DOMNode $headerNode */
 
                 $row = [];
-
-                $vote->children()->each(function ($cell, $i) use (&$row, $title) {
-
+                foreach ($xPath->query(CssSelector::toXPath('td'), $rowNode) as $cell) {
                     // Cell is a name
-                    if (count($cell->filter('a')) > 0) {
-                        $row[] = trim($cell->text());
-
-                        return;
+                    $list = $xPath->query(CssSelector::toXPath('a'), $cell);
+                    if ($list->length > 0) {
+                        $row[] = trim($cell->textContent);
+                        continue;
                     }
 
                     // Cell is a yes vote
-                    if (count($cell->filter('img')) > 0) {
+                    $list = $xPath->query(CssSelector::toXPath('img'), $cell);
+                    if ($list->length > 0) {
                         $row[] = "\xE2\x9C\x93";
-
-                        return;
+                        continue;
                     }
 
                     // Cell is a no vote
                     $row[] = "";
-                });
+                }
 
                 $votes[$title]['votes'][] = $row;
-            });
+            }
 
-            // Counts will either be last or second to last
-            // Depending on whether the voting is completed
-            $counts = $votes[$title]['closed']
-                ? $table->filter('tr:nth-last-child(2) > *')
-                : $table->filter('tr:last-child > *');
+            if ($votes[$title]['closed']) {
+                $countXPath = 'tr:nth-last-child(2) > *';
+            } else {
+                $countXPath = 'tr:last-child > *';
+            }
 
-            $counts->each(function ($header, $i) use ($title, &$votes) {
-                $votes[$title]['counts'][] = trim($header->text());
-            });
+            $counts = $xPath->query(CssSelector::toXPath($countXPath), $node);
 
-        });
-
+            foreach ($counts as $count) {
+                $votes[$title]['counts'][] = trim($count->textContent);
+            }
+        }
         return $votes;
     }
 }
