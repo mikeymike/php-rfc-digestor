@@ -38,6 +38,7 @@ $app->addCommands(array(
     new Digest\ChangeLog($conf, $rfcBuilder),
     new Command\Notify(),
     new Command\RfcList(),
+    new ActiveRfcVoteSummary($rfcBuilder)
 ));
 
 return $app;
