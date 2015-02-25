@@ -4,9 +4,8 @@ ini_set('display_errors', 1);
 
 use \MikeyMike\RfcDigestor\Command;
 use MikeyMike\RfcDigestor\Command\ActiveRfcVoteSummary;
-use \MikeyMike\RfcDigestor\Command\Digest;
+use \MikeyMike\RfcDigestor\Command\Rfc;
 use \MikeyMike\RfcDigestor\Service\RfcBuilder;
-use \Symfony\Component\DomCrawler\Crawler;
 use \Symfony\Component\Console\Application;
 use \Noodlehaus\Config;
 
@@ -31,11 +30,9 @@ $app        = new Application('PHP RFC Digestor', '0.1.0');
 $conf       = new Config(realpath(__DIR__ . '/../config.json'));
 $rfcBuilder = new RfcBuilder(realpath(sprintf('%s/%s', __DIR__, $conf->get('storagePath'))));
 $storagePath = realpath(sprintf('%s/%s', __DIR__, $conf->get('storagePath')));
+
 $app->addCommands(array(
-    new Digest($conf, $rfcBuilder),
-    new Digest\Votes($conf, $rfcBuilder),
-    new Digest\Details($conf, $rfcBuilder),
-    new Digest\ChangeLog($conf, $rfcBuilder),
+    new Rfc\Digest($conf, $rfcBuilder),
     new Command\Notify(),
     new Command\RfcList(),
     new ActiveRfcVoteSummary($rfcBuilder)
