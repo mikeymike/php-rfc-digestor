@@ -2,9 +2,8 @@
 
 ini_set('display_errors', 1);
 
-use \MikeyMike\RfcDigestor\Command;
-use MikeyMike\RfcDigestor\Command\ActiveRfcVoteSummary;
 use \MikeyMike\RfcDigestor\Command\Rfc;
+use \MikeyMike\RfcDigestor\Command\Notify;
 use \MikeyMike\RfcDigestor\Service\RfcBuilder;
 use \Symfony\Component\Console\Application;
 use \Noodlehaus\Config;
@@ -32,10 +31,12 @@ $rfcBuilder = new RfcBuilder(realpath(sprintf('%s/%s', __DIR__, $conf->get('stor
 $storagePath = realpath(sprintf('%s/%s', __DIR__, $conf->get('storagePath')));
 
 $app->addCommands(array(
-    new Rfc\Digest($conf, $rfcBuilder),
-    new Command\Notify(),
-    new Command\RfcList(),
-    new ActiveRfcVoteSummary($rfcBuilder)
+    new Rfc\Digest($rfcBuilder),
+    new Rfc\Summary($rfcBuilder),
+    new Rfc\RfcList(),
+    new Notify\Rfc(),
+    new Notify\Summary(),
+    new Notify\RfcList(),
 ));
 
 return $app;

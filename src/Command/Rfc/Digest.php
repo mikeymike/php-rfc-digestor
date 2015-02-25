@@ -11,16 +11,11 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class Votes
+ * Class Digest
  * @author  Michael Woodward <mikeymike.mw@gmail.com>
  */
 class Digest extends Command
 {
-    /**
-     * @var array
-     */
-    protected $config;
-
     /**
      * @var RfcBuilder
      */
@@ -37,12 +32,10 @@ class Digest extends Command
     protected $output;
 
     /**
-     * @param array      $config
      * @param RfcBuilder $rfcBuilder
      */
-    public function __construct($config = [], RfcBuilder $rfcBuilder)
+    public function __construct(RfcBuilder $rfcBuilder)
     {
-        $this->config       = $config;
         $this->rfcBuilder   = $rfcBuilder;
 
         parent::__construct();

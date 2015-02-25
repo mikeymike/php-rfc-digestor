@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MikeyMike\RfcDigestor\Command;
+namespace MikeyMike\RfcDigestor\Command\Notify;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -10,12 +10,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
- * Class Notify
+ * Class Summary
  *
  * @package MikeyMike\RfcDigestor\Command
  * @author  Michael Woodward <mikeymike.mw@gmail.com>
  */
-class Notify extends Command
+class Summary extends Command
 {
     /**
      * Configure Command
@@ -23,9 +23,10 @@ class Notify extends Command
     public function configure()
     {
         $this
-            ->setName('notify')
-            ->setDescription('Get notifications of RFC vote changes')
-            ->addArgument('URL', InputArgument::REQUIRED, 'RFC page URL');
+            ->setName('notify:summary')
+            ->setAliases(['notify:active'])
+            ->setDescription('Get notifications of RFC vote changes for actively voting RFCs')
+            ->addArgument('Email', InputArgument::REQUIRED, 'Email to notify');
     }
 
     /**
@@ -36,14 +37,16 @@ class Notify extends Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $output->writeln('<info>Not done this yet :D</info>');
+
         // TODO: Verify running on cron maybe ?
 
         // Get URL Arg
-        $url = $input->getArgument('URL');
+//        $url = $input->getArgument('URL');
 
         // TODO: Verify is URL maybe
 
-        $crawler = new Crawler(null, $url);
+//        $crawler = new Crawler(null, $url);
     }
 
 }

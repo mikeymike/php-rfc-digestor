@@ -1,6 +1,6 @@
 <?php
 
-namespace MikeyMike\RfcDigestor\Command;
+namespace MikeyMike\RfcDigestor\Command\Rfc;
 
 use MikeyMike\RfcDigestor\Helper\Table;
 use MikeyMike\RfcDigestor\Service\RfcBuilder;
@@ -12,12 +12,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\CssSelector\CssSelector;
 
 /**
- * Class RfcList
+ * Class Summary
  *
  * @package MikeyMike\RfcDigestor
  * @author  Aydin Hassan <aydin@hotmail.co.uk>
  */
-class ActiveRfcVoteSummary extends Command
+class Summary extends Command
 {
 
     /**
@@ -40,8 +40,8 @@ class ActiveRfcVoteSummary extends Command
     public function configure()
     {
         $this
-            ->setName('rfc:active')
-            ->setAliases(['rfc:summary'])
+            ->setName('rfc:summary')
+            ->setAliases(['rfc:active'])
             ->setDescription('List the vote totals for each active RFC');
     }
 
@@ -72,15 +72,17 @@ class ActiveRfcVoteSummary extends Command
                 ->loadVotes()
                 ->getRfc();
 
-            $table->addRow(array($rfcDetails[0]), $rfcStyle);
+            $table->addRow([$rfcDetails[0]], $rfcStyle);
             $table->addRow(new TableSeparator());
 
             foreach ($rfc->getVotes() as $title => $vote) {
-                $table->addRow(array($title), $voteStyle);
+                $table->addRow([$title], $voteStyle);
 
                 array_shift($vote['counts']);
+                array_shift($vote['headers']);
+
                 foreach ($vote['counts'] as $key => $total) {
-                    $table->addRow(array($vote['headers'][$key], $total));
+                    $table->addRow([$vote['headers'][$key], $total]);
                 }
             }
 

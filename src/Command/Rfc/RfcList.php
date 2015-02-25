@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MikeyMike\RfcDigestor\Command;
+namespace MikeyMike\RfcDigestor\Command\Rfc;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
