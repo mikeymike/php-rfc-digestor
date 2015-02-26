@@ -64,7 +64,6 @@ class RfcService
      * @param bool   $loadDetails
      * @param bool   $loadChangeLog
      * @param bool   $loadVotes
-     * @param bool   $loadVoters
      */
     public function buildRfc($rfcCode, $loadDetails = true, $loadChangeLog = true, $loadVotes = true)
     {
