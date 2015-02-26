@@ -348,10 +348,19 @@ class RfcService
      * @param array $sections
      * @return array
      */
-    public function getListsBySections($sections = [])
+    public function getLists($sections = [])
     {
+        // Default lets get all
         if (empty($sections)) {
-            $sections = [self::IN_VOTING];
+            $sections = [
+                self::IN_VOTING,
+                self::DISCUSSION,
+                self::DRAFT,
+                self::ACCEPTED,
+                self::DECLINED,
+                self::WITHDRAWN,
+                self::INACTIVE
+            ];
         }
 
         $lists = [];

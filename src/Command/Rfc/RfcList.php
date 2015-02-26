@@ -48,7 +48,8 @@ class RfcList extends Command
             ->addOption('accepted', null, InputOption::VALUE_NONE, 'List accepted RFCs')
             ->addOption('declined', null, InputOption::VALUE_NONE, 'List declined RFCs')
             ->addOption('withdrawn', null, InputOption::VALUE_NONE, 'List withdrawn RFCs')
-            ->addOption('inactive', null, InputOption::VALUE_NONE, 'List inactive RFCs');
+            ->addOption('inactive', null, InputOption::VALUE_NONE, 'List inactive RFCs')
+            ->addOption('all', null, InputOption::VALUE_NONE, 'List all options');
     }
 
     /**
@@ -61,39 +62,43 @@ class RfcList extends Command
     {
         $sections = [];
 
-        if ($input->getOption('voting')) {
-            $sections[] = RfcService::IN_VOTING;
-        }
+        if (!$input->getOption('all')) {
+            if (count(array_filter($input->getOptions())) === 0 || $input->getOption('voting')) {
+                $sections[] = RfcService::IN_VOTING;
+            }
 
-        if ($input->getOption('discussion')) {
-            $sections[] = RfcService::DISCUSSION;
-        }
+            if ($input->getOption('discussion')) {
+                $sections[] = RfcService::DISCUSSION;
+            }
 
-        if ($input->getOption('draft')) {
-            $sections[] = RfcService::DRAFT;
-        }
+            if ($input->getOption('draft')) {
+                $sections[] = RfcService::DRAFT;
+            }
 
-        if ($input->getOption('accepted')) {
-            $sections[] = RfcService::ACCEPTED;
-        }
+            if ($input->getOption('accepted')) {
+                $sections[] = RfcService::ACCEPTED;
+            }
 
-        if ($input->getOption('declined')) {
-            $sections[] = RfcService::DECLINED;
-        }
+            if ($input->getOption('declined')) {
+                $sections[] = RfcService::DECLINED;
+            }
 
-        if ($input->getOption('withdrawn')) {
-            $sections[] = RfcService::WITHDRAWN;
-        }
+            if ($input->getOption('withdrawn')) {
+                $sections[] = RfcService::WITHDRAWN;
+            }
 
-        if ($input->getOption('inactive')) {
-            $sections[] = RfcService::INACTIVE;
+            if ($input->getOption('inactive')) {
+                $sections[] = RfcService::INACTIVE;
+            }
         }
 
         $table      = new Table($output);
         $titleStyle = new TableStyle();
         $titleStyle->setCellRowFormat('<comment>%s</comment>');
 
-        $lists = $this->rfcService->getListsBySections($sections);
+        $lists = $this->rfcService->getLists($sections);
+
+        $table->setHeaders(['RFC', 'RFC Code']);
 
         foreach ($lists as $heading => $list) {
             $table->addRow([$heading], $titleStyle);
