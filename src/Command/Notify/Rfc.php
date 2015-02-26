@@ -52,5 +52,4 @@ class Rfc extends Command
 
         $crawler = new Crawler(null, $url);
     }
-
 }

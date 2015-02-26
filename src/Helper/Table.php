@@ -266,7 +266,11 @@ class Table
 
         $markup = $this->style->getCrossingChar();
         for ($column = 0; $column < $count; $column++) {
-            $markup .= str_repeat($this->style->getHorizontalBorderChar(), $this->getColumnWidth($column)).$this->style->getCrossingChar();
+            $markup .= sprinf(
+                '%s%s',
+                str_repeat($this->style->getHorizontalBorderChar(), $this->getColumnWidth($column)),
+                $this->style->getCrossingChar()
+            );
         }
 
         $this->output->writeln(sprintf($this->style->getBorderFormat(), $markup));
@@ -323,7 +327,10 @@ class Table
 
         $content = sprintf($this->style->getCellRowContentFormat(), $cell);
 
-        $this->output->write(sprintf($cellFormat, str_pad($content, $width, $this->style->getPaddingChar(), $this->style->getPadType())));
+        $this->output->write(sprintf(
+            $cellFormat,
+            str_pad($content, $width, $this->style->getPaddingChar(), $this->style->getPadType())
+        ));
     }
 
     /**

@@ -48,5 +48,4 @@ class Summary extends Command
 
 //        $crawler = new Crawler(null, $url);
     }
-
 }
