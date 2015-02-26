@@ -266,7 +266,7 @@ class Table
 
         $markup = $this->style->getCrossingChar();
         for ($column = 0; $column < $count; $column++) {
-            $markup .= sprinf(
+            $markup .= sprintf(
                 '%s%s',
                 str_repeat($this->style->getHorizontalBorderChar(), $this->getColumnWidth($column)),
                 $this->style->getCrossingChar()
