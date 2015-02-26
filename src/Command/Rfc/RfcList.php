@@ -135,7 +135,7 @@ class RfcList extends Command
 
         $this->lists[$listKey] = [];
 
-        $this->crawler->filter(sprintf('#%s + div.level2 div.li', $headingId))->each(function($rfc, $i) use ($listKey) {
+        $this->crawler->filter(sprintf('#%s + .level2 .li', $headingId))->each(function ($rfc, $i) use ($listKey) {
 
             $link = $rfc->filter('a');
 

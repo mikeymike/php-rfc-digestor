@@ -61,6 +61,7 @@ class RfcBuilder
         $this->document->loadHTMLFile($wikiUrl);
         libxml_use_internal_errors(false);
         $this->buildRfc($buildAll);
+
         return $this;
     }
 
@@ -164,10 +165,11 @@ class RfcBuilder
         $details = [];
 
         $xPath = new \DOMXPath($this->document);
-        foreach( $xPath->query(CssSelector::toXPath('.page div:first-of-type li')) as $node) {
+        foreach ($xPath->query(CssSelector::toXPath('.page div:first-of-type li')) as $node) {
             $text = trim($node->textContent);
             $details[] = explode(':', $text, 2);
         }
+
         return $details;
     }
 
@@ -185,6 +187,7 @@ class RfcBuilder
             $text = trim($node->textContent);
             $changeLog[] = explode('-', $text, 2);
         }
+
         return $changeLog;
     }
 
@@ -193,8 +196,8 @@ class RfcBuilder
      */
     private function parseVoteDescription()
     {
-        $xPath      = new \DOMXPath($this->document);
-        $nodeList   = $xPath->query(CssSelector::toXPath('#vote + div p:first-child'));
+        $xPath = new \DOMXPath($this->document);
+        $nodeList = $xPath->query(CssSelector::toXPath('#vote + div p:first-child'));
 
         if ($nodeList->length > 0) {
             $description = $nodeList->item(0)->textContent;
@@ -214,26 +217,27 @@ class RfcBuilder
     {
         $votes = [];
 
-        $xPath      = new \DOMXPath($this->document);
-        $nodeList   = $xPath->query(CssSelector::toXPath('form[name="doodle__form"] table'));
+        $xPath = new \DOMXPath($this->document);
+        $nodeList = $xPath->query(CssSelector::toXPath('form[name="doodle__form"] table'));
         foreach ($nodeList as $node) {
             /** @var \DOMNode $node */
             $title = trim($xPath->query(CssSelector::toXPath('tr.row0 th'), $node)->item(0)->textContent);
 
             // Build array for votes table
-            $votes[$title]            = [];
+            $votes[$title] = [];
             $votes[$title]['headers'] = [];
-            $votes[$title]['votes']   = [];
-            $votes[$title]['counts']  = [];
-            $votes[$title]['closed']  = false;
+            $votes[$title]['votes'] = [];
+            $votes[$title]['counts'] = [];
+            $votes[$title]['closed'] = false;
 
-            $statusText = $xPath->query(CssSelector::toXPath('tr:last-child td:first-child, tr:last-child th:first-child'), $node)->item(0)->textContent;
+            $selector = CssSelector::toXPath('tr:last-child td:first-child, tr:last-child th:first-child');
+            $statusText = $xPath->query($selector, $node)->item(0)->textContent;
             if (strpos($statusText, 'closed') !== false) {
                 $votes[$title]['closed'] = true;
             }
 
-            $headersXPath   = CssSelector::toXPath('tr.row1 > *');
-            $rowXPath       = ($votes[$title]['closed'])
+            $headersXPath = CssSelector::toXPath('tr.row1 > *');
+            $rowXPath = ($votes[$title]['closed'])
                 ? CssSelector::toXPath('tr:not(.row0):not(.row1):not(:last-child):not(:nth-last-child(2))')
                 : CssSelector::toXPath('tr:not(.row0):not(.row1):not(:last-child)');
 
@@ -281,6 +285,7 @@ class RfcBuilder
                 $votes[$title]['counts'][] = trim($count->textContent);
             }
         }
+
         return $votes;
     }
 }
