@@ -107,6 +107,7 @@ class Digest extends Command
         $table = $this->getHelper('table');
 
         $this->output->writeln("\n<comment>RFC Details</comment>");
+        $this->output->writeln(sprintf("\n<info>%s</info>", $rfc->getName()));
 
         $table->setRows($rfc->getDetails());
         $table->render($this->output);

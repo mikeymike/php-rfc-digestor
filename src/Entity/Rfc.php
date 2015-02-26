@@ -11,6 +11,10 @@ namespace MikeyMike\RfcDigestor\Entity;
 class Rfc
 {
     /**
+     * @var string
+     */
+    protected $name = '';
+    /**
      * @var array
      */
     protected $details = [];
@@ -29,6 +33,22 @@ class Rfc
      * @var string
      */
     protected $voteDescription = '';
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
 
     /**
      * @param array $details
@@ -67,7 +87,6 @@ class Rfc
      */
     public function setVotes($votes)
     {
-        // TODO: Validation on vote structure
         $this->votes = $votes;
     }
 

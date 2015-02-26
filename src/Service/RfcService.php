@@ -71,6 +71,8 @@ class RfcService
 
         $this->rfc = new Rfc();
 
+        $this->loadName();
+
         if ($loadDetails) {
             $this->loadDetails();
         }
@@ -122,6 +124,27 @@ class RfcService
         if (!file_exists($filePath)) {
             throw new InvalidArgumentException('No application storage for RFC');
         }
+
+        return $this;
+    }
+
+    public function saveToStorage(Rfc $rfc)
+    {
+
+    }
+
+    /**
+     * Add RFC name to entity
+     *
+     * @return self
+     */
+    public function loadName()
+    {
+        $xPath   = new \DOMXPath($this->document);
+        $heading = $xPath->query(CssSelector::toXPath('h1'))->item(0)->textContent;
+        $name    = trim(str_replace('PHP RFC:', '', $heading));
+
+        $this->rfc->setName($name);
 
         return $this;
     }
