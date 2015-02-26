@@ -128,6 +128,9 @@ class RfcList extends Command
         $this->getList('inactive');
     }
 
+    /**
+     * @param string $headingId
+     */
     public function getList($headingId)
     {
         # List key is the heading

@@ -113,7 +113,7 @@ class Table
     /**
      * Sets table style.
      *
-     * @param TableStyle|string $name The style name or a TableStyle instance
+     * @param string $name The style name or a TableStyle instance
      *
      * @return Table
      */
