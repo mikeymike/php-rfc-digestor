@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 
 use \MikeyMike\RfcDigestor\Command\Rfc;
 use \MikeyMike\RfcDigestor\Command\Notify;
-use \MikeyMike\RfcDigestor\Service\RfcBuilder;
+use \MikeyMike\RfcDigestor\Service\RfcService;
 use \Symfony\Component\Console\Application;
 use \Noodlehaus\Config;
 
@@ -25,18 +25,18 @@ switch (true) {
         throw new RuntimeException('Unable to locate Composer autoloader; please run "composer install".');
 }
 
-$app        = new Application('PHP RFC Digestor', '0.1.0');
-$conf       = new Config(realpath(__DIR__ . '/../config.json'));
-$rfcBuilder = new RfcBuilder(realpath(sprintf('%s/%s', __DIR__, $conf->get('storagePath'))));
+$app         = new Application('PHP RFC Digestor', '0.1.0');
+$conf        = new Config(realpath(__DIR__ . '/../config.json'));
+$rfcService  = new RfcService(realpath(sprintf('%s/%s', __DIR__, $conf->get('storagePath'))));
 $storagePath = realpath(sprintf('%s/%s', __DIR__, $conf->get('storagePath')));
 
 $app->addCommands(array(
-    new Rfc\Digest($rfcBuilder),
-    new Rfc\Summary($rfcBuilder),
-    new Rfc\RfcList(),
-    new Notify\Rfc(),
-    new Notify\Summary(),
-    new Notify\RfcList(),
+    new Rfc\Digest($rfcService),
+    new Rfc\Summary($rfcService),
+    new Rfc\RfcList($rfcService),
+//    new Notify\Rfc($rfcService),
+//    new Notify\Summary($rfcService),
+//    new Notify\RfcList($rfcService),
 ));
 
 return $app;

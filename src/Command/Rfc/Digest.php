@@ -3,7 +3,8 @@
 
 namespace MikeyMike\RfcDigestor\Command\Rfc;
 
-use MikeyMike\RfcDigestor\Service\RfcBuilder;
+use MikeyMike\RfcDigestor\Entity\Rfc;
+use MikeyMike\RfcDigestor\Service\RfcService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,9 +18,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Digest extends Command
 {
     /**
-     * @var RfcBuilder
+     * @var RfcService
      */
-    protected $rfcBuilder;
+    protected $rfcService;
 
     /**
      * @var InputInterface
@@ -32,12 +33,11 @@ class Digest extends Command
     protected $output;
 
     /**
-     * @param RfcBuilder $rfcBuilder
+     * @param RfcService $rfcService
      */
-    public function __construct(RfcBuilder $rfcBuilder)
+    public function __construct(RfcService $rfcService)
     {
-        $this->rfcBuilder   = $rfcBuilder;
-
+        $this->rfcService   = $rfcService;
         parent::__construct();
     }
 
@@ -68,9 +68,6 @@ class Digest extends Command
         $this->output   = $output;
         $rfcCode        = $input->getArgument('rfc');
 
-        // Build RFC
-        $this->rfcBuilder->loadFromWiki($rfcCode);
-
         // Get only true options
         $setArguments = array_filter($input->getOptions());
 
@@ -81,30 +78,33 @@ class Digest extends Command
             $input->setOption('votes', true);
         }
 
+        // Build RFC
+        $rfc = $this->rfcService->buildRfc(
+            $rfcCode,
+            $input->getOption('details'),
+            $input->getOption('changelog'),
+            $input->getOption('votes')
+        );
+
         if ($input->getOption('details')) {
-            $this->showDetails();
+            $this->showDetails($rfc);
         }
 
         if ($input->getOption('changelog')) {
-            $this->showChangeLog();
+            $this->showChangeLog($rfc);
         }
 
         if ($input->getOption('votes')) {
-            $this->showVotes();
+            $this->showVotes($rfc);
         }
     }
 
     /**
-     * Output the RFC details
+     * @param Rfc $rfc
      */
-    private function showDetails()
+    private function showDetails(Rfc $rfc)
     {
         $table = $this->getHelper('table');
-
-        // Build RFC
-        $rfc = $this->rfcBuilder
-            ->loadDetails()
-            ->getRfc();
 
         $this->output->writeln("\n<comment>RFC Details</comment>");
 
@@ -113,16 +113,11 @@ class Digest extends Command
     }
 
     /**
-     * Output a table of RFC votes
+     * @param Rfc $rfc
      */
-    private function showVotes()
+    private function showVotes(Rfc $rfc)
     {
         $table = $this->getHelper('table');
-
-        // Build RFC
-        $rfc = $this->rfcBuilder
-            ->loadVotes()
-            ->getRfc();
 
         $this->output->writeln("\n<comment>RFC Votes</comment>");
 
@@ -145,23 +140,18 @@ class Digest extends Command
     }
 
     /**
-     * Output the RFC change log
+     * @param Rfc $rfc
      */
-    private function showChangeLog()
+    private function showChangeLog(Rfc $rfc)
     {
         $table = $this->getHelper('table');
 
-        // Build RFC
-        $rfc = $this->rfcBuilder
-            ->loadChangeLog()
-            ->getRfc();
+        $this->output->writeln("\n<comment>RFC ChangeLog</comment>");
 
         if (!$rfc->getChangeLog()) {
             $this->output->writeln('<info>No change log provided</info>');
             return;
         }
-
-        $this->output->writeln("\n<comment>RFC ChangeLog</comment>");
 
         $table->setRows($rfc->getChangeLog());
         $table->render($this->output);

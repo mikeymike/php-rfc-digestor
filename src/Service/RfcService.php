@@ -4,21 +4,31 @@ namespace MikeyMike\RfcDigestor\Service;
 
 use SebastianBergmann\RecursionContext\InvalidArgumentException;
 use Symfony\Component\CssSelector\CssSelector;
-use Symfony\Component\DomCrawler\Crawler;
 use MikeyMike\RfcDigestor\Entity\Rfc;
 
 /**
- * Class RfcBuilder
+ * Class RfcService
  *
  * @package MikeyMike\RfcDigestor\Service
  * @author  Michael Woodward <mikeymike.mw@gmail.com>
  */
-class RfcBuilder
+class RfcService
 {
     /**
-     * URL prefix for loadFromWiki
+     * PHP Wiki URLs
      */
-    const URL_PREFIX = 'https://wiki.php.net/rfc';
+    const RFC_URL = 'https://wiki.php.net/rfc';
+
+    /**
+     * Voting sections
+     */
+    const IN_VOTING     = 'in_voting_phase';
+    const DISCUSSION    = 'under_discussion';
+    const DRAFT         = 'in_draft';
+    const ACCEPTED      = 'accepted';
+    const DECLINED      = 'declined';
+    const WITHDRAWN     = 'withdrawn';
+    const INACTIVE      = 'inactive';
 
     /**
      * @var \DomDocument
@@ -28,7 +38,7 @@ class RfcBuilder
     /**
      * @var string
      */
-    private $storagePath = '';
+    private $storagePath;
 
     /**
      * @var Rfc
@@ -48,19 +58,53 @@ class RfcBuilder
     }
 
     /**
+     * Quick RFC building
+     *
+     * @param string $rfcCode
+     * @param bool   $loadDetails
+     * @param bool   $loadChangeLog
+     * @param bool   $loadVotes
+     * @param bool   $loadVoters
+     */
+    public function buildRfc($rfcCode, $loadDetails = true, $loadChangeLog = true, $loadVotes = true)
+    {
+        $this->loadFromWiki($rfcCode);
+
+        $this->rfc = new Rfc();
+
+        if ($loadDetails) {
+            $this->loadDetails();
+        }
+
+        if ($loadChangeLog) {
+            $this->loadChangeLog();
+        }
+
+        if ($loadVotes) {
+            $this->loadVotes();
+        }
+
+        return $this->rfc;
+    }
+
+    /**
      * Load content for RFC from PHP Wiki
      *
      * @param string $rfcCode
      * @return self
      */
-    public function loadFromWiki($rfcCode, $buildAll = false)
+    public function loadFromWiki($rfcCode)
     {
-        $wikiUrl = sprintf('%s/%s', self::URL_PREFIX, $rfcCode);
+        $wikiUrl = sprintf('%s/%s', self::RFC_URL, $rfcCode);
+
+        // Suppress HTML5 errors
         libxml_use_internal_errors(true);
+
         $this->document = new \DOMDocument();
         $this->document->loadHTMLFile($wikiUrl);
+
+        // Turn errors back on
         libxml_use_internal_errors(false);
-        $this->buildRfc($buildAll);
 
         return $this;
     }
@@ -68,10 +112,11 @@ class RfcBuilder
     /**
      * Load content for RFC from app storage
      *
+     * TODO: Refactor service to allow build RFC from storage
      * @param $rfcCode
      * @return self
      */
-    public function loadFromStorage($rfcCode, $buildAll = false)
+    public function loadFromStorage($rfcCode)
     {
         $filePath = sprintf('%s/%s.html', $this->storagePath, $rfcCode);
 
@@ -79,27 +124,7 @@ class RfcBuilder
             throw new InvalidArgumentException('No application storage for RFC');
         }
 
-        $this->buildRfc(file_get_contents($filePath), $buildAll);
-
         return $this;
-    }
-
-    /**
-     * Build RFC entity
-     *
-     * @param bool $buildAll
-     *
-     * @return Rfc
-     */
-    private function buildRfc($buildAll = false)
-    {
-        $this->rfc = new Rfc();
-
-        if ($buildAll) {
-            $this->loadDetails();
-            $this->loadVotes();
-            $this->loadChangeLog();
-        }
     }
 
     /**
@@ -166,7 +191,7 @@ class RfcBuilder
 
         $xPath = new \DOMXPath($this->document);
         foreach ($xPath->query(CssSelector::toXPath('.page div:first-of-type li')) as $node) {
-            $text = trim($node->textContent);
+            $text      = trim($node->textContent);
             $details[] = explode(':', $text, 2);
         }
 
@@ -184,7 +209,7 @@ class RfcBuilder
 
         $xPath = new \DOMXPath($this->document);
         foreach ($xPath->query(CssSelector::toXPath('h2#changelog + div li')) as $node) {
-            $text = trim($node->textContent);
+            $text        = trim($node->textContent);
             $changeLog[] = explode('-', $text, 2);
         }
 
@@ -192,11 +217,13 @@ class RfcBuilder
     }
 
     /**
+     * Parse vote description
+     *
      * @return string
      */
     private function parseVoteDescription()
     {
-        $xPath = new \DOMXPath($this->document);
+        $xPath    = new \DOMXPath($this->document);
         $nodeList = $xPath->query(CssSelector::toXPath('#vote + div p:first-child'));
 
         if ($nodeList->length > 0) {
@@ -209,9 +236,9 @@ class RfcBuilder
     }
 
     /**
+     * Parse the votes table
+     *
      * @return array
-     * TODO: Refactor, really don't like having to pass $votes everywhere
-     * TODO: Resolve major performance hit from DOM Crawler when getting votes
      */
     private function parseVotes()
     {
@@ -219,39 +246,45 @@ class RfcBuilder
 
         $xPath = new \DOMXPath($this->document);
         $nodeList = $xPath->query(CssSelector::toXPath('form[name="doodle__form"] table'));
+
         foreach ($nodeList as $node) {
             /** @var \DOMNode $node */
             $title = trim($xPath->query(CssSelector::toXPath('tr.row0 th'), $node)->item(0)->textContent);
 
             // Build array for votes table
-            $votes[$title] = [];
-            $votes[$title]['headers'] = [];
-            $votes[$title]['votes'] = [];
-            $votes[$title]['counts'] = [];
-            $votes[$title]['closed'] = false;
+            $votes[$title]              = [];
+            $votes[$title]['headers']   = [];
+            $votes[$title]['votes']     = [];
+            $votes[$title]['counts']    = [];
+            $votes[$title]['closed']    = false;
 
-            $selector = CssSelector::toXPath('tr:last-child td:first-child, tr:last-child th:first-child');
-            $statusText = $xPath->query($selector, $node)->item(0)->textContent;
+            // Get the status text field
+            $statusSelect   = CssSelector::toXPath('tr:last-child td:first-child, tr:last-child th:first-child');
+            $statusText     = $xPath->query($statusSelect, $node)->item(0)->textContent;
+
             if (strpos($statusText, 'closed') !== false) {
                 $votes[$title]['closed'] = true;
             }
 
             $headersXPath = CssSelector::toXPath('tr.row1 > *');
-            $rowXPath = ($votes[$title]['closed'])
-                ? CssSelector::toXPath('tr:not(.row0):not(.row1):not(:last-child):not(:nth-last-child(2))')
-                : CssSelector::toXPath('tr:not(.row0):not(.row1):not(:last-child)');
-
 
             foreach ($xPath->query($headersXPath, $node) as $headerNode) {
                 /** @var \DOMNode $headerNode */
                 $votes[$title]['headers'][] = trim($headerNode->textContent);
             }
 
+            // An extra final row occurs if the the vote is closed
+            $rowXPath = ($votes[$title]['closed'])
+                ? CssSelector::toXPath('tr:not(.row0):not(.row1):not(:last-child):not(:nth-last-child(2))')
+                : CssSelector::toXPath('tr:not(.row0):not(.row1):not(:last-child)');
+
             foreach ($xPath->query($rowXPath, $node) as $rowNode) {
-                /** @var \DOMNode $headerNode */
+                /** @var \DOMNode $rowNode */
 
                 $row = [];
                 foreach ($xPath->query(CssSelector::toXPath('td'), $rowNode) as $cell) {
+                    /** @var \DOMNode $cell */
+
                     // Cell is a name
                     $list = $xPath->query(CssSelector::toXPath('a'), $cell);
                     if ($list->length > 0) {
@@ -262,22 +295,20 @@ class RfcBuilder
                     // Cell is a yes vote
                     $list = $xPath->query(CssSelector::toXPath('img'), $cell);
                     if ($list->length > 0) {
-                        $row[] = "\xE2\x9C\x93";
+                        $row[] = true;
                         continue;
                     }
 
                     // Cell is a no vote
-                    $row[] = "";
+                    $row[] = false;
                 }
 
                 $votes[$title]['votes'][] = $row;
             }
 
-            if ($votes[$title]['closed']) {
-                $countXPath = 'tr:nth-last-child(2) > *';
-            } else {
-                $countXPath = 'tr:last-child > *';
-            }
+            $countXPath = $votes[$title]['closed']
+                ? $countXPath = 'tr:nth-last-child(2) > *'
+                : $countXPath = 'tr:last-child > *';
 
             $counts = $xPath->query(CssSelector::toXPath($countXPath), $node);
 
@@ -287,5 +318,66 @@ class RfcBuilder
         }
 
         return $votes;
+    }
+
+    /**
+     * Get list from sections
+     *
+     * @param array $sections
+     * @return array
+     */
+    public function getListsBySections($sections = [])
+    {
+        if (empty($sections)) {
+            $sections = [self::IN_VOTING];
+        }
+
+        $lists = [];
+
+        foreach ($sections as $section) {
+            $list  = $this->getSectionList($section);
+            $lists = array_merge($lists, $list);
+        }
+
+        return $lists;
+    }
+
+    /**
+     * @param string $section
+     * @return array
+     */
+    private function getSectionList($section)
+    {
+        // Suppress HTML5 errors
+        libxml_use_internal_errors(true);
+
+        $document = new \DOMDocument();
+        $document->loadHTMLFile(self::RFC_URL);
+
+        // Turn errors back on
+        libxml_use_internal_errors(false);
+
+        $xPath    = new \DOMXPath($document);
+        $listKey  = $xPath->query(CssSelector::toXPath(sprintf('#%s', $section)))->item(0)->textContent;
+
+        $list = [
+            $listKey => []
+        ];
+
+        foreach ($xPath->query(CssSelector::toXPath(sprintf('#%s + .level2 .li', $section))) as $listing) {
+            /** @var \DOMNode $listing */
+
+            /** @var \DOMElement $link */
+            $link = $xPath->query(CssSelector::toXPath('a'), $listing)->item(0);
+
+            $row = [
+                $link->textContent,
+                basename($link->getAttribute('href'))
+            ];
+
+            $list[$listKey][] = $row;
+        }
+
+        return $list;
     }
 }

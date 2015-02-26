@@ -3,27 +3,36 @@
 
 namespace MikeyMike\RfcDigestor\Command\Rfc;
 
+use MikeyMike\RfcDigestor\Helper\Table;
+use MikeyMike\RfcDigestor\Service\RfcService;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\TableSeparator;
+use Symfony\Component\Console\Helper\TableStyle;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * Class RfcList
  *
- * TODO: Strip out into service
  * @package MikeyMike\RfcDigestor
  * @author  Michael Woodward <mikeymike.mw@gmail.com>
  */
 class RfcList extends Command
 {
-    public $lists = [];
+    /**
+     * @var RfcService
+     */
+    protected $rfcService;
 
     /**
-     * @var Crawler
+     * @param RfcService $rfcService
      */
-    public $crawler;
+    public function __construct(RfcService $rfcService)
+    {
+        $this->rfcService = $rfcService;
+        parent::__construct();
+    }
 
     /**
      * Configure Command
@@ -40,7 +49,6 @@ class RfcList extends Command
             ->addOption('declined', null, InputOption::VALUE_NONE, 'List declined RFCs')
             ->addOption('withdrawn', null, InputOption::VALUE_NONE, 'List withdrawn RFCs')
             ->addOption('inactive', null, InputOption::VALUE_NONE, 'List inactive RFCs');
-//            ->addOption('implemented', null, InputOption::VALUE_NONE, 'List implemented RFCs') // Maybe not this
     }
 
     /**
@@ -51,103 +59,55 @@ class RfcList extends Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->crawler = new Crawler(file_get_contents('https://wiki.php.net/rfc'));
+        $sections = [];
 
-        if (count(array_filter($input->getOptions())) === 0 || $input->getOption('voting')) {
-            $this->getInVoting();
+        if ($input->getOption('voting')) {
+            $sections[] = RfcService::IN_VOTING;
         }
 
         if ($input->getOption('discussion')) {
-            $this->getInDiscussion();
+            $sections[] = RfcService::DISCUSSION;
         }
 
         if ($input->getOption('draft')) {
-            $this->getInDraft();
+            $sections[] = RfcService::DRAFT;
         }
 
         if ($input->getOption('accepted')) {
-            $this->getAccepted();
+            $sections[] = RfcService::ACCEPTED;
         }
 
         if ($input->getOption('declined')) {
-            $this->getDeclined();
+            $sections[] = RfcService::DECLINED;
         }
 
         if ($input->getOption('withdrawn')) {
-            $this->getWithdrawn();
+            $sections[] = RfcService::WITHDRAWN;
         }
 
         if ($input->getOption('inactive')) {
-            $this->getInactive();
+            $sections[] = RfcService::INACTIVE;
         }
 
-        $table = $this->getHelper('table');
-        foreach ($this->lists as $title => $list) {
-            $output->writeln(sprintf("\n<comment>%s</comment>", $title));
+        $table      = new Table($output);
+        $titleStyle = new TableStyle();
+        $titleStyle->setCellRowFormat('<comment>%s</comment>');
 
-            $table->setHeaders([
-                'RFC', 'RFC Code'
-            ]);
-            $table->setRows($list);
-            $table->render($output);
+        $lists = $this->rfcService->getListsBySections($sections);
+
+        foreach ($lists as $heading => $list) {
+            $table->addRow([$heading], $titleStyle);
+            $table->addRow(new TableSeparator());
+
+            foreach ($list as $listing) {
+                $table->addRow($listing);
+            }
+
+            if ($list !== end($lists)) {
+                $table->addRow(new TableSeparator());
+            }
         }
-    }
 
-    public function getInVoting()
-    {
-        $this->getList('in_voting_phase');
-    }
-
-    public function getInDiscussion()
-    {
-        $this->getList('under_discussion');
-    }
-
-    public function getInDraft()
-    {
-        $this->getList('in_draft');
-    }
-
-    public function getAccepted()
-    {
-        $this->getList('accepted');
-    }
-
-    public function getDeclined()
-    {
-        $this->getList('declined');
-    }
-
-    public function getWithdrawn()
-    {
-        $this->getList('withdrawn');
-    }
-
-    public function getInactive()
-    {
-        $this->getList('inactive');
-    }
-
-    /**
-     * @param string $headingId
-     */
-    public function getList($headingId)
-    {
-        # List key is the heading
-        $listKey = $this->crawler->filter(sprintf('#%s', $headingId))->text();
-
-        $this->lists[$listKey] = [];
-
-        $this->crawler->filter(sprintf('#%s + .level2 .li', $headingId))->each(function ($rfc, $i) use ($listKey) {
-
-            $link = $rfc->filter('a');
-
-            $row = [
-                $link->text(),
-                basename($link->attr('href'))
-            ];
-
-            $this->lists[$listKey][] = $row;
-        });
+        $table->render();
     }
 }
