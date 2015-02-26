@@ -27,8 +27,11 @@ switch (true) {
 
 $app         = new Application('PHP RFC Digestor', '0.1.0');
 $conf        = new Config(realpath(__DIR__ . '/../config.json'));
-$rfcService  = new RfcService(realpath(sprintf('%s/%s', __DIR__, $conf->get('storagePath'))));
-$storagePath = realpath(sprintf('%s/%s', __DIR__, $conf->get('storagePath')));
+$storagePath = rtrim(realpath(sprintf('%s/%s', __DIR__, $conf->get('storagePath'))), '/');
+$rfcService  = new RfcService($storagePath);
+
+// Set config path for future commands
+$conf->set('storagePath', $storagePath);
 
 $app->addCommands(array(
     new Rfc\Digest($rfcService),
@@ -36,7 +39,7 @@ $app->addCommands(array(
     new Rfc\RfcList($rfcService),
 //    new Notify\Rfc($rfcService),
 //    new Notify\Summary($rfcService),
-//    new Notify\RfcList($rfcService),
+    new Notify\RfcList($conf, $rfcService),
 ));
 
 return $app;
