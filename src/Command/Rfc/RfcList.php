@@ -60,36 +60,22 @@ class RfcList extends Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $sections = [];
+        $sections = [
+            'voting'     => RfcService::IN_VOTING,
+            'discussion' => RfcService::DISCUSSION,
+            'draft'      => RfcService::DRAFT,
+            'accepted'   => RfcService::ACCEPTED,
+            'declined'   => RfcService::DECLINED,
+            'withdrawn'  => RfcService::WITHDRAWN,
+            'inactive'   => RfcService::INACTIVE
+        ];
 
-        if (!$input->getOption('all')) {
-            if (count(array_filter($input->getOptions())) === 0 || $input->getOption('voting')) {
-                $sections[] = RfcService::IN_VOTING;
-            }
+        $sections = array_intersect_key($sections, array_filter($input->getOptions()));
 
-            if ($input->getOption('discussion')) {
-                $sections[] = RfcService::DISCUSSION;
-            }
-
-            if ($input->getOption('draft')) {
-                $sections[] = RfcService::DRAFT;
-            }
-
-            if ($input->getOption('accepted')) {
-                $sections[] = RfcService::ACCEPTED;
-            }
-
-            if ($input->getOption('declined')) {
-                $sections[] = RfcService::DECLINED;
-            }
-
-            if ($input->getOption('withdrawn')) {
-                $sections[] = RfcService::WITHDRAWN;
-            }
-
-            if ($input->getOption('inactive')) {
-                $sections[] = RfcService::INACTIVE;
-            }
+        if ($input->getOption('all')) {
+            $sections = [];
+        } else if (count($sections) === 0) {
+            $sections[] = RfcService::IN_VOTING;
         }
 
         $table      = new Table($output);
