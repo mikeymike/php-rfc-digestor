@@ -72,9 +72,7 @@ class RfcList extends Command
 
         $sections = array_intersect_key($sections, array_filter($input->getOptions()));
 
-        if ($input->getOption('all')) {
-            $sections = [];
-        } else if (count($sections) === 0) {
+        if (count($sections) === 0 && !$input->getOption('all')) {
             $sections[] = RfcService::IN_VOTING;
         }
 
