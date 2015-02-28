@@ -2,6 +2,7 @@
 
 ini_set('display_errors', 1);
 
+use \MikeyMike\RfcDigestor\RfcBuilder;
 use \MikeyMike\RfcDigestor\Command\Rfc;
 use \MikeyMike\RfcDigestor\Command\Notify;
 use \MikeyMike\RfcDigestor\Service\RfcService;
@@ -28,7 +29,9 @@ switch (true) {
 $app         = new Application('PHP RFC Digestor', '0.1.0');
 $conf        = new Config(realpath(__DIR__ . '/../config.json'));
 $storagePath = rtrim(realpath(sprintf('%s/%s', __DIR__, $conf->get('storagePath'))), '/');
-$rfcService  = new RfcService($storagePath);
+
+$rfcBuilder  = new RfcBuilder($storagePath);
+$rfcService  = new RfcService($rfcBuilder);
 
 // Set config path for future commands
 $conf->set('storagePath', $storagePath);

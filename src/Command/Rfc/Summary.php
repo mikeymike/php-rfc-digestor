@@ -65,7 +65,7 @@ class Summary extends Command
             $rfcCode = $rfcDetails[1];
 
             // Build RFC
-            $rfc = $this->rfcService->buildRfc($rfcCode);
+            $rfc = $this->rfcService->getRfc($rfcCode);
 
             $table->addRow([$rfcDetails[0]], $rfcStyle);
             $table->addRow(new TableSeparator());

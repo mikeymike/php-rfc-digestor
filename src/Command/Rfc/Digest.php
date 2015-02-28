@@ -67,34 +67,39 @@ class Digest extends Command
         $this->input    = $input;
         $this->output   = $output;
         $rfcCode        = $input->getArgument('rfc');
+        $args           = array_fill_keys(['details', 'changelog', 'votes'], true);
 
-        // Get only true options
-        $setArguments = array_filter($input->getOptions());
+        // Merge relevant values
+        array_walk($args, function (&$option, $key) use ($input) {
+            $option = $input->getOption($key);
+        });
 
         // Set default if no options passed
-        if (count($setArguments) === 0 || (count($setArguments) === 1 && $input->getOption('detailed'))) {
-            $input->setOption('details', true);
-            $input->setOption('changelog', true);
-            $input->setOption('votes', true);
+        if (count(array_filter($args)) === 0) {
+            $args = [
+                'details'   => true,
+                'changelog' => true,
+                'votes'     => true
+            ];
         }
 
         // Build RFC
-        $rfc = $this->rfcService->buildRfc(
+        $rfc = $this->rfcService->getRfc(
             $rfcCode,
-            $input->getOption('details'),
-            $input->getOption('changelog'),
-            $input->getOption('votes')
+            $args['details'],
+            $args['changelog'],
+            $args['votes']
         );
 
-        if ($input->getOption('details')) {
+        if ($args['details']) {
             $this->showDetails($rfc);
         }
 
-        if ($input->getOption('changelog')) {
+        if ($args['changelog']) {
             $this->showChangeLog($rfc);
         }
 
-        if ($input->getOption('votes')) {
+        if ($args['votes']) {
             $this->showVotes($rfc);
         }
     }
