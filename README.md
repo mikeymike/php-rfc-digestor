@@ -5,6 +5,3 @@
 
 ## *WIP*
 
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/mikeymike/php-rfc-digestor/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
