@@ -20,6 +20,11 @@ class RfcBuilder
     private $document;
 
     /**
+     * @var string
+     */
+    private $storagePath;
+
+    /**
      * @var Rfc
      */
     private $rfc;
