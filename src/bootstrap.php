@@ -6,6 +6,7 @@ use \MikeyMike\RfcDigestor\RfcBuilder;
 use \MikeyMike\RfcDigestor\Command\Rfc;
 use \MikeyMike\RfcDigestor\Command\Notify;
 use \MikeyMike\RfcDigestor\Service\RfcService;
+use \MikeyMike\RfcDigestor\Service\DiffService;
 use \Symfony\Component\Console\Application;
 use \Noodlehaus\Config;
 
@@ -32,6 +33,7 @@ $storagePath = rtrim(realpath(sprintf('%s/%s', __DIR__, $conf->get('storagePath'
 
 $rfcBuilder  = new RfcBuilder($storagePath);
 $rfcService  = new RfcService($rfcBuilder);
+$diffService = new DiffService();
 
 // Set config path for future commands
 $conf->set('storagePath', $storagePath);
@@ -42,7 +44,7 @@ $app->addCommands(array(
     new Rfc\RfcList($rfcService),
 //    new Notify\Rfc($rfcService),
 //    new Notify\Summary($rfcService),
-    new Notify\RfcList($conf, $rfcService),
+    new Notify\RfcList($conf, $rfcService, $diffService),
 ));
 
 return $app;

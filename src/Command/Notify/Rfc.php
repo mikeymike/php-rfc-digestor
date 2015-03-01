@@ -25,7 +25,7 @@ class Rfc extends Command
     {
         $this
             ->setName('notify:rfc')
-            ->setDescription('Get notifications of RFC vote changes')
+            ->setDescription('Get notifications of RFC changes')
             ->addArgument('URL', InputArgument::REQUIRED, 'RFC page URL')
             ->addArgument('Email', InputArgument::REQUIRED, 'Email to notify')
             ->addOption('details', null, InputOption::VALUE_NONE, 'Display only RFC details')

@@ -3,3 +3,4 @@ data
 /vendor/
 public/assets/vendor/
 storage/*
+.DS_Store

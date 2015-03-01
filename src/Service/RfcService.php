@@ -36,7 +36,7 @@ class RfcService
     private $rfcBuilder;
 
     /**
-     * @param RfcBuilder $rfcBuilder
+     * @param string $storagePath
      */
     public function __construct(RfcBuilder $rfcBuilder)
     {
@@ -108,7 +108,10 @@ class RfcService
 
         foreach ($sections as $section) {
             $list  = $this->getSectionList($section);
-            $lists = array_merge($lists, $list);
+
+            if ($list) {
+                $lists = array_merge($lists, $list);
+            }
         }
 
         return $lists;
@@ -116,7 +119,7 @@ class RfcService
 
     /**
      * @param string $section
-     * @return array
+     * @return array|bool
      */
     private function getSectionList($section)
     {
@@ -129,8 +132,14 @@ class RfcService
         // Turn errors back on
         libxml_use_internal_errors(false);
 
-        $xPath    = new \DOMXPath($document);
-        $listKey  = $xPath->query(CssSelector::toXPath(sprintf('#%s', $section)))->item(0)->textContent;
+        $xPath       = new \DOMXPath($document);
+        $headingNode = $xPath->query(CssSelector::toXPath(sprintf('#%s', $section)))->item(0);
+
+        if (!$headingNode) {
+            return false;
+        }
+
+        $listKey = $headingNode->textContent;
 
         $list = [
             $listKey => []
@@ -147,7 +156,7 @@ class RfcService
                 basename($link->getAttribute('href'))
             ];
 
-            $list[$listKey][] = $row;
+            $list[$listKey][$link->textContent] = $row;
         }
 
         return $list;

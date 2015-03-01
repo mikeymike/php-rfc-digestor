@@ -3,14 +3,13 @@
 
 namespace MikeyMike\RfcDigestor\Command\Notify;
 
+use MikeyMike\RfcDigestor\Service\DiffService;
 use MikeyMike\RfcDigestor\Service\RfcService;
 use Noodlehaus\Config;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * Class RfcList
@@ -31,12 +30,18 @@ class RfcList extends Command
     protected $rfcService;
 
     /**
+     * @var DiffService
+     */
+    protected $diffService;
+
+    /**
      * @param RfcService $rfcService
      */
-    public function __construct(Config $config, RfcService $rfcService)
+    public function __construct(Config $config, RfcService $rfcService, DiffService $diffService)
     {
-        $this->config     = $config;
-        $this->rfcService = $rfcService;
+        $this->config      = $config;
+        $this->rfcService  = $rfcService;
+        $this->diffService = $diffService;
 
         parent::__construct();
     }
@@ -48,15 +53,8 @@ class RfcList extends Command
     {
         $this
             ->setName('notify:list')
-            ->setDescription('Get notifications of RFC list changes, optionally by sections')
-            ->addArgument('Email', InputArgument::REQUIRED, 'Email to notify')
-            ->addOption('voting', null, InputOption::VALUE_NONE, 'List RFCs in voting stage')
-            ->addOption('discussion', null, InputOption::VALUE_NONE, 'List RFCs under discussion')
-            ->addOption('draft', null, InputOption::VALUE_NONE, 'List RFCs in draft stage')
-            ->addOption('accepted', null, InputOption::VALUE_NONE, 'List accepted RFCs')
-            ->addOption('declined', null, InputOption::VALUE_NONE, 'List declined RFCs')
-            ->addOption('withdrawn', null, InputOption::VALUE_NONE, 'List withdrawn RFCs')
-            ->addOption('inactive', null, InputOption::VALUE_NONE, 'List inactive RFCs');
+            ->setDescription('Get notifications of RFC list changes')
+            ->addArgument('email', InputArgument::REQUIRED, 'Email to notify');
     }
 
     /**
@@ -79,21 +77,27 @@ class RfcList extends Command
             return;
         }
 
-
-        // TODO: Diff logic
-        // Needs to find if RFC has moved, from and to (without duplication)
-        // Needs to find new RFCs
-
         $previousRfcList = json_decode(file_get_contents($storageFile), true);
 
-        $diffs = [];
-        foreach ($currentRfcList as $key => $list) {
-            $listDiff = array_diff($list, $previousRfcList[$key]);
+        $diffs = $this->diffService->listDiff($currentRfcList, $previousRfcList);
 
-            if (!empty($listDiff)) {
-                $diffs[] = $listDiff;
-            }
+        // TODO : Twig template
+
+        $emailBody = '';
+
+        foreach ($diffs as $rfcTitle => $diff) {
+            $emailBody .= sprintf("%s has moved from %s to %s\n", $rfcTitle, $diff['from'], $diff['to']);
         }
+
+        $mailer = new \Swift_Mailer(new \Swift_MailTransport());
+
+        $message = $mailer->createMessage()
+            ->setSubject('Test')
+            ->setFrom('notifier@php-rfc-digestor.com')
+            ->setTo($input->getArgument('email'))
+            ->setBody($emailBody);
+
+        $mailer->send($message);
 
         // $this->writeRfcFile($currentRfcList, $file);
     }
