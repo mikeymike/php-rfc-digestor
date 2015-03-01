@@ -39,8 +39,8 @@ class DiffService
 
     /**
      * @param array  $list
-     * @param string $code
-     * @return int|string
+     * @param string $title
+     * @return string
      */
     private function findFromKey($list, $title)
     {

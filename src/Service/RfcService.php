@@ -36,7 +36,7 @@ class RfcService
     private $rfcBuilder;
 
     /**
-     * @param string $storagePath
+     * @param RfcBuilder $rfcBuilder
      */
     public function __construct(RfcBuilder $rfcBuilder)
     {
