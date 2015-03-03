@@ -40,7 +40,7 @@ $transport->setHost($conf->get('smtp.host'));
 $transport->setPort($conf->get('smtp.port'));
 $transport->setUsername($conf->get('smtp.username'));
 $transport->setPassword($conf->get('smtp.password'));
-$transport->setSecurity($conf->get('smtp.security'));
+$transport->setEncryption($conf->get('smtp.security'));
 $mailer = new Swift_Mailer($transport);
 
 // Set config path for future commands
