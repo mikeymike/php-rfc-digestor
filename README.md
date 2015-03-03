@@ -199,6 +199,25 @@ Notify of changes shown in `rfc:summary` command
 
 *__Coming Soon__*
 
+### Test Email
+
+Test the SMTP configuration 
+
+```
+Usage:
+ test:email email
+
+Arguments:
+ email                 Email to notify
+```
+
+#### Example Output
+
+```
+$ bin/php-rfc-digestor test:email mikeymike.mw@gmail.com
+  Email sent to mikeymike.mw@gmail.com
+```
+
 ## TODO
 
 - [ ] Finish DiffService for other commands

@@ -72,6 +72,6 @@ class Email extends Command
 
         $this->mailer->send($message);
 
-        $output->writeln(sprintf('<info>Email sent to %s</info>', $input->getArgument('email'));
+        $output->writeln(sprintf('<info>Email sent to %s</info>', $input->getArgument('email')));
     }
 }

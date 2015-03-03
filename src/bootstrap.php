@@ -7,6 +7,7 @@ use \MikeyMike\RfcDigestor\Command\Rfc;
 use \MikeyMike\RfcDigestor\Command\Notify;
 use \MikeyMike\RfcDigestor\Service\RfcService;
 use \MikeyMike\RfcDigestor\Service\DiffService;
+use \MikeyMike\RfcDigestor\Command\Test;
 use \Symfony\Component\Console\Application;
 use \Noodlehaus\Config;
 
@@ -53,6 +54,7 @@ $app->addCommands(array(
 //    new Notify\Rfc($rfcService),
 //    new Notify\Summary($rfcService),
     new Notify\RfcList($conf, $rfcService, $diffService, $mailer),
+    new Test\Email($conf, $mailer)
 ));
 
 return $app;
