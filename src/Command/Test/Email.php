@@ -31,8 +31,6 @@ class Email extends Command
 
     /**
      * @param Config        $config
-     * @param RfcService    $rfcService
-     * @param DiffService   $diffService
      * @param \Swift_Mailer $mailer
      */
     public function __construct(Config $config, \Swift_Mailer $mailer)
