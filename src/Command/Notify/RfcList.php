@@ -35,13 +35,22 @@ class RfcList extends Command
     protected $diffService;
 
     /**
-     * @param RfcService $rfcService
+     * @var \Swift_Mailer
      */
-    public function __construct(Config $config, RfcService $rfcService, DiffService $diffService)
+    protected $mailer;
+
+    /**
+     * @param Config        $config
+     * @param RfcService    $rfcService
+     * @param DiffService   $diffService
+     * @param \Swift_Mailer $mailer
+     */
+    public function __construct(Config $config, RfcService $rfcService, DiffService $diffService, \Swift_Mailer $mailer)
     {
         $this->config      = $config;
         $this->rfcService  = $rfcService;
         $this->diffService = $diffService;
+        $this->mailer      = $mailer;
 
         parent::__construct();
     }
@@ -89,15 +98,13 @@ class RfcList extends Command
             $emailBody .= sprintf("%s has moved from %s to %s\n", $rfcTitle, $diff['from'], $diff['to']);
         }
 
-        $mailer = new \Swift_Mailer(new \Swift_MailTransport());
-
-        $message = $mailer->createMessage()
+        $message = $this->mailer->createMessage()
             ->setSubject('Test')
             ->setFrom('notifier@php-rfc-digestor.com')
             ->setTo($input->getArgument('email'))
             ->setBody($emailBody);
 
-        $mailer->send($message);
+        $this->mailer->send($message);
 
         // $this->writeRfcFile($currentRfcList, $file);
     }

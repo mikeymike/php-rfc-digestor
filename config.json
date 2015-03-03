@@ -1,3 +1,10 @@
 {
-   "storagePath": "../storage"
+   "storagePath": "../storage",
+   "smtp": {
+      "host": "localhost",
+      "port": 25,
+      "security": "ssl",
+      "username": "",
+      "password": ""
+   }
 }

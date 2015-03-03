@@ -35,6 +35,14 @@ $rfcBuilder  = new RfcBuilder($storagePath);
 $rfcService  = new RfcService($rfcBuilder);
 $diffService = new DiffService();
 
+$transport = new Swift_SmtpTransport();
+$transport->setHost($conf->get('smtp.host'));
+$transport->setPort($conf->get('smtp.port'));
+$transport->setUsername($conf->get('smtp.username'));
+$transport->setPassword($conf->get('smtp.password'));
+$transport->setSecurity($conf->get('smtp.security'));
+$mailer = new Swift_Mailer($transport);
+
 // Set config path for future commands
 $conf->set('storagePath', $storagePath);
 
@@ -44,7 +52,7 @@ $app->addCommands(array(
     new Rfc\RfcList($rfcService),
 //    new Notify\Rfc($rfcService),
 //    new Notify\Summary($rfcService),
-    new Notify\RfcList($conf, $rfcService, $diffService),
+    new Notify\RfcList($conf, $rfcService, $diffService, $mailer),
 ));
 
 return $app;
