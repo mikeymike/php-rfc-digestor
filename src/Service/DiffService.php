@@ -11,8 +11,11 @@ namespace MikeyMike\RfcDigestor\Service;
 class DiffService
 {
     /**
+     * Get a parsed diff of two RFC lists
+     *
      * @param array $list1
      * @param array $list2
+     * @return array
      */
     public function listDiff($list1, $list2)
     {
@@ -38,6 +41,8 @@ class DiffService
     }
 
     /**
+     * Gets the section name for the RFC
+     *
      * @param array  $list
      * @param string $title
      * @return string

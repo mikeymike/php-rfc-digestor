@@ -67,8 +67,6 @@ class RfcList extends Command
     }
 
     /**
-     * Execute Command
-     *
      * @param InputInterface  $input
      * @param OutputInterface $output
      */
@@ -82,42 +80,34 @@ class RfcList extends Command
         $storageFile    = sprintf('%s/rfcList.json', $this->config->get('storagePath'));
 
         if (!file_exists($storageFile)) {
-            $this->writeRfcFile($currentRfcList, $storageFile);
+            file_put_contents($storageFile, json_encode($currentRfcList));
             return;
         }
 
         $previousRfcList = json_decode(file_get_contents($storageFile), true);
+        $diffs           = $this->diffService->listDiff($currentRfcList, $previousRfcList);
 
-        $diffs = $this->diffService->listDiff($currentRfcList, $previousRfcList);
+        if (empty($diffs)) {
+            file_put_contents($storageFile, json_encode($currentRfcList));
+            return;
+        }
 
         // TODO : Twig template
 
         $emailBody = '';
 
         foreach ($diffs as $rfcTitle => $diff) {
-            $emailBody .= sprintf("%s has moved from %s to %s\n", $rfcTitle, $diff['from'], $diff['to']);
+            $emailBody .= sprintf("<p>%s has moved from %s to %s</p></br>", $rfcTitle, $diff['from'], $diff['to']);
         }
 
         $message = $this->mailer->createMessage()
             ->setSubject('Test')
             ->setFrom('notifier@php-rfc-digestor.com')
             ->setTo($input->getArgument('email'))
-            ->setBody($emailBody);
+            ->addPart($emailBody, 'text/html');
 
         $this->mailer->send($message);
 
-        // $this->writeRfcFile($currentRfcList, $file);
-    }
-
-    /**
-     * @param $rfcList array
-     */
-    public function writeRfcFile($rfcList, $file)
-    {
-        if (!is_array($rfcList)) {
-            throw new RuntimeException('Cannot write rfc list to file');
-        }
-
-        file_put_contents($file, json_encode($rfcList));
+        file_put_contents($storageFile, json_encode($currentRfcList));
     }
 }
