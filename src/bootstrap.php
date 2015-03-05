@@ -28,10 +28,21 @@ switch (true) {
         throw new RuntimeException('Unable to locate Composer autoloader; please run "composer install".');
 }
 
-$app         = new Application('PHP RFC Digestor', '0.1.0');
-$conf        = new Config(realpath(__DIR__ . '/../config.json'));
-$storagePath = rtrim(realpath(sprintf('%s/%s', __DIR__, $conf->get('storagePath'))), '/');
+$app  = new Application('PHP RFC Digestor', '0.1.0');
 
+// Get config files
+// Likely not platform agnostic
+$userConfigFile    = sprintf('%s/.rfcdigester.json', realpath($_ENV['HOME']));
+$defaultConfigFile = sprintf('%s/../config.json', realpath(__DIR__));
+
+// Load configs and get storage path
+$conf        = new Config([$defaultConfigFile, $userConfigFile]);
+$storagePath = realpath(sprintf('%s/%s', __DIR__, $conf->get('storagePath')));
+
+// Set config path for future commands
+$conf->set('storagePath', $storagePath);
+
+// Build dependencies
 $rfcBuilder  = new RfcBuilder($storagePath);
 $rfcService  = new RfcService($rfcBuilder);
 $diffService = new DiffService();
@@ -43,9 +54,6 @@ $transport->setUsername($conf->get('smtp.username'));
 $transport->setPassword($conf->get('smtp.password'));
 $transport->setEncryption($conf->get('smtp.security'));
 $mailer = new Swift_Mailer($transport);
-
-// Set config path for future commands
-$conf->set('storagePath', $storagePath);
 
 $app->addCommands(array(
     new Rfc\Digest($rfcService),
