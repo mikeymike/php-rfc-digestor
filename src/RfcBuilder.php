@@ -91,6 +91,7 @@ class RfcBuilder
         libxml_use_internal_errors(false);
 
         $this->rfc = new Rfc();
+        $this->rfc->setRawContent($this->document->saveHTML());
     }
 
     /**

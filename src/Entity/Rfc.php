@@ -35,6 +35,11 @@ class Rfc
     protected $voteDescription = '';
 
     /**
+     * @var string
+     */
+    protected $rawContent = '';
+
+    /**
      * @param string $name
      */
     public function setName($name)
@@ -112,5 +117,21 @@ class Rfc
     public function getVoteDescription()
     {
         return $this->voteDescription;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRawContent()
+    {
+        return $this->rawContent;
+    }
+
+    /**
+     * @param string $rawContent
+     */
+    public function setRawContent($rawContent)
+    {
+        $this->rawContent = $rawContent;
     }
 }

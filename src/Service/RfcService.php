@@ -73,6 +73,17 @@ class RfcService
     }
 
     /**
+     * Get RFC from storage
+     *
+     * @param $rfcCode
+     * @return RfcBuilder
+     */
+    public function getRfcFromStorage($rfcCode)
+    {
+        return $this->rfcBuilder->loadFromStorage($rfcCode);
+    }
+
+    /**
      * Save an RFC to storage in json
      *
      * @param Rfc $rfc
