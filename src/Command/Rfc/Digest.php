@@ -37,7 +37,7 @@ class Digest extends Command
      */
     public function __construct(RfcService $rfcService)
     {
-        $this->rfcService   = $rfcService;
+        $this->rfcService = $rfcService;
         parent::__construct();
     }
 

@@ -2,6 +2,8 @@
 
 namespace MikeyMike\RfcDigestor\Service;
 
+use MikeyMike\RfcDigestor\Entity\Rfc;
+
 /**
  * Class DiffService
  *
@@ -10,6 +12,19 @@ namespace MikeyMike\RfcDigestor\Service;
  */
 class DiffService
 {
+    /**
+     * Returns array of changes in Rfc 2
+     *
+     * @param Rfc $rfc1
+     * @param Rfc $rfc2
+     * @return array
+     */
+    public function rfcDiff(Rfc $rfc1, Rfc $rfc2)
+    {
+
+        return [];
+    }
+
     /**
      * Get a parsed diff of two RFC lists
      *
