@@ -62,7 +62,7 @@ class Rfc extends Command
             ->setName('notify:rfc')
             ->setDescription('Get notifications of RFC changes')
             ->addArgument('rfc', InputArgument::REQUIRED, 'RFC Code e.g. scalar_type_hints')
-            ->addArgument('Email', InputArgument::REQUIRED, 'Email to notify');;
+            ->addArgument('Email', InputArgument::REQUIRED, 'Email to notify');
     }
 
     /**
