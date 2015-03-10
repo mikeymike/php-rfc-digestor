@@ -55,6 +55,35 @@ class RfcService
     {
         $this->rfcBuilder->loadFromWiki($rfcCode, self::RFC_URL);
 
+        $this->loadRfc($loadDetails, $loadChangeLog, $loadVotes);
+
+        return $this->rfcBuilder->getRfc();
+    }
+
+    /**
+     * Quick RFC building from storage
+     *
+     * @param $rfcCode
+     * @return RfcBuilder
+     */
+    public function getRfcFromStorage($rfcCode, $loadDetails = true, $loadChangeLog = true, $loadVotes = true)
+    {
+        $this->rfcBuilder->loadFromStorage($rfcCode);
+
+        $this->loadRfc($loadDetails, $loadChangeLog, $loadVotes);
+
+        return $this->rfcBuilder->getRfc();
+    }
+
+    /**
+     * Load specific areas of RFC through builder
+     *
+     * @param bool $loadDetails
+     * @param bool $loadChangeLog
+     * @param bool $loadVotes
+     */
+    private function loadRfc($loadDetails, $loadChangeLog, $loadVotes)
+    {
         $this->rfcBuilder->loadName();
 
         if ($loadDetails) {
@@ -68,19 +97,6 @@ class RfcService
         if ($loadVotes) {
             $this->rfcBuilder->loadVotes();
         }
-
-        return $this->rfcBuilder->getRfc();
-    }
-
-    /**
-     * Get RFC from storage
-     *
-     * @param $rfcCode
-     * @return RfcBuilder
-     */
-    public function getRfcFromStorage($rfcCode)
-    {
-        return $this->rfcBuilder->loadFromStorage($rfcCode);
     }
 
     /**

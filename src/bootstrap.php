@@ -59,8 +59,8 @@ $app->addCommands(array(
     new Rfc\Digest($rfcService),
     new Rfc\Summary($rfcService),
     new Rfc\RfcList($rfcService),
-//    new Notify\Rfc($rfcService),
-//    new Notify\Summary($rfcService),
+    new Notify\Rfc($conf, $rfcService, $diffService, $mailer),
+//    new Notify\Summary($conf, $rfcService, $diffService, $mailer),
     new Notify\RfcList($conf, $rfcService, $diffService, $mailer),
     new Test\Email($conf, $mailer)
 ));

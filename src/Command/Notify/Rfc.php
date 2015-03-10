@@ -3,7 +3,9 @@
 
 namespace MikeyMike\RfcDigestor\Command\Notify;
 
+use MikeyMike\RfcDigestor\Service\DiffService;
 use MikeyMike\RfcDigestor\Service\RfcService;
+use Noodlehaus\Config;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

@@ -21,8 +21,15 @@ class DiffService
      */
     public function rfcDiff(Rfc $rfc1, Rfc $rfc2)
     {
+        $detailsDiff = $this->recursiveArrayDiff($rfc1->getDetails(), $rfc2->getDetails());
+        $changeLogDiff = $this->recursiveArrayDiff($rfc1->getChangeLog(), $rfc2->getChangeLog());
+        $voteDiff = $this->recursiveArrayDiff($rfc1->getVotes(), $rfc2->getVotes());
 
-        return [];
+        return [
+            'details'   => $detailsDiff,
+            'changeLog' => $changeLogDiff,
+            'votes'     => $voteDiff
+        ];
     }
 
     /**
@@ -69,5 +76,43 @@ class DiffService
                 return $key;
             }
         }
+    }
+
+    /**
+     * Get diff of arrays recursively
+     * 
+     * @param array $arr1
+     * @param array $arr2
+     * @return array
+     */
+    private function recursiveArrayDiff($arr1, $arr2) 
+    {
+        $diff = [];
+        foreach ($arr1 as $key => $value) {
+
+            if (!is_array($value)) {
+                if (!isset($arr2[$key]) || $arr2[$key] != $value) {
+                    $diff[$key] = $value;
+                }
+                continue;
+            }
+
+            if (!isset($arr2[$key])) {
+                $diff[$key] = $value;
+                continue;
+            }
+
+            if (!is_array($arr2[$key])) {
+                $difference[$key] = $value;
+                continue;
+            }
+
+            $new_diff = $this->recursiveArrayDiff($value, $arr2[$key]);
+            if($new_diff != false) {
+                $diff[$key] = $new_diff;
+            }
+        }
+
+        return $diff;
     }
 }
