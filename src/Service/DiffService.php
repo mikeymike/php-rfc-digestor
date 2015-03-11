@@ -21,14 +21,10 @@ class DiffService
      */
     public function rfcDiff(Rfc $rfc1, Rfc $rfc2)
     {
-        $detailsDiff = $this->recursiveArrayDiff($rfc1->getDetails(), $rfc2->getDetails());
-        $changeLogDiff = $this->recursiveArrayDiff($rfc1->getChangeLog(), $rfc2->getChangeLog());
-        $voteDiff = $this->recursiveArrayDiff($rfc1->getVotes(), $rfc2->getVotes());
-
         return [
-            'details'   => $detailsDiff,
-            'changeLog' => $changeLogDiff,
-            'votes'     => $voteDiff
+            'details'   => $this->recursiveArrayDiff($rfc1->getDetails(), $rfc2->getDetails()),
+            'changeLog' => $this->recursiveArrayDiff($rfc1->getChangeLog(), $rfc2->getChangeLog()),
+            'votes'     => $this->recursiveArrayDiff($rfc1->getVotes(), $rfc2->getVotes())
         ];
     }
 
@@ -85,7 +81,7 @@ class DiffService
      * @param array $arr2
      * @return array
      */
-    private function recursiveArrayDiff($arr1, $arr2) 
+    private function recursiveArrayDiff($arr1, $arr2)
     {
         $diff = [];
         foreach ($arr1 as $key => $value) {
@@ -108,7 +104,7 @@ class DiffService
             }
 
             $new_diff = $this->recursiveArrayDiff($value, $arr2[$key]);
-            if($new_diff != false) {
+            if ($new_diff != false) {
                 $diff[$key] = $new_diff;
             }
         }
