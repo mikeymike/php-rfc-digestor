@@ -51,9 +51,9 @@ class Summary extends Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $lists      = $this->rfcService->getLists([RfcService::IN_VOTING]);
-        $rfcs       = array_pop($lists);
-        $table      = new Table($output);
+        $lists = $this->rfcService->getLists([RfcService::IN_VOTING]);
+        $rfcs  = array_pop($lists);
+        $table = new Table($output);
 
         $voteStyle = new TableStyle();
         $voteStyle->setCellRowFormat('<comment>%s</comment>');

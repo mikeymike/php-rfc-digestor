@@ -5,6 +5,7 @@ namespace MikeyMike\RfcDigestor\Command\Rfc;
 
 use MikeyMike\RfcDigestor\Entity\Rfc;
 use MikeyMike\RfcDigestor\Service\RfcService;
+use SebastianBergmann\RecursionContext\InvalidArgumentException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -61,6 +62,7 @@ class Digest extends Command
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
+     * @return void
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
@@ -83,13 +85,18 @@ class Digest extends Command
             ];
         }
 
-        // Build RFC
-        $rfc = $this->rfcService->getRfc(
-            $rfcCode,
-            $args['details'],
-            $args['changelog'],
-            $args['votes']
-        );
+        try {
+            // Build RFC
+            $rfc = $this->rfcService->getRfc(
+                $rfcCode,
+                $args['details'],
+                $args['changelog'],
+                $args['votes']
+            );
+        } catch (\InvalidArgumentException $e) {
+            $output->writeln('<error>Invalid RFC code, check rfc:list for valid codes</error>');
+            return;
+        }
 
         if ($args['details']) {
             $this->showDetails($rfc);

@@ -2,7 +2,6 @@
 
 namespace MikeyMike\RfcDigestor;
 
-use SebastianBergmann\RecursionContext\InvalidArgumentException;
 use Symfony\Component\CssSelector\CssSelector;
 use MikeyMike\RfcDigestor\Entity\Rfc;
 
@@ -52,6 +51,12 @@ class RfcBuilder
     {
         $wikiUrl = sprintf('%s/%s', $wikiUrl, $rfcCode);
 
+        // Check the URL
+        $headers = get_headers($wikiUrl);
+        if (substr($headers[0], 9, 3) !== "200") {
+            throw new \InvalidArgumentException('Invalid RFC code');
+        }
+
         $this->loadRfc($wikiUrl);
 
         return $this;
@@ -68,7 +73,7 @@ class RfcBuilder
         $filePath = sprintf('%s/%s.html', $this->storagePath, $rfcCode);
 
         if (!file_exists($filePath)) {
-            throw new InvalidArgumentException('No application storage for RFC');
+            throw new \InvalidArgumentException('No application storage for RFC');
         }
 
         $this->loadRfc($filePath);

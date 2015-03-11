@@ -72,6 +72,7 @@ class Rfc extends Command
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
+     * @return void
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
@@ -79,11 +80,17 @@ class Rfc extends Command
             $output->writeln('<info>щ(ºДºщ) This command is pointless when not run on a cron</info>');
         }
 
-        $rfcCode = $input->getArgument('rfc');
-
-        // Build current RFC
-        $currentRfc = $this->rfcService->getRfc($input->getArgument('rfc'));
+        $rfcCode    = $input->getArgument('rfc');
         $oldRfcPath = sprintf('%s/%s.html', $this->config->get('storagePath'), $rfcCode);
+
+
+        try {
+            // Build current RFC
+            $currentRfc = $this->rfcService->getRfc($input->getArgument('rfc'));
+        } catch (\InvalidArgumentException $e) {
+            $output->writeln('<error>Invalid RFC code, check rfc:list for valid codes</error>');
+            return;
+        }
 
         // Store current RFC if no old RFC exists
         if (!file_exists($oldRfcPath)) {
@@ -91,8 +98,13 @@ class Rfc extends Command
             return;
         }
 
-        // Get oldRfc
-        $oldRfc = $this->rfcService->getRfcFromStorage($rfcCode);
+        try {
+            // Get oldRfc
+            $oldRfc = $this->rfcService->getRfcFromStorage($rfcCode);
+        } catch (\InvalidArgumentException $e) {
+            $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
+            return;
+        }
 
         // Get diffs
         $diffs = $this->diffService->rfcDiff($currentRfc, $oldRfc);
