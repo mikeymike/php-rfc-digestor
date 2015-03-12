@@ -121,7 +121,7 @@ class Digest extends Command
         $this->output->writeln("\n<comment>RFC Details</comment>");
         $this->output->writeln(sprintf("\n<info>%s</info>", $rfc->getName()));
 
-        $table->setRows($rfc->getDetails());
+        $table->setRows($this->rfcService->getDetailsAsTableRows($rfc));
         $table->render($this->output);
     }
 
@@ -145,8 +145,17 @@ class Digest extends Command
         foreach ($rfc->getVotes() as $title => $vote) {
             $this->output->writeln(sprintf("\n<info>%s</info>", $title));
 
+            $votes = $this->rfcService->getVotesAsTableRows($rfc, $title);
+
+            // Lets have fancy tick marks
+            array_walk_recursive($votes, function (&$vote) {
+                if ($vote === true) {
+                    $vote = "\xE2\x9C\x93";
+                }
+            });
+
             $table->setHeaders($vote['headers']);
-            $table->setRows($this->input->getOption('detailed') ? $vote['votes'] : []);
+            $table->setRows($this->input->getOption('detailed') ? $votes : []);
             $table->addRow($vote['counts']);
             $table->render($this->output);
         }
@@ -166,7 +175,7 @@ class Digest extends Command
             return;
         }
 
-        $table->setRows($rfc->getChangeLog());
+        $table->setRows($this->rfcService->getChangeLogsAsTableRows($rfc));
         $table->render($this->output);
     }
 }

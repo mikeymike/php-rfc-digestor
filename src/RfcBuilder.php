@@ -179,8 +179,10 @@ class RfcBuilder
 
         $xPath = new \DOMXPath($this->document);
         foreach ($xPath->query(CssSelector::toXPath('.page div:first-of-type li')) as $node) {
-            $text      = trim($node->textContent);
-            $details[] = explode(':', $text, 2);
+            // Get details separately
+            list($key, $value) = explode(':', trim($node->textContent), 2);
+
+            $details[$key] = $value;
         }
 
         return $details;
@@ -197,8 +199,10 @@ class RfcBuilder
 
         $xPath = new \DOMXPath($this->document);
         foreach ($xPath->query(CssSelector::toXPath('h2#changelog + div li')) as $node) {
-            $text        = trim($node->textContent);
-            $changeLog[] = explode('-', $text, 2);
+            // Get details separately
+            list($version, $change) = explode(' ', trim($node->textContent), 2);
+
+            $changeLog[$version] = rtrim($change, ':');
         }
 
         return $changeLog;
@@ -269,14 +273,15 @@ class RfcBuilder
             foreach ($xPath->query($rowXPath, $node) as $rowNode) {
                 /** @var \DOMNode $rowNode */
 
-                $row = [];
+                $row       = [];
+                $currVoter = '';
                 foreach ($xPath->query(CssSelector::toXPath('td'), $rowNode) as $cell) {
                     /** @var \DOMNode $cell */
 
                     // Cell is a name
                     $list = $xPath->query(CssSelector::toXPath('a'), $cell);
                     if ($list->length > 0) {
-                        $row[] = trim($cell->textContent);
+                        $currVoter  = trim($cell->textContent);
                         continue;
                     }
 
@@ -291,7 +296,7 @@ class RfcBuilder
                     $row[] = false;
                 }
 
-                $votes[$title]['votes'][] = $row;
+                $votes[$title]['votes'][$currVoter] = $row;
             }
 
             $countXPath = $votes[$title]['closed']

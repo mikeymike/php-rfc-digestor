@@ -188,4 +188,64 @@ class RfcService
 
         return $list;
     }
+
+    /**
+     * Get the details in a flat format
+     *
+     * @param Rfc $rfc
+     * @return array
+     */
+    public function getDetailsAsTableRows(Rfc $rfc)
+    {
+        return $this->assocArrayToRows($rfc->getDetails());
+    }
+
+    /**
+     * Get the change log in a flat format
+     *
+     * @param Rfc $rfc
+     * @return array
+     */
+    public function getChangeLogsAsTableRows(Rfc $rfc)
+    {
+        return $this->assocArrayToRows($rfc->getChangeLog());
+    }
+
+    /**
+     * Get the votes in a flat format
+     *
+     * @param Rfc    $rfc
+     * @param string $voteKey
+     * @return array
+     */
+    public function getVotesAsTableRows(Rfc $rfc, $voteKey)
+    {
+        $votes = $rfc->getVotes();
+
+        return $this->assocArrayToRows($votes[$voteKey]['votes']);
+    }
+
+    /**
+     * @param array $array
+     * @return array
+     */
+    protected function assocArrayToRows($array)
+    {
+        $rows = [];
+
+        foreach ($array as $key => $value) {
+            $row = [$key];
+
+            if (is_array($value)) {
+                $row = array_merge($row, $value);
+                $rows[] = $row;
+                continue;
+            }
+
+            $row[]  = $value;
+            $rows[] = $row;
+        }
+
+        return $rows;
+    }
 }
