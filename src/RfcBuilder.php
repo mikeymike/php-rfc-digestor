@@ -275,8 +275,11 @@ class RfcBuilder
 
                 $row       = [];
                 $currVoter = '';
-                foreach ($xPath->query(CssSelector::toXPath('td'), $rowNode) as $cell) {
+                foreach ($xPath->query(CssSelector::toXPath('td'), $rowNode) as $index => $cell) {
                     /** @var \DOMNode $cell */
+
+                    // Get column title in question
+                    $header = $votes[$title]['headers'][$index];
 
                     // Cell is a name
                     $list = $xPath->query(CssSelector::toXPath('a'), $cell);
@@ -288,12 +291,12 @@ class RfcBuilder
                     // Cell is a yes vote
                     $list = $xPath->query(CssSelector::toXPath('img'), $cell);
                     if ($list->length > 0) {
-                        $row[] = true;
+                        $row[$header] = true;
                         continue;
                     }
 
                     // Cell is a no vote
-                    $row[] = false;
+                    $row[$header] = false;
                 }
 
                 $votes[$title]['votes'][$currVoter] = $row;

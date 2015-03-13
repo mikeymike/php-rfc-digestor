@@ -237,7 +237,7 @@ class RfcService
             $row = [$key];
 
             if (is_array($value)) {
-                $row = array_merge($row, $value);
+                $row = array_merge($row, array_values($value));
                 $rows[] = $row;
                 continue;
             }
