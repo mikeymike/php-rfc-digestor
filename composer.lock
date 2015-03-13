@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a353ec40c40c643fe8b51be83fbf7537",
+    "hash": "db540989f8b7fc678d273c92eb190f4d",
     "packages": [
         {
             "name": "noodlehaus/config",
@@ -65,86 +65,6 @@
                 "yml"
             ],
             "time": "2015-02-24 19:06:26"
-        },
-        {
-            "name": "northys/css-inliner",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Northys/CSS-Inliner.git",
-                "reference": "6c3b11b959aa0985558d4e0f598fa66bf390e23b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Northys/CSS-Inliner/zipball/6c3b11b959aa0985558d4e0f598fa66bf390e23b",
-                "reference": "6c3b11b959aa0985558d4e0f598fa66bf390e23b",
-                "shasum": ""
-            },
-            "require": {
-                "sabberworm/php-css-parser": "6.0.*",
-                "symfony/css-selector": "~2.5"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "license": [
-                "LGPL"
-            ],
-            "authors": [
-                {
-                    "name": "Jiri Travnicek"
-                }
-            ],
-            "description": "PHP Library that converts css file into html inline styles.",
-            "support": {
-                "source": "https://github.com/Northys/CSS-Inliner/tree/master",
-                "issues": "https://github.com/Northys/CSS-Inliner/issues"
-            },
-            "time": "2014-08-15 20:43:44"
-        },
-        {
-            "name": "sabberworm/php-css-parser",
-            "version": "6.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sabberworm/PHP-CSS-Parser.git",
-                "reference": "ef95a38fe0c0f093f46a25029a4dd2d57ebe847e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sabberworm/PHP-CSS-Parser/zipball/ef95a38fe0c0f093f46a25029a4dd2d57ebe847e",
-                "reference": "ef95a38fe0c0f093f46a25029a4dd2d57ebe847e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.2"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Sabberworm\\CSS": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Raphael Schweikert"
-                }
-            ],
-            "description": "Parser for CSS Files written in PHP",
-            "homepage": "http://www.sabberworm.com/blog/2010/6/10/php-css-parser",
-            "keywords": [
-                "css",
-                "parser",
-                "stylesheet"
-            ],
-            "time": "2014-07-03 21:45:17"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -352,6 +272,63 @@
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
             "time": "2015-01-25 04:39:26"
+        },
+        {
+            "name": "twig/twig",
+            "version": "v1.18.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twigphp/Twig.git",
+                "reference": "4cf7464348e7f9893a93f7096a90b73722be99cf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/4cf7464348e7f9893a93f7096a90b73722be99cf",
+                "reference": "4cf7464348e7f9893a93f7096a90b73722be99cf",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.18-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Twig_": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com",
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
+                },
+                {
+                    "name": "Armin Ronacher",
+                    "email": "armin.ronacher@active-4.com",
+                    "role": "Project Founder"
+                },
+                {
+                    "name": "Twig Team",
+                    "homepage": "http://twig.sensiolabs.org/contributors",
+                    "role": "Contributors"
+                }
+            ],
+            "description": "Twig, the flexible, fast, and secure template language for PHP",
+            "homepage": "http://twig.sensiolabs.org",
+            "keywords": [
+                "templating"
+            ],
+            "time": "2015-01-25 17:32:08"
         }
     ],
     "packages-dev": [
@@ -1334,7 +1311,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "northys/css-inliner": 20,
         "noodlehaus/config": 20
     },
     "prefer-stable": false,

@@ -47,6 +47,7 @@ $rfcBuilder  = new RfcBuilder($storagePath);
 $rfcService  = new RfcService($rfcBuilder);
 $diffService = new DiffService();
 
+// Mailer
 $transport = new Swift_SmtpTransport();
 $transport->setHost($conf->get('smtp.host'));
 $transport->setPort($conf->get('smtp.port'));
@@ -55,11 +56,16 @@ $transport->setPassword($conf->get('smtp.password'));
 $transport->setEncryption($conf->get('smtp.security'));
 $mailer = new Swift_Mailer($transport);
 
+// Twig Templates
+Twig_Autoloader::register();
+$loader = new Twig_Loader_Filesystem(__DIR__ . '/../templates'); //TODO: Config option
+$twig   = new Twig_Environment($loader);
+
 $app->addCommands(array(
     new Rfc\Digest($rfcService),
     new Rfc\Summary($rfcService),
     new Rfc\RfcList($rfcService),
-    new Notify\Rfc($conf, $rfcService, $diffService, $mailer),
+    new Notify\Rfc($conf, $rfcService, $diffService, $mailer, $twig),
 //    new Notify\Summary($conf, $rfcService, $diffService, $mailer),
     new Notify\RfcList($conf, $rfcService, $diffService, $mailer),
     new Test\Email($conf, $mailer)

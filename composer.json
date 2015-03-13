@@ -12,9 +12,9 @@
         "php" : ">=5.4",
         "symfony/console": "~2.6",
         "symfony/css-selector": "~2.6",
-        "northys/css-inliner": "dev-master",
         "noodlehaus/config": "dev-master",
-        "swiftmailer/swiftmailer": "~5.3"
+        "swiftmailer/swiftmailer": "~5.3",
+        "twig/twig": "~1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.1",

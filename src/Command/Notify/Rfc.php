@@ -40,17 +40,28 @@ class Rfc extends Command
     protected $mailer;
 
     /**
+     * @var Twig_Environment
+     */
+    protected $twig;
+
+    /**
      * @param Config        $config
      * @param RfcService    $rfcService
      * @param DiffService   $diffService
      * @param \Swift_Mailer $mailer
      */
-    public function __construct(Config $config, RfcService $rfcService, DiffService $diffService, \Swift_Mailer $mailer)
-    {
+    public function __construct(
+        Config $config,
+        RfcService $rfcService,
+        DiffService $diffService,
+        \Swift_Mailer $mailer,
+        \Twig_Environment $twig
+    ) {
         $this->config      = $config;
         $this->rfcService  = $rfcService;
         $this->diffService = $diffService;
         $this->mailer      = $mailer;
+        $this->twig        = $twig;
 
         parent::__construct();
     }
@@ -64,7 +75,7 @@ class Rfc extends Command
             ->setName('notify:rfc')
             ->setDescription('Get notifications of RFC changes')
             ->addArgument('rfc', InputArgument::REQUIRED, 'RFC Code e.g. scalar_type_hints')
-            ->addArgument('Email', InputArgument::REQUIRED, 'Email to notify');
+            ->addArgument('email', InputArgument::REQUIRED, 'Email to notify');
     }
 
     /**
@@ -82,7 +93,6 @@ class Rfc extends Command
 
         $rfcCode    = $input->getArgument('rfc');
         $oldRfcPath = sprintf('%s/%s.html', $this->config->get('storagePath'), $rfcCode);
-
 
         try {
             // Build current RFC
@@ -109,8 +119,21 @@ class Rfc extends Command
         // Get diffs
         $diffs = $this->diffService->rfcDiff($currentRfc, $oldRfc);
 
-        // TODO: Email diffs, need templates for better rendering
+        $email = $this->twig->render('rfc.twig', [
+            'rfcName'     => $currentRfc->getName(),
+            'details'     => $diffs['details'],
+            'changeLog'   => $diffs['changeLog'],
+            'voteDiffs'   => $diffs['votes']
+        ]);
 
-        file_put_contents($oldRfcPath, $currentRfc->getRawContent());
+        $message = $this->mailer->createMessage()
+            ->setSubject('Test')
+            ->setFrom('notifier@php-rfc-digestor.com')
+            ->setTo($input->getArgument('email'))
+            ->addPart($email, 'text/html');
+
+        $this->mailer->send($message);
+
+//        file_put_contents($oldRfcPath, $currentRfc->getRawContent());
     }
 }

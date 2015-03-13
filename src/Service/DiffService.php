@@ -21,10 +21,37 @@ class DiffService
      */
     public function rfcDiff(Rfc $rfc1, Rfc $rfc2)
     {
+        // Get any vote diffs between two RFCs
+        $voteDiffs = $this->recursiveArrayDiff($rfc1->getVotes(), $rfc2->getVotes());
+
+        // Split them into new and updated
+        $splitVotesDiffs = [];
+        foreach ($voteDiffs as $key => $votes) {
+            $rfc2Votes    = $rfc2->getVotes();
+            $newVotes     = array_diff_key($votes['votes'], $rfc2Votes[$key]['votes']);
+            $updatedVotes = array_intersect_key($votes['votes'], $rfc2Votes[$key]['votes']);
+
+            // Get the vote as the column name
+            foreach ($newVotes as $voter => $vote) {
+                $filtered = array_filter($vote);
+                $flipped  = array_keys($filtered);
+                $newVotes[$voter] = reset($flipped);
+            }
+
+            foreach ($updatedVotes as $voter => $vote) {
+                $filtered = array_filter($vote);
+                $flipped  = array_keys($filtered);
+                $updatedVotes[$voter] = reset($flipped);
+            }
+
+            $splitVotesDiffs[$key]['new']     = $newVotes;
+            $splitVotesDiffs[$key]['updated'] = $updatedVotes;
+        }
+
         return [
             'details'   => $this->recursiveArrayDiff($rfc1->getDetails(), $rfc2->getDetails()),
             'changeLog' => $this->recursiveArrayDiff($rfc1->getChangeLog(), $rfc2->getChangeLog()),
-            'votes'     => $this->recursiveArrayDiff($rfc1->getVotes(), $rfc2->getVotes())
+            'votes'     => $splitVotesDiffs
         ];
     }
 
