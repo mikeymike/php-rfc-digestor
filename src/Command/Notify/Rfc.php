@@ -3,9 +3,9 @@
 
 namespace MikeyMike\RfcDigestor\Command\Notify;
 
+use Noodlehaus\Config;
 use MikeyMike\RfcDigestor\Service\DiffService;
 use MikeyMike\RfcDigestor\Service\RfcService;
-use Noodlehaus\Config;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -130,10 +130,10 @@ class Rfc extends Command
             ->setSubject('Test')
             ->setFrom('notifier@php-rfc-digestor.com')
             ->setTo($input->getArgument('email'))
-            ->addPart($email, 'text/html');
+            ->setBody($email, 'text/html');
 
         $this->mailer->send($message);
 
-//        file_put_contents($oldRfcPath, $currentRfc->getRawContent());
+        file_put_contents($oldRfcPath, $currentRfc->getRawContent());
     }
 }

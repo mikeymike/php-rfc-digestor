@@ -1,153 +1,122 @@
 {% include('head.html') %}
 
-<table class="body">
+
+<table class="container">
     <tr>
-        <td class="center" align="center" valign="top">
-            <center>
+        <td>
 
+            <!-- content start -->
+            <table class="row">
+                <tr>
+                    <td class="wrapper last">
 
-                <table class="row header">
-                    <tr>
-                        <td class="center" align="center">
-                            <center>
+                        <table class="twelve columns">
+                            <tr>
+                                <td>
 
-                                <table class="container">
-                                    <tr>
-                                        <td class="logo-wrapper last">
+                                    <h3 class="center">{{ rfcName }} has been updated!</h3>
+                                </td>
+                                <td class="expander"></td>
+                            </tr>
+                        </table>
 
-                                            <img src="http://php.net/images/logo.php" alt="PHP" width="48px"
-                                                 height="24px" class="center"/>
+                    </td>
+                </tr>
+            </table>
 
-                                        </td>
-                                    </tr>
-                                </table>
+            <table class="row">
+                <tr>
+                    <td class="wrapper last">
 
-                            </center>
-                        </td>
-                    </tr>
-                </table>
-                <br>
+                        <table class="twelve columns">
+                            <tr>
+                                <td>
 
-                <table class="container">
-                    <tr>
-                        <td>
-
-                            <!-- content start -->
-                            <table class="row">
-                                <tr>
-                                    <td class="wrapper last">
-
+                                    {% if details is not empty %}
                                         <table class="twelve columns">
                                             <tr>
-                                                <td>
+                                                <td class="panel">
 
-                                                    <h3 class="center">{{ rfcName }} has been updated!</h3>
+                                                    <h5>New Details</h5>
+                                                    <ul>
+                                                        {% for key, value  in  details %}
+                                                            <li>{{ key }} updated to {{ value }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+
                                                 </td>
                                                 <td class="expander"></td>
                                             </tr>
                                         </table>
+                                    {% endif %}
 
-                                    </td>
-                                </tr>
-                            </table>
-
-                            <table class="row">
-                                <tr>
-                                    <td class="wrapper last">
-
+                                    {% if changeLog is not empty %}
                                         <table class="twelve columns">
                                             <tr>
-                                                <td>
+                                                <td class="panel">
 
-                                                    {% if details is not empty %}
-                                                        <table class="twelve columns">
-                                                            <tr>
-                                                                <td class="panel">
-
-                                                                    <h5>New Details</h5>
-                                                                    <ul>
-                                                                        {% for key, value  in  details %}
-                                                                            <li>{{ key }} updated to {{ value }}</li>
-                                                                        {% endfor %}
-                                                                    </ul>
-
-                                                                </td>
-                                                                <td class="expander"></td>
-                                                            </tr>
-                                                        </table>
-                                                    {% endif %}
-
-                                                    {% if changeLog is not empty %}
-                                                        <table class="twelve columns">
-                                                            <tr>
-                                                                <td class="panel">
-
-                                                                    <h5>Changelog Updates</h5>
-                                                                    <ul>
-                                                                        {% for key, value  in  changeLog %}
-                                                                            <li>{{ key }} updated to {{ value }}</li>
-                                                                        {% endfor %}
-                                                                    </ul>
-
-                                                                </td>
-                                                                <td class="expander"></td>
-                                                            </tr>
-                                                        </table>
-                                                    {% endif %}
-
-                                                    {% if voteDiffs is not empty %}
-                                                        {% for title, votes in voteDiffs %}
-                                                            <table class="twelve columns">
-                                                                <tr>
-                                                                    <td class="panel">
-
-                                                                        <h5 class="center">{{ title }}</h5>
-
-                                                                        {% if votes.new is not empty %}
-                                                                            <h6>New Votes</h6>
-
-                                                                            <ul>
-                                                                                {% for voter, vote in votes.new %}
-                                                                                    <li>{{ voter }}
-                                                                                        voted {{ vote }}</li>
-                                                                                {% endfor %}
-                                                                            </ul>
-                                                                        {% endif %}
-
-                                                                        {% if votes.updated is not empty %}
-                                                                            <h6>Updated Votes</h6>
-
-                                                                            <ul>
-                                                                                {% for voter, vote in votes.updated %}
-                                                                                    <li>{{ voter }} changed their vote
-                                                                                        to {{ vote }}</li>
-                                                                                {% endfor %}
-                                                                            </ul>
-                                                                        {% endif %}
-
-                                                                    </td>
-                                                                    <td class="expander"></td>
-                                                                </tr>
-                                                            </table>
+                                                    <h5>Changelog Updates</h5>
+                                                    <ul>
+                                                        {% for key, value  in  changeLog %}
+                                                            <li>{{ key }} updated to {{ value }}</li>
                                                         {% endfor %}
-                                                    {% endif %}
+                                                    </ul>
 
                                                 </td>
+                                                <td class="expander"></td>
                                             </tr>
                                         </table>
+                                    {% endif %}
 
-                                    </td>
-                                </tr>
-                            </table>
+                                    {% if voteDiffs is not empty %}
+                                        {% for title, votes in voteDiffs %}
+                                            <table class="twelve columns">
+                                                <tr>
+                                                    <td class="panel">
 
-                            <!-- container end below -->
-                        </td>
-                    </tr>
-                </table>
+                                                        <h5 class="center">Vote: {{ title }}</h5>
 
-            </center>
+                                                        {% if votes.new is not empty %}
+                                                            <h6>New Votes</h6>
+
+                                                            <ul>
+                                                                {% for voter, vote in votes.new %}
+                                                                    <li>{{ voter }}
+                                                                        voted {{ vote }}</li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        {% endif %}
+
+                                                        {% if votes.updated is not empty %}
+                                                            <h6>Updated Votes</h6>
+
+                                                            <ul>
+                                                                {% for voter, vote in votes.updated %}
+                                                                    <li>{{ voter }} changed their vote
+                                                                        to {{ vote }}</li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        {% endif %}
+
+                                                    </td>
+                                                    <td class="expander"></td>
+                                                </tr>
+                                            </table>
+                                        {% endfor %}
+                                    {% endif %}
+
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+            </table>
+
+            <!-- container end below -->
         </td>
     </tr>
 </table>
+
 
 {% include('foot.html') %}

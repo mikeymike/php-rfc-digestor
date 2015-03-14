@@ -14,6 +14,7 @@
         "symfony/css-selector": "~2.6",
         "noodlehaus/config": "dev-master",
         "swiftmailer/swiftmailer": "~5.3",
+        "openbuildings/swiftmailer-css-inliner": "~0.2",
         "twig/twig": "~1.0"
     },
     "require-dev": {

@@ -10,6 +10,7 @@ use \MikeyMike\RfcDigestor\Service\DiffService;
 use \MikeyMike\RfcDigestor\Command\Test;
 use \Symfony\Component\Console\Application;
 use \Noodlehaus\Config;
+use Openbuildings\Swiftmailer\CssInlinerPlugin;
 
 switch (true) {
     case (file_exists(__DIR__ . '/../vendor/autoload.php')):
@@ -55,6 +56,7 @@ $transport->setUsername($conf->get('smtp.username'));
 $transport->setPassword($conf->get('smtp.password'));
 $transport->setEncryption($conf->get('smtp.security'));
 $mailer = new Swift_Mailer($transport);
+$mailer->registerPLugin(new CssInlinerPlugin());
 
 // Twig Templates
 Twig_Autoloader::register();
