@@ -220,8 +220,9 @@ $ bin/php-rfc-digestor test:email mikeymike.mw@gmail.com
 
 ## TODO
 
-- [ ] Finish DiffService for other commands
-- [ ] Send email notifications
+- [x] Finish DiffService for other commands
+- [x] Send email notifications
 - [ ] Twig email templates
 - [ ] Override through config
 - [ ] Tests, a lot of tests!
+- [ ] Tidy up README
