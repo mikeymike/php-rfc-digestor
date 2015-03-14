@@ -119,6 +119,11 @@ class Rfc extends Command
         // Get diffs
         $diffs = $this->diffService->rfcDiff($currentRfc, $oldRfc);
 
+        // Only send email if we have diffs
+        if (count(array_filter($diffs)) === 0) {
+            return;
+        }
+
         $email = $this->twig->render('rfc.twig', [
             'rfcName'     => $currentRfc->getName(),
             'details'     => $diffs['details'],
