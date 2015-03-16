@@ -33,11 +33,17 @@ $app  = new Application('PHP RFC Digestor', '0.1.0');
 
 // Get config files
 // Likely not platform agnostic
-$userConfigFile    = sprintf('%s/.rfcdigester.json', realpath($_ENV['HOME']));
-$defaultConfigFile = sprintf('%s/../config.json', realpath(__DIR__));
+$configs = [
+    sprintf('%s/../config.json', realpath(__DIR__))
+];
+
+$userConfigFile = sprintf('%s/.rfcdigester.json', realpath($_ENV['HOME']));
+if (file_exists($userConfigFile)) {
+    $configs[] = $userConfigFile;
+}
 
 // Load configs and get storage path
-$conf        = new Config([$defaultConfigFile, $userConfigFile]);
+$conf        = new Config($configs);
 $storagePath = realpath(sprintf('%s/%s', __DIR__, $conf->get('storagePath')));
 
 // Set config path for future commands
@@ -68,7 +74,7 @@ $app->addCommands(array(
     new Rfc\Summary($rfcService),
     new Rfc\RfcList($rfcService),
     new Notify\Rfc($conf, $rfcService, $diffService, $mailer, $twig),
-//    new Notify\Summary($conf, $rfcService, $diffService, $mailer),
+    new Notify\Voting($conf, $rfcService),
     new Notify\RfcList($conf, $rfcService, $diffService, $mailer),
     new Test\Email($conf, $mailer)
 ));

@@ -178,7 +178,7 @@ class RfcBuilder
         $details = [];
 
         $xPath = new \DOMXPath($this->document);
-        foreach ($xPath->query(CssSelector::toXPath('.page div:first-of-type li')) as $node) {
+        foreach ($xPath->query(CssSelector::toXPath('.page div:first-of-type li.level1 > div.li')) as $node) {
             // Get details separately
             list($key, $value) = explode(':', trim($node->textContent), 2);
 
