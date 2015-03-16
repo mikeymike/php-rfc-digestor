@@ -128,7 +128,8 @@ class Rfc extends Command
             'rfcName'     => $currentRfc->getName(),
             'details'     => $diffs['details'],
             'changeLog'   => $diffs['changeLog'],
-            'voteDiffs'   => $diffs['votes']
+            'voteDiffs'   => $diffs['votes'],
+            'rfcVotes'    => $currentRfc->getVotes()
         ]);
 
         $message = $this->mailer->createMessage()

@@ -98,6 +98,14 @@
                                                             </ul>
                                                         {% endif %}
 
+                                                        <h6>Current Standings</h6>
+                                                        <ul>
+                                                            {% for heading, standing in rfcVotes[title].counts %}
+                                                                {% if heading|lower != "real name" %}
+                                                                    <li>{{ heading }}: {{ standing }}</li>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </ul>
                                                     </td>
                                                     <td class="expander"></td>
                                                 </tr>

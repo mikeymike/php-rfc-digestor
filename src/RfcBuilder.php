@@ -308,8 +308,11 @@ class RfcBuilder
 
             $counts = $xPath->query(CssSelector::toXPath($countXPath), $node);
 
-            foreach ($counts as $count) {
-                $votes[$title]['counts'][] = trim($count->textContent);
+            foreach ($counts as $index => $count) {
+                // Get column title in question
+                $header = $votes[$title]['headers'][$index];
+
+                $votes[$title]['counts'][$header] = trim($count->textContent);
             }
         }
 
