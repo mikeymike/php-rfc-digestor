@@ -37,7 +37,7 @@ $configs = [
     sprintf('%s/../config.json', realpath(__DIR__))
 ];
 
-$userConfigFile = sprintf('%s/.rfcdigester.json', realpath($_ENV['HOME']));
+$userConfigFile = sprintf('%s/.rfcdigestor.json', realpath($_ENV['HOME']));
 if (file_exists($userConfigFile)) {
     $configs[] = $userConfigFile;
 }

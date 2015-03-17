@@ -48,7 +48,6 @@ class Voting extends Command
     {
         $this
             ->setName('notify:voting')
-            ->setAliases(['notify:active'])
             ->setDescription('Get notifications of RFC vote changes for actively voting RFCs')
             ->addArgument('email', InputArgument::REQUIRED, 'Email to notify');
     }

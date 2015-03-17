@@ -39,7 +39,6 @@ class Summary extends Command
     {
         $this
             ->setName('rfc:summary')
-            ->setAliases(['rfc:active'])
             ->setDescription('List the vote totals for each active RFC');
     }
 
