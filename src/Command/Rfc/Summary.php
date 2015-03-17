@@ -73,10 +73,8 @@ class Summary extends Command
                 $table->addRow([$title], $voteStyle);
 
                 array_shift($vote['counts']);
-                array_shift($vote['headers']);
-
                 foreach ($vote['counts'] as $key => $total) {
-                    $table->addRow([$vote['headers'][$key], $total]);
+                    $table->addRow([$key, $total]);
                 }
             }
 
