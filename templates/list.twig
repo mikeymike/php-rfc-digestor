@@ -1,0 +1,68 @@
+{% include('head.html') %}
+
+
+<table class="container">
+    <tr>
+        <td>
+
+            <!-- content start -->
+            <table class="row">
+                <tr>
+                    <td class="wrapper last">
+
+                        <table class="twelve columns">
+                            <tr>
+                                <td>
+
+                                    <h3 class="center">Some RFCs have moved!!</h3>
+                                </td>
+                                <td class="expander"></td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+            </table>
+
+            <table class="row">
+                <tr>
+                    <td class="wrapper last">
+
+                        <table class="twelve columns">
+                            <tr>
+                                <td>
+                                    <table class="twelve columns">
+                                        <tr>
+                                            <td class="panel">
+
+                                                <ul>
+                                                    {% for name, change  in  changes %}
+                                                        <li>
+                                                            <b>{{ name }}</b>
+                                                            <ul>
+                                                                <li>From: {{ change.from }}</li>
+                                                                <li>To: {{ change.to }}</li>
+                                                            </ul>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+
+                                            </td>
+                                            <td class="expander"></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+            </table>
+
+            <!-- container end below -->
+        </td>
+    </tr>
+</table>
+
+
+{% include('foot.html') %}

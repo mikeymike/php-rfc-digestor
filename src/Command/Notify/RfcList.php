@@ -40,17 +40,28 @@ class RfcList extends Command
     protected $mailer;
 
     /**
+     * @var Twig_Environment
+     */
+    protected $twig;
+
+    /**
      * @param Config        $config
      * @param RfcService    $rfcService
      * @param DiffService   $diffService
      * @param \Swift_Mailer $mailer
      */
-    public function __construct(Config $config, RfcService $rfcService, DiffService $diffService, \Swift_Mailer $mailer)
-    {
+    public function __construct(
+        Config $config,
+        RfcService $rfcService,
+        DiffService $diffService,
+        \Swift_Mailer $mailer,
+        \Twig_Environment $twig
+    ) {
         $this->config      = $config;
         $this->rfcService  = $rfcService;
         $this->diffService = $diffService;
         $this->mailer      = $mailer;
+        $this->twig        = $twig;
 
         parent::__construct();
     }
@@ -76,38 +87,34 @@ class RfcList extends Command
             $output->writeln('<info>щ(ºДºщ) This command is pointless when not run on a cron</info>');
         }
 
-        $currentRfcList = $this->rfcService->getLists();
-        $storageFile    = sprintf('%s/rfcList.json', $this->config->get('storagePath'));
+        $currRfcList = $this->rfcService->getLists();
+        $storageFile = sprintf('%s/rfcList.json', $this->config->get('storagePath'));
 
         if (!file_exists($storageFile)) {
-            file_put_contents($storageFile, json_encode($currentRfcList));
+            file_put_contents($storageFile, json_encode($currRfcList));
             return;
         }
 
-        $previousRfcList = json_decode(file_get_contents($storageFile), true);
-        $diffs           = $this->diffService->listDiff($currentRfcList, $previousRfcList);
+        $prevRfcList = json_decode(file_get_contents($storageFile), true);
+        $diffs       = $this->diffService->listDiff($currRfcList, $prevRfcList);
 
         if (empty($diffs)) {
-            file_put_contents($storageFile, json_encode($currentRfcList));
+            file_put_contents($storageFile, json_encode($currRfcList));
             return;
         }
 
-        // TODO : Twig template
-
-        $emailBody = '';
-
-        foreach ($diffs as $rfcTitle => $diff) {
-            $emailBody .= sprintf("<p>%s has moved from %s to %s</p></br>", $rfcTitle, $diff['from'], $diff['to']);
-        }
+        $email = $this->twig->render('list.twig', [
+            'changes' => $diffs
+        ]);
 
         $message = $this->mailer->createMessage()
-            ->setSubject('Test')
+            ->setSubject('Some RFCs have moved!')
             ->setFrom('notifier@php-rfc-digestor.com')
             ->setTo($input->getArgument('email'))
-            ->addPart($emailBody, 'text/html');
+            ->setBody($email, 'text/html');
 
         $this->mailer->send($message);
 
-        file_put_contents($storageFile, json_encode($currentRfcList));
+//        file_put_contents($storageFile, json_encode($currRfcList));
     }
 }

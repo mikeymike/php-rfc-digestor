@@ -75,7 +75,7 @@ $app->addCommands(array(
     new Rfc\RfcList($rfcService),
     new Notify\Rfc($conf, $rfcService, $diffService, $mailer, $twig),
     new Notify\Voting($conf, $rfcService),
-    new Notify\RfcList($conf, $rfcService, $diffService, $mailer),
+    new Notify\RfcList($conf, $rfcService, $diffService, $mailer, $twig),
     new Test\Email($conf, $mailer)
 ));
 
