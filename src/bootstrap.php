@@ -37,7 +37,12 @@ $configs = [
     sprintf('%s/../config.json', realpath(__DIR__))
 ];
 
-$userConfigFile = sprintf('%s/.rfcdigestor.json', realpath($_ENV['HOME']));
+// Unix or Windows home path
+$homePath = strtolower(substr(PHP_OS, 0, 3)) === 'win'
+    ? getenv('USERPROFILE')
+    : getenv('HOME');
+
+$userConfigFile = sprintf('%s/.rfcdigestor.json', $homePath);
 if (file_exists($userConfigFile)) {
     $configs[] = $userConfigFile;
 }
