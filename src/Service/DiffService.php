@@ -13,7 +13,7 @@ use MikeyMike\RfcDigestor\Entity\Rfc;
 class DiffService
 {
     /**
-     * Returns array of changes in Rfc 2
+     * Returns array of changes in RFC 1 compared to RFC 2
      *
      * @param Rfc $rfc1
      * @param Rfc $rfc2
@@ -24,35 +24,57 @@ class DiffService
         // Get any vote diffs between two RFCs
         $voteDiffs = $this->recursiveArrayDiff($rfc1->getVotes(), $rfc2->getVotes());
 
+        return [
+            'details'   => $this->recursiveArrayDiff($rfc1->getDetails(), $rfc2->getDetails()),
+            'changeLog' => $this->recursiveArrayDiff($rfc1->getChangeLog(), $rfc2->getChangeLog()),
+            'votes'     => $this->parseVotesDiff($voteDiffs, $rfc2->getVotes())
+        ];
+    }
+
+    /**
+     * Parse a vote diff into new and updated votes
+     *
+     * @param $voteDiffs
+     * @param $comparisonVotes
+     * @return array
+     */
+    protected function parseVotesDiff($voteDiffs, $comparisonVotes)
+    {
         // Split them into new and updated
         $splitVotesDiffs = [];
         foreach ($voteDiffs as $key => $votes) {
-            $rfc2Votes    = $rfc2->getVotes();
+            $rfc2Votes    = $comparisonVotes;
             $newVotes     = array_diff_key($votes['votes'], $rfc2Votes[$key]['votes']);
             $updatedVotes = array_intersect_key($votes['votes'], $rfc2Votes[$key]['votes']);
 
-            // Get the vote as the column name
-            foreach ($newVotes as $voter => $vote) {
-                $filtered = array_filter($vote);
-                $flipped  = array_keys($filtered);
-                $newVotes[$voter] = reset($flipped);
-            }
+            /**
+             * Quick function to get vote
+             *
+             * @param $votes
+             * @return array
+             */
+            $getVote = function ($votes) {
+                $parsedVotes = [];
+                foreach ($votes as $voter => $vote) {
+                    // Get true vote and it's key
+                    $vote = array_filter($vote);
+                    $vote = array_keys($vote);
 
-            foreach ($updatedVotes as $voter => $vote) {
-                $filtered = array_filter($vote);
-                $flipped  = array_keys($filtered);
-                $updatedVotes[$voter] = reset($flipped);
-            }
+                    // Set the voters parsed vote
+                    $parsedVotes[$voter] = reset($vote);
+                }
+
+                return $parsedVotes;
+            };
+
+            $newVotes     = $getVote($newVotes);
+            $updatedVotes = $getVote($updatedVotes);
 
             $splitVotesDiffs[$key]['new']     = $newVotes;
             $splitVotesDiffs[$key]['updated'] = $updatedVotes;
         }
 
-        return [
-            'details'   => $this->recursiveArrayDiff($rfc1->getDetails(), $rfc2->getDetails()),
-            'changeLog' => $this->recursiveArrayDiff($rfc1->getChangeLog(), $rfc2->getChangeLog()),
-            'votes'     => $splitVotesDiffs
-        ];
+        return $splitVotesDiffs;
     }
 
     /**
@@ -103,7 +125,7 @@ class DiffService
 
     /**
      * Get diff of arrays recursively
-     * 
+     *
      * @param array $arr1
      * @param array $arr2
      * @return array
@@ -112,7 +134,6 @@ class DiffService
     {
         $diff = [];
         foreach ($arr1 as $key => $value) {
-
             if (!is_array($value)) {
                 if (!isset($arr2[$key]) || $arr2[$key] != $value) {
                     $diff[$key] = $value;
@@ -126,7 +147,7 @@ class DiffService
             }
 
             if (!is_array($arr2[$key])) {
-                $difference[$key] = $value;
+                $diff[$key] = $value;
                 continue;
             }
 

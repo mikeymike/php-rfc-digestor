@@ -71,8 +71,8 @@ $mailer->registerPLugin(new CssInlinerPlugin());
 
 // Twig Templates
 Twig_Autoloader::register();
-$loader = new Twig_Loader_Filesystem(__DIR__ . '/../templates'); //TODO: Config option
-$twig   = new Twig_Environment($loader);
+$loader = new \Twig_Loader_Filesystem(__DIR__ . '/../templates'); //TODO: Config option
+$twig   = new \Twig_Environment($loader);
 
 $app->addCommands(array(
     new Rfc\Digest($rfcService),

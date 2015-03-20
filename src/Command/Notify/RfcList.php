@@ -40,7 +40,7 @@ class RfcList extends Command
     protected $mailer;
 
     /**
-     * @var Twig_Environment
+     * @var \Twig_Environment
      */
     protected $twig;
 
@@ -115,6 +115,6 @@ class RfcList extends Command
 
         $this->mailer->send($message);
 
-//        file_put_contents($storageFile, json_encode($currRfcList));
+        file_put_contents($storageFile, json_encode($currRfcList));
     }
 }

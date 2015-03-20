@@ -100,17 +100,6 @@ class RfcService
     }
 
     /**
-     * Save an RFC to storage in json
-     *
-     * @param Rfc $rfc
-     * @return bool|void
-     */
-    public function saveRfcToStorage(Rfc $rfc)
-    {
-        return;
-    }
-
-    /**
      * Get list from sections
      *
      * @param array $sections

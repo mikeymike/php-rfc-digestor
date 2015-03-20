@@ -83,6 +83,6 @@ class Summary extends Command
             }
         }
 
-        $table->render($output);
+        $table->render();
     }
 }

@@ -40,7 +40,7 @@ class Rfc extends Command
     protected $mailer;
 
     /**
-     * @var Twig_Environment
+     * @var \Twig_Environment
      */
     protected $twig;
 

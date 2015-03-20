@@ -13,6 +13,11 @@ class Rfc
     /**
      * @var string
      */
+    protected $code = '';
+
+    /**
+     * @var string
+     */
     protected $name = '';
     /**
      * @var array
@@ -38,6 +43,22 @@ class Rfc
      * @var string
      */
     protected $rawContent = '';
+
+    /**
+     * @param string $code
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
 
     /**
      * @param string $name

@@ -57,7 +57,7 @@ class RfcBuilder
             throw new \InvalidArgumentException('Invalid RFC code');
         }
 
-        $this->loadRfc($wikiUrl);
+        $this->loadRfc($wikiUrl, $rfcCode);
 
         return $this;
     }
@@ -76,7 +76,7 @@ class RfcBuilder
             throw new \InvalidArgumentException('No application storage for RFC');
         }
 
-        $this->loadRfc($filePath);
+        $this->loadRfc($filePath, $rfcCode);
 
         return $this;
     }
@@ -84,7 +84,7 @@ class RfcBuilder
     /**
      * @param string $rfcLocation
      */
-    private function loadRfc($rfcLocation)
+    private function loadRfc($rfcLocation, $rfcCode)
     {
         // Suppress HTML5 errors
         libxml_use_internal_errors(true);
@@ -96,6 +96,7 @@ class RfcBuilder
         libxml_use_internal_errors(false);
 
         $this->rfc = new Rfc();
+        $this->rfc->setCode($rfcCode);
         $this->rfc->setRawContent($this->document->saveHTML());
     }
 
