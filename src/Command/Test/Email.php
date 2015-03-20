@@ -30,13 +30,19 @@ class Email extends Command
     protected $mailer;
 
     /**
+     * @var \Twig_Environment
+     */
+    protected $twig;
+
+    /**
      * @param Config        $config
      * @param \Swift_Mailer $mailer
      */
-    public function __construct(Config $config, \Swift_Mailer $mailer)
+    public function __construct(Config $config, \Swift_Mailer $mailer, \Twig_Environment $twig)
     {
-        $this->config      = $config;
-        $this->mailer      = $mailer;
+        $this->config = $config;
+        $this->mailer = $mailer;
+        $this->twig   = $twig;
 
         parent::__construct();
     }
@@ -60,13 +66,13 @@ class Email extends Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        // TODO : Twig template
+        $email = $this->twig->render('test.twig');
 
         $message = $this->mailer->createMessage()
-            ->setSubject('Test')
+            ->setSubject('PHP RFC Digestor Test Email')
             ->setFrom('notifier@php-rfc-digestor.com')
             ->setTo($input->getArgument('email'))
-            ->setBody('PHP RFC Digestor Test Mail');
+            ->setBody($email, 'text/html');
 
         $this->mailer->send($message);
 

@@ -48,11 +48,13 @@ if (file_exists($userConfigFile)) {
 }
 
 // Load configs and get storage path
-$conf        = new Config($configs);
-$storagePath = realpath(sprintf('%s/%s', __DIR__, $conf->get('storagePath')));
+$conf         = new Config($configs);
+$storagePath  = realpath(sprintf('%s/%s', __DIR__, $conf->get('storagePath')));
+$templatePath = realpath(sprintf('%s/%s', __DIR__, $conf->get('templatePath')));
 
-// Set config path for future commands
+// Set config paths for future commands
 $conf->set('storagePath', $storagePath);
+$conf->set('templatePath', $templatePath);
 
 // Build dependencies
 $rfcBuilder  = new RfcBuilder($storagePath);
@@ -71,7 +73,7 @@ $mailer->registerPLugin(new CssInlinerPlugin());
 
 // Twig Templates
 Twig_Autoloader::register();
-$loader = new \Twig_Loader_Filesystem(__DIR__ . '/../templates'); //TODO: Config option
+$loader = new \Twig_Loader_Filesystem($conf->get('templatePath'));
 $twig   = new \Twig_Environment($loader);
 
 $app->addCommands(array(
@@ -81,7 +83,7 @@ $app->addCommands(array(
     new Notify\Rfc($conf, $rfcService, $diffService, $mailer, $twig),
     new Notify\Voting($conf, $rfcService),
     new Notify\RfcList($conf, $rfcService, $diffService, $mailer, $twig),
-    new Test\Email($conf, $mailer)
+    new Test\Email($conf, $mailer, $twig)
 ));
 
 return $app;
