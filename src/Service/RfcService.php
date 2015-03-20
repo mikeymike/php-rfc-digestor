@@ -64,7 +64,7 @@ class RfcService
      * Quick RFC building from storage
      *
      * @param $rfcCode
-     * @return RfcBuilder
+     * @return Rfc
      */
     public function getRfcFromStorage($rfcCode, $loadDetails = true, $loadChangeLog = true, $loadVotes = true)
     {
