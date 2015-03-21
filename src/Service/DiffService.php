@@ -34,11 +34,11 @@ class DiffService
     /**
      * Parse a vote diff into new and updated votes
      *
-     * @param $voteDiffs
-     * @param $comparisonVotes
+     * @param array $voteDiffs
+     * @param array $comparisonVotes
      * @return array
      */
-    protected function parseVotesDiff($voteDiffs, $comparisonVotes)
+    protected function parseVotesDiff(array $voteDiffs, array $comparisonVotes)
     {
         // Split them into new and updated
         $splitVotesDiffs = [];
@@ -84,7 +84,7 @@ class DiffService
      * @param array $list2
      * @return array
      */
-    public function listDiff($list1, $list2)
+    public function listDiff(array $list1, array $list2)
     {
         $diffs       = [];
         $parsedDiffs = [];
@@ -114,7 +114,7 @@ class DiffService
      * @param string $title
      * @return string
      */
-    private function findFromKey($list, $title)
+    private function findFromKey(array $list, $title)
     {
         foreach ($list as $key => $section) {
             if (array_key_exists($title, $section)) {
@@ -130,7 +130,7 @@ class DiffService
      * @param array $arr2
      * @return array
      */
-    private function recursiveArrayDiff($arr1, $arr2)
+    private function recursiveArrayDiff(array $arr1, array $arr2)
     {
         $diff = [];
         foreach ($arr1 as $key => $value) {

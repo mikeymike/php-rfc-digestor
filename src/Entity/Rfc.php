@@ -79,7 +79,7 @@ class Rfc
     /**
      * @param array $details
      */
-    public function setDetails($details)
+    public function setDetails(array $details)
     {
         $this->details = $details;
     }
@@ -95,7 +95,7 @@ class Rfc
     /**
      * @param array $changLog
      */
-    public function setChangeLog($changLog)
+    public function setChangeLog(array $changLog)
     {
         $this->changeLog = $changLog;
     }
@@ -111,7 +111,7 @@ class Rfc
     /**
      * @param array $votes
      */
-    public function setVotes($votes)
+    public function setVotes(array $votes)
     {
         $this->votes = $votes;
     }

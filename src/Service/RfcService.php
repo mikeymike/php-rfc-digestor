@@ -105,7 +105,7 @@ class RfcService
      * @param array $sections
      * @return array
      */
-    public function getLists($sections = [])
+    public function getLists(array $sections = [])
     {
         // Default lets get all
         if (empty($sections)) {
@@ -218,7 +218,7 @@ class RfcService
      * @param array $array
      * @return array
      */
-    protected function assocArrayToRows($array)
+    protected function assocArrayToRows(array $array)
     {
         $rows = [];
 
