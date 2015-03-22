@@ -33,8 +33,8 @@ class RfcBuilder
      */
     public function __construct($storagePath)
     {
-        if (!file_exists($storagePath) || !is_dir($storagePath)) {
-            throw new InvalidArgumentException('Storage path does not exist!');
+        if (!is_dir($storagePath)) {
+            throw new \InvalidArgumentException('Storage path does not exist!');
         }
 
         $this->storagePath = rtrim($storagePath, '/');
