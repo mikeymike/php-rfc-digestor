@@ -64,4 +64,31 @@ class DiffServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($expected, $actual);
     }
+
+    public function testListDiffFromIsEmptyWhenNewListing()
+    {
+        $list1 = [
+            'In voting phase' => [
+                'Generator Delegation' => ['Generator Delegation', 'generator_delegation'],
+                'In Operator' => ['In Operator', 'in_operator']
+            ]
+        ];
+
+        $list2 = [
+            'In voting phase' => [
+                'Generator Delegation' => ['Generator Delegation', 'generator_delegation']
+            ]
+        ];
+
+        $expected = [
+            'In Operator' => [
+                'to'   => 'In voting phase',
+                'from' => ''
+            ]
+        ];
+
+        $actual = $this->diffService->listDiff($list1, $list2);
+
+        $this->assertSame($expected, $actual);
+    }
 }

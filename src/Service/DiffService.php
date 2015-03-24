@@ -95,7 +95,7 @@ class DiffService
 
         foreach ($diffs as $section => $diff) {
             foreach ($diff as $title) {
-                $from = $this->findFromKey($list2, $title);
+                $from = $this->findRfcListKey($list2, $title);
 
                 $parsedDiffs[$title] = [
                     'to'   => $section,
@@ -114,13 +114,17 @@ class DiffService
      * @param string $title
      * @return string
      */
-    private function findFromKey(array $list, $title)
+    private function findRfcListKey(array $list, $title)
     {
+        $from = '';
         foreach ($list as $key => $section) {
             if (array_key_exists($title, $section)) {
-                return $key;
+                $from = $key;
+                break;
             }
         }
+
+        return $from;
     }
 
     /**
