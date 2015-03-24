@@ -91,4 +91,53 @@ class DiffServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($expected, $actual);
     }
+
+    /**
+     * @dataProvider recursiveArrayDiffProvider
+     */
+    public function testRecursiveArrayDiff($arr1, $arr2, $expectedDiff)
+    {
+        // Private func use reflection
+        $reflectionClass  = new \ReflectionClass($this->diffService);
+        $reflectionMethod = $reflectionClass->getMethod('recursiveArrayDiff');
+        $reflectionMethod->setAccessible(true);
+
+        $actualDiff = $reflectionMethod->invoke($this->diffService, $arr1, $arr2);
+
+        $this->assertSame($expectedDiff, $actualDiff);
+    }
+
+    public function recursiveArrayDiffProvider()
+    {
+        return [
+            [ // Empty
+                [], [], []
+            ],
+            [ // Simple assoc
+                ['foo' => 'bar'],
+                ['foo' => 'not_bar'],
+                ['foo' => 'bar']
+            ],
+            [ // Multidimensional
+                ['foo' => ['inner' => 'bar']],
+                ['foo' => 'bar'],
+                ['foo' => ['inner' => 'bar']]
+            ],
+            [ // Multidimensional new value
+                ['foo' => ['inner' => 'bar', 'new' => 'value']],
+                ['foo' => ['inner' => 'bar']],
+                ['foo' => ['new' => 'value']]
+            ],
+            [ // Multidimensional new array
+                ['foo' => ['inner' => 'bar']],
+                [],
+                ['foo' => ['inner' => 'bar']]
+            ],
+            [ // Only diffs changes in first array
+                ['bar' => 'foo'],
+                ['foo' => 'bar'],
+                ['bar' => 'foo']
+            ]
+        ];
+    }
 }

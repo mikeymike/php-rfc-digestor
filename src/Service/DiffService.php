@@ -128,7 +128,7 @@ class DiffService
     }
 
     /**
-     * Get diff of arrays recursively
+     * Get diff of assoc arrays recursively
      *
      * @param array $arr1
      * @param array $arr2
