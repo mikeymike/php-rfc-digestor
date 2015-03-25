@@ -140,4 +140,31 @@ class DiffServiceTest extends \PHPUnit_Framework_TestCase
             ]
         ];
     }
+
+    public function testFindRfcListKeyReturnsCorrectKey()
+    {
+        $list = [
+            'In voting phase' => [
+                'Generator Delegation' => ['Generator Delegation', 'generator_delegation'],
+                'In Operator' => ['In Operator', 'in_operator']
+            ],
+            'Accepted' => [
+                'Context Sensitive Lexer' => ['Context Sensitive Lexer', 'context_sensitive_lexer']
+            ]
+        ];
+
+        $reflectionClass  = new \ReflectionClass($this->diffService);
+        $reflectionMethod = $reflectionClass->getMethod('findRfcListKey');
+        $reflectionMethod->setAccessible(true);
+
+        $this->assertSame(
+            'In voting phase',
+            $reflectionMethod->invoke($this->diffService, $list, 'In Operator')
+        );
+
+        $this->assertSame(
+            '',
+            $reflectionMethod->invoke($this->diffService, $list, 'Magic Quotes')
+        );
+    }
 }
