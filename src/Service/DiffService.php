@@ -114,7 +114,7 @@ class DiffService
      * @param string $title
      * @return string
      */
-    private function findRfcListKey(array $list, $title)
+    protected function findRfcListKey(array $list, $title)
     {
         $from = '';
         foreach ($list as $key => $section) {
@@ -134,7 +134,7 @@ class DiffService
      * @param array $arr2
      * @return array
      */
-    private function recursiveArrayDiff(array $arr1, array $arr2)
+    protected function recursiveArrayDiff(array $arr1, array $arr2)
     {
         $diff = [];
         foreach ($arr1 as $key => $value) {

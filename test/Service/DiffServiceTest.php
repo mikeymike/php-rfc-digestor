@@ -1,6 +1,7 @@
 <?php
 
 namespace MikeyMike\RfcDigestor\Service;
+use MikeyMike\RfcDigestor\Entity\Rfc;
 
 /**
  * Class DiffServiceTest
@@ -166,5 +167,196 @@ class DiffServiceTest extends \PHPUnit_Framework_TestCase
             '',
             $reflectionMethod->invoke($this->diffService, $list, 'Magic Quotes')
         );
+    }
+
+    public function testRfcDiffCallsRequiredMethodsOnBothRfcObjects()
+    {
+        $rfc = $this->getMockBuilder('MikeyMike\RfcDigestor\Entity\Rfc')
+            ->setMethods(['getDetails', 'getChangeLog', 'getVotes'])
+            ->getMock();
+
+        $rfc->expects($this->exactly(2))
+            ->method('getDetails')
+            ->will($this->returnValue([]));
+
+        $rfc->expects($this->exactly(2))
+            ->method('getChangeLog')
+            ->will($this->returnValue([]));
+
+        $rfc->expects($this->exactly(3))
+            ->method('getVotes')
+            ->will($this->returnValue([]));
+
+        $this->diffService->rfcDiff($rfc, $rfc);
+    }
+
+    /**
+     * @dataProvider rfcDiffDataProvider
+     */
+    public function testRfcDiffReturnsCorrectDiff($details, $changeLogs, $votes, $expectedDiff)
+    {
+        $rfc1 = new Rfc();
+        $rfc2 = new Rfc();
+
+        $rfc1->setDetails($details[0]);
+        $rfc1->setChangeLog($changeLogs[0]);
+        $rfc1->setVotes($votes[0]);
+
+        $rfc2->setDetails($details[1]);
+        $rfc2->setChangeLog($changeLogs[1]);
+        $rfc2->setVotes($votes[1]);
+
+        $this->assertSame($expectedDiff, $this->diffService->rfcDiff($rfc1, $rfc2));
+    }
+
+    public function rfcDiffDataProvider()
+    {
+        return [
+            [ // Testing Empty
+                [ // Details
+                    [], []
+                ],
+                [ // ChangeLogs
+                    [], []
+                ],
+                [ // Votes
+                    [], []
+                ],
+                [ // Expected Diff
+                    'details'   => [],
+                    'changeLog' => [],
+                    'votes'     => []
+                ]
+            ],
+            [ // Testing Same
+                [ // Details
+                    [
+                        'version'            => '0.5.1',
+                        'name'               => 'In Operator',
+                        'authors'            => 'Niklas Keller me@kelunik.com, Bob Weinand bobwei9@hotmail.com',
+                        'status'             => 'Voting',
+                        'First Published at' => 'http://wiki.php.net/rfc/in_operator'
+                    ],
+                    [
+                        'version'            => '0.5.1',
+                        'name'               => 'In Operator',
+                        'authors'            => 'Niklas Keller me@kelunik.com, Bob Weinand bobwei9@hotmail.com',
+                        'status'             => 'Voting',
+                        'First Published at' => 'http://wiki.php.net/rfc/in_operator'
+                    ]
+                ],
+                [ // ChangeLogs
+                    [
+                        'v0.5:' => 'Removed integer support, so the strictness is consistent.',
+                        'v0.4:' => 'Removed possibility to check multiple values using an array.'
+                    ],
+                    [
+                        'v0.5:' => 'Removed integer support, so the strictness is consistent.',
+                        'v0.4:' => 'Removed possibility to check multiple values using an array.'
+                    ]
+                ],
+                [ // Votes
+                    [
+                        'Introduce the in operator?' => [
+                            'headers' => ['Real name', 'Yes', 'No'],
+                            'votes'   => [
+                                'aharvey (aharvey)' => ['Yes' => false, 'No' => true],
+                                'ajf (ajf)'         => ['Yes' => false, 'No' => true]
+                            ],
+                            'counts'  => ['Real name' => 'Count:', 'Yes' => 0, 'No' => 2],
+                            'closed'  => false
+                        ]
+                    ],
+                    [
+                        'Introduce the in operator?' => [
+                            'headers' => ['Real name', 'Yes', 'No'],
+                            'votes'   => [
+                                'aharvey (aharvey)' => ['Yes' => false, 'No' => true],
+                                'ajf (ajf)'         => ['Yes' => false, 'No' => true]
+                            ],
+                            'counts'  => ['Real name' => 'Count:', 'Yes' => 0, 'No' => 2],
+                            'closed'  => false
+                        ]
+                    ]
+                ],
+                [ // Expected Diff
+                    'details'   => [],
+                    'changeLog' => [],
+                    'votes'     => []
+                ]
+            ],
+            [ // Testing Different
+                [ // Details
+                    [
+                        'version'            => '0.6.0',
+                        'name'               => 'In Operator',
+                        'authors'            => 'Niklas Keller me@kelunik.com, Bob Weinand bobwei9@hotmail.com',
+                        'status'             => 'Voting',
+                        'First Published at' => 'http://wiki.php.net/rfc/in_operator'
+                    ],
+                    [
+                        'version'            => '0.5.1',
+                        'name'               => 'In Operator',
+                        'authors'            => 'Niklas Keller me@kelunik.com, Bob Weinand bobwei9@hotmail.com',
+                        'status'             => 'Voting',
+                        'First Published at' => 'http://wiki.php.net/rfc/in_operator'
+                    ]
+                ],
+                [ // ChangeLogs
+                    [
+                        'v0.6:' => 'Updated for some reason',
+                        'v0.5:' => 'Removed integer support, so the strictness is consistent.',
+                        'v0.4:' => 'Removed possibility to check multiple values using an array.'
+                    ],
+                    [
+                        'v0.5:' => 'Removed integer support, so the strictness is consistent.',
+                        'v0.4:' => 'Removed possibility to check multiple values using an array.'
+                    ]
+                ],
+                [ // Votes
+                    [
+                        'Introduce the in operator?' => [
+                            'headers' => ['Real name', 'Yes', 'No'],
+                            'votes'   => [
+                                'aharvey (aharvey)' => ['Yes' => true,  'No' => false],
+                                'ajf (ajf)'         => ['Yes' => false, 'No' => true],
+                                'bwoebi (bwoebi)'   => ['Yes' => true,  'No' => false]
+                            ],
+                            'counts'  => ['Real name' => 'Count:', 'Yes' => 2, 'No' => 1],
+                            'closed'  => false
+                        ]
+                    ],
+                    [
+                        'Introduce the in operator?' => [
+                            'headers' => ['Real name', 'Yes', 'No'],
+                            'votes'   => [
+                                'aharvey (aharvey)' => ['Yes' => false, 'No' => true],
+                                'ajf (ajf)'         => ['Yes' => false, 'No' => true]
+                            ],
+                            'counts'  => ['Real name' => 'Count:', 'Yes' => 0, 'No' => 2],
+                            'closed'  => false
+                        ]
+                    ]
+                ],
+                [ // Expected Diff
+                    'details' => [
+                        'version' => '0.6.0',
+                    ],
+                    'changeLog' => [
+                        'v0.6:' => 'Updated for some reason'
+                    ],
+                    'votes' => [
+                        'Introduce the in operator?' => [
+                            'new' => [
+                                'bwoebi (bwoebi)' => 'Yes'
+                            ],
+                            'updated' => [
+                                'aharvey (aharvey)' => 'Yes'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
     }
 }
