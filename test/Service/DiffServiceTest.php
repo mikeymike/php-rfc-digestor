@@ -1,6 +1,7 @@
 <?php
 
 namespace MikeyMike\RfcDigestor\Service;
+
 use MikeyMike\RfcDigestor\Entity\Rfc;
 
 /**
