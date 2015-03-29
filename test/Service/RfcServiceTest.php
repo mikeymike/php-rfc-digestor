@@ -152,4 +152,32 @@ class RfcServiceTest extends \PHPUnit_Framework_TestCase
             [true,  false,  true]
         ];
     }
+
+    public function testGetVotesAsTableRows()
+    {
+        $rfc = new Rfc();
+
+        $rfc->setVotes([
+            'Introduce the in operator?' => [
+                'headers' => ['Real name', 'Yes', 'No'],
+                'votes'   => [
+                    'aharvey (aharvey)' => ['Yes' => false, 'No' => true],
+                    'ajf (ajf)'         => ['Yes' => false, 'No' => true],
+                    'ben (ben)'         => ['Yes' => true,  'No' => false],
+                ],
+                'counts'  => ['Real name' => 'Count:', 'Yes' => 0, 'No' => 2],
+                'closed'  => false
+            ]
+        ]);
+
+        $result = $this->rfcService->getVotesAsTableRows($rfc, 'Introduce the in operator?');
+
+        $expected = [
+            ['aharvey (aharvey)', false, true],
+            ['ajf (ajf)', false, true],
+            ['ben (ben)', true, false]
+        ];
+
+        $this->assertSame($expected, $result); //TODO : fixme
+    }
 }
