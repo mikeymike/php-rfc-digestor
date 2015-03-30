@@ -153,6 +153,50 @@ class RfcServiceTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    public function testGetDetailsAsTableRows()
+    {
+        $rfc = new Rfc();
+
+        $rfc->setDetails([
+            'version'            => '0.5.1',
+            'name'               => 'In Operator',
+            'authors'            => 'Niklas Keller me@kelunik.com, Bob Weinand bobwei9@hotmail.com',
+            'status'             => 'Voting',
+            'First Published at' => 'http://wiki.php.net/rfc/in_operator'
+        ]);
+
+        $result = $this->rfcService->getDetailsAsTableRows($rfc);
+
+        $expected = [
+            ['version', '0.5.1'],
+            ['name', 'In Operator'],
+            ['authors', 'Niklas Keller me@kelunik.com, Bob Weinand bobwei9@hotmail.com'],
+            ['status', 'Voting'],
+            ['First Published at', 'http://wiki.php.net/rfc/in_operator']
+        ];
+
+        $this->assertSame($expected, $result);
+    }
+
+    public function testGetChangeLogsAsTableRows()
+    {
+        $rfc = new Rfc();
+
+        $rfc->setChangelog([
+            'v0.5:' => 'Removed integer support, so the strictness is consistent.',
+            'v0.4:' => 'Removed possibility to check multiple values using an array.'
+        ]);
+
+        $result = $this->rfcService->getChangeLogsAsTableRows($rfc);
+
+        $expected = [
+            ['v0.5:', 'Removed integer support, so the strictness is consistent.'],
+            ['v0.4:', 'Removed possibility to check multiple values using an array.']
+        ];
+
+        $this->assertSame($expected, $result);
+    }
+
     public function testGetVotesAsTableRows()
     {
         $rfc = new Rfc();
