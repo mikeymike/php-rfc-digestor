@@ -1,4 +1,5 @@
 {
+   "rfcUrl": "https://wiki.php.net/rfc",
    "storagePath": "../storage",
    "templatePath": "../templates",
    "smtp": {

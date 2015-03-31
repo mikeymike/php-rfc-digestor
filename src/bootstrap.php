@@ -58,7 +58,7 @@ $conf->set('templatePath', $templatePath);
 
 // Build dependencies
 $rfcBuilder  = new RfcBuilder($storagePath);
-$rfcService  = new RfcService($rfcBuilder);
+$rfcService  = new RfcService($rfcBuilder, $conf->get('rfcUrl'));
 $diffService = new DiffService();
 
 // Mailer
