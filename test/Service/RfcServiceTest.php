@@ -38,7 +38,7 @@ class RfcServiceTest extends \PHPUnit_Framework_TestCase
             ])
             ->getMock();
 
-        $this->rfcService = new RfcService($this->rfcBuilderMock);
+        $this->rfcService = new RfcService($this->rfcBuilderMock, 'https://wiki.php.net/rfc');
     }
 
     /**
@@ -223,5 +223,176 @@ class RfcServiceTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->assertSame($expected, $result);
+    }
+
+    /**
+     * @dataProvider getListsDataProvider
+     */
+    public function testGetLists($sections, $expected)
+    {
+        // Use reflection to replace the RFC URL path
+        $rfcFilePath = realpath(__DIR__ . '/../resources/rfcListings.html');
+
+        $reflectionClass    = new \ReflectionClass($this->rfcService);
+        $reflectionProperty = $reflectionClass->getProperty('rfcUrl');
+
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($this->rfcService, $rfcFilePath);
+
+        $this->assertSame($expected, $this->rfcService->getLists($sections));
+    }
+
+    /**
+     * @return array
+     */
+    public function getListsDataProvider()
+    {
+        $votingSection = [
+            'In voting phase' => [
+                'Reserve Even More Types in PHP 7' => [
+                    0 => 'Reserve Even More Types in PHP 7',
+                    1 => 'reserve_even_more_types_in_php_7',
+                ],
+            ]
+        ];
+
+        $discussionSectoin = [
+            'Under Discussion' => [
+                'Integrate voting polls in PHP.net' => [
+                    0 => 'Integrate voting polls in PHP.net',
+                    1 => 'site_voting_poll',
+                ],
+                'Escaping RFC for PHP Core' => [
+                    0 => 'Escaping RFC for PHP Core',
+                    1 => 'escaper',
+                ],
+                'Add is_cacheable() stream-wrapper operation' => [
+                    0 => 'Add is_cacheable() stream-wrapper operation',
+                    1 => 'streams-is-cacheable',
+                ],
+                'Add cyclic string replace to str_[i]replace() functions' => [
+                    0 => 'Add cyclic string replace to str_[i]replace() functions',
+                    1 => 'cyclic-replace',
+                ],
+            ]
+        ];
+
+        $draftSection = [
+            'In Draft' => [
+                'Loop+Else control structure' => [
+                    0 => 'Loop+Else control structure',
+                    1 => 'loop_else',
+                ],
+                'Deprecate MCRYPT_RAND' => [
+                    0 => 'Deprecate MCRYPT_RAND',
+                    1 => 'deprecate_mcrypt_rand',
+                ],
+                'Make the PHP core case-sensitive' => [
+                    0 => 'Make the PHP core case-sensitive',
+                    1 => 'case-sensitivity',
+                ],
+                'Restrict parameter parsing rules' => [
+                    0 => 'Restrict parameter parsing rules',
+                    1 => 'zpp-conversion-rules',
+                ],
+            ]
+        ];
+
+        $acceptedSection = [
+            'Accepted' => [
+                'PHP Version Control System' => [
+                    0 => 'PHP Version Control System',
+                    1 => 'phpvcs',
+                ],
+                'Name of Next Release of PHP' => [
+                    0 => 'Name of Next Release of PHP',
+                    1 => 'php6',
+                ],
+                'Remove deprecated functionality in PHP 7' => [
+                    0 => 'Remove deprecated functionality in PHP 7',
+                    1 => 'remove_deprecated_functionality_in_php7',
+                ],
+                'Remove PHP 4 Constructors' => [
+                    0 => 'Remove PHP 4 Constructors',
+                    1 => 'remove_php4_constructors',
+                ],
+            ]
+        ];
+
+        $declinedSection = [
+            'Declined' => [
+                'In Operator' => [
+                    0 => 'In Operator',
+                    1 => 'in_operator',
+                ],
+                'Coercive Scalar Type Hints' => [
+                    0 => 'Coercive Scalar Type Hints',
+                    1 => 'coercive_sth',
+                ],
+                'Make empty() a Variadic' => [
+                    0 => 'Make empty() a Variadic',
+                    1 => 'variadic_empty',
+                ],
+                'Allow error_handler callback parameters to be passed by reference' => [
+                    0 => 'Allow error_handler callback parameters to be passed by reference',
+                    1 => 'error_handler_callback_parameters_passed_by_reference',
+                ],
+                'pecl_http' => [
+                    0 => 'pecl_http',
+                    1 => 'pecl_http',
+                ],
+            ]
+        ];
+
+        $withdrawnSection = [
+            'Withdrawn' => [
+                ' ReflectionParameter::getClassName()' => [
+                    0 => ' ReflectionParameter::getClassName()',
+                    1 => 'reflectionparameter-getclassname',
+                ],
+                'Big Integer Support' => [
+                    0 => 'Big Integer Support',
+                    1 => 'bigint',
+                ],
+                'Scalar Type Hints' => [
+                    0 => 'Scalar Type Hints',
+                    1 => 'scalar_type_hints',
+                ],
+                'Void Return Type' => [
+                    0 => 'Void Return Type',
+                    1 => 'void_return_type',
+                ],
+                'Deprecate function that modify INI' => [
+                    0 => 'Deprecate function that modify INI',
+                    1 => 'deprecate-ini-functions',
+                ],
+            ]
+        ];
+
+        return [
+            [ // Test gets all
+                [],
+                array_merge(
+                    $votingSection,
+                    $discussionSectoin,
+                    $draftSection,
+                    $acceptedSection,
+                    $declinedSection,
+                    $withdrawnSection
+                )
+            ],
+            [ // Voting section only
+                ['in_voting_phase'],
+                $votingSection
+            ],
+            [ // Voting section and accepted
+                ['in_voting_phase', 'accepted'],
+                array_merge($votingSection, $acceptedSection)
+            ],
+            [ // Accepted, declined and withdrawn
+                ['accepted', 'declined', 'withdrawn'],
+                array_merge($acceptedSection, $declinedSection, $withdrawnSection)
+            ]
+        ];
     }
 }
