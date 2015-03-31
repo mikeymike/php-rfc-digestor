@@ -207,7 +207,7 @@ class RfcServiceTest extends \PHPUnit_Framework_TestCase
                 'votes'   => [
                     'aharvey (aharvey)' => ['Yes' => false, 'No' => true],
                     'ajf (ajf)'         => ['Yes' => false, 'No' => true],
-                    'ben (ben)'         => ['Yes' => true,  'No' => false],
+                    'ben (ben)'         => ['Yes' => true, 'No' => false],
                 ],
                 'counts'  => ['Real name' => 'Count:', 'Yes' => 0, 'No' => 2],
                 'closed'  => false
