@@ -1,0 +1,770 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PHP: rfc:php6</title>
+
+    <meta name="generator" content="DokuWiki"/>
+    <meta name="robots" content="index,follow"/>
+    <meta name="keywords" content="rfc,php6"/>
+    <link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="PHP Wiki"/>
+    <link rel="start" href="/"/>
+    <link rel="contents" href="/rfc/php6?do=index" title="Sitemap"/>
+    <link rel="alternate" type="application/rss+xml" title="Recent changes" href="/feed.php"/>
+    <link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=rfc"/>
+    <link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/rfc/php6"/>
+    <link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/rfc/php6"/>
+    <link rel="canonical" href="https://wiki.php.net/rfc/php6"/>
+    <link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=phpnet&amp;tseed=c00a5976295d5266845914ccf618f43d"/>
+    <script type="text/javascript">/*<![CDATA[*/var NS='rfc';var JSINFO = {"id":"rfc:php6","namespace":"rfc"};
+    /*!]]>*/</script>
+    <script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?tseed=c00a5976295d5266845914ccf618f43d"></script>
+    <link media='all' rel='stylesheet' href='//shared.php.net/styles/defaults.css?filemtime=1421836953'/>
+    <link media='all' rel='stylesheet' href='//shared.php.net/styles/wiki.css?filemtime=1427329210'/>
+
+    <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,400italic,600italic|Source+Code+Pro&amp;subset=latin,latin-ext" rel="stylesheet">
+    <link rel="shortcut icon" href="//php.net/favicon.ico">
+    <!--[if lt IE 9]>
+    <script src="//shared.php.net/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+<body id="">
+
+<div class="wrap">
+    <header class='clearfix'>
+        <div id="mainmenu-toggle-overlay"></div>
+        <input type="checkbox" id="mainmenu-toggle">
+        <nav class="fullscreen">
+            <div class="mainscreen">
+                <a href="/" class="home"><img src="//php.net/images/logo.php?" width="48" height="24" alt="php"><span class="subdomain"></span></a>
+                <ul>
+                    <li><a href="?do=login">Login</a></li>
+                    <li><a href="?do=register">Register</a></li>
+                </ul>
+            </div>
+            <div class="secondscreen">
+                <form method="get" action="/start">
+                    <input type="search" placeholder="Search" name="id" class="search">
+                    <input type="hidden" name="do" value="search">
+                </form>
+            </div>
+        </nav>
+    </header>
+    <div id="flash-message"></div>
+    <nav id="megadropdown"></nav>
+
+    <section class="fullscreen clearfix">
+
+
+
+        <section id="breadcrumbs">
+            <nav>
+                <span class="bchead">You are here: </span><span class="home"><bdi><a href="/start" class="wikilink1" title="start">start</a></bdi></span> › <bdi><a href="/rfc" class="wikilink1" title="rfc">rfc</a></bdi> › <bdi><span class="curid"><a href="/rfc/php6" class="wikilink1" title="rfc:php6">php6</a></span></bdi></nav>
+        </section>
+        <section class="mainscreen">
+            <!--[if lte IE 7 ]><div id="IE7"><![endif]--><!--[if IE 8 ]><div id="IE8"><![endif]-->
+            <div id="dokuwiki__site"><div id="dokuwiki__top" class="site dokuwiki mode_show tpl_phpnet     ">
+
+
+                <div class="wrapper group">
+
+
+                    <!-- ********** CONTENT ********** -->
+                    <div id="dokuwiki__content"><div class="pad group">
+
+                        <div class="pageId"><span>rfc:php6</span></div>
+
+                        <div class="page group">
+                            <!-- wikipage start -->
+
+                            <h1 class="sectionedit1" id="php_rfcname_of_next_release_of_php">PHP RFC: Name of Next Release of PHP</h1>
+                            <div class="level1">
+                                <ul>
+                                    <li class="level1"><div class="li"> Version: 2.0</div>
+                                    </li>
+                                    <li class="level1"><div class="li"> Date: 2014-07-05 (latest 2014-07-22)</div>
+                                    </li>
+                                    <li class="level1"><div class="li"> Authors: Andrea Faulds <a href="mailto:&#x61;&#x6a;&#x66;&#x40;&#x61;&#x6a;&#x66;&#x2e;&#x6d;&#x65;" class="mail" title="&#x61;&#x6a;&#x66;&#x40;&#x61;&#x6a;&#x66;&#x2e;&#x6d;&#x65;">&#x61;&#x6a;&#x66;&#x40;&#x61;&#x6a;&#x66;&#x2e;&#x6d;&#x65;</a>, Zeev Suraski <a href="mailto:&#x7a;&#x65;&#x65;&#x76;&#x40;&#x70;&#x68;&#x70;&#x2e;&#x6e;&#x65;&#x74;" class="mail" title="&#x7a;&#x65;&#x65;&#x76;&#x40;&#x70;&#x68;&#x70;&#x2e;&#x6e;&#x65;&#x74;">&#x7a;&#x65;&#x65;&#x76;&#x40;&#x70;&#x68;&#x70;&#x2e;&#x6e;&#x65;&#x74;</a></div>
+                                    </li>
+                                    <li class="level1"><div class="li"> Status: Accepted (Name is PHP 7)</div>
+                                    </li>
+                                    <li class="level1"><div class="li"> First Published at: <a href="http://wiki.php.net/rfc/php6" class="urlextern" title="http://wiki.php.net/rfc/php6"  rel="nofollow">http://wiki.php.net/rfc/php6</a></div>
+                                    </li>
+                                </ul>
+
+                            </div>
+
+                            <h2 class="sectionedit2" id="introduction">Introduction</h2>
+                            <div class="level2">
+
+                                <p>
+                                    There has been some debate over what the name of the next major release of PHP, to succeed the PHP 5.x series, should be called. This <abbr title="Request for Comments">RFC</abbr> is an attempt to settle the matter once and for all.
+                                </p>
+
+                                <p>
+                                    This <abbr title="Request for Comments">RFC</abbr> proposes that the next major version of PHP shall be named either PHP 6 or PHP 7, based on the outcome of this vote. In the following arguments for both sides are presented.
+                                </p>
+
+                            </div>
+
+                            <h2 class="sectionedit3" id="historical_context">Historical context</h2>
+                            <div class="level2">
+
+                                <p>
+                                    The reason why this question even comes up, is that there has been a previous attempt at a new major version, which was started in 2005 and abandoned in 2010 due to difficulties in the Unicode implementation. Apart from language-integrated Unicode support, most features added for that version were integrated either in PHP 5.3 or PHP 5.4.
+                                </p>
+
+                                <p>
+                                    This previous attempt at a new major version was also developed under the name of PHP 6 and as such there are various resources referring to it, including a number of books. There is concern that there might be confusion between the abandoned previous attempt and the work that is currently happening.
+                                </p>
+
+                            </div>
+
+                            <h2 class="sectionedit4" id="the_case_for_php_7">The Case for PHP 7</h2>
+                            <div class="level2">
+
+                                <p>
+                                    The case for choosing 7 as the next major version for PHP is comprised from 2 key elements - there are no good reasons not to do it, and several good reasons to do it.
+                                </p>
+
+                            </div>
+
+                            <h3 class="sectionedit5" id="no_good_reasons_not_to_skip_version_6">No good reasons NOT to skip version 6</h3>
+                            <div class="level3">
+
+                                <p>
+                                    Regarding the first element, it seems that many people are concerned that if we skip a version, we somehow cause confusion or break away from our versioning scheme.
+                                </p>
+
+                                <p>
+                                    The main confusion point cited by proponents of &#039;PHP 6&#039; was that people will wonder &#039;how come we suddenly have PHP 7 and without having PHP 6?&#039; - however, this is really much more of a trivia question than a cause for confusion.  For obvious reasons, it will be clear that 7 is the latest version and even if there is 6 out there, 7 is newer and better.
+                                </p>
+
+                                <p>
+                                    We also wouldn&#039;t be breaking away or even changing our current versioning scheme.  We&#039;re only skipping a version, while keeping everything about our versioning scheme intact.
+                                </p>
+
+                            </div>
+
+                            <h3 class="sectionedit6" id="strong_reasons_of_why_we_actually_should_skip_version_6_into_7">Strong reasons of why we actually should skip version 6 into 7</h3>
+                            <div class="level3">
+
+                                <p>
+                                    There are several reasons of why we shouldn&#039;t reuse version 6 for the next major version of PHP.
+                                </p>
+                                <ul>
+                                    <li class="level1"><div class="li"> First and foremost, PHP 6 already existed and it was something completely different.  The decimal system (or more accurately the infinite supply of numbers we have) makes it easy for us to skip a version, with plenty more left for future versions to come.</div>
+                                    </li>
+                                    <li class="level1"><div class="li"> While it&#039;s true that the other PHP 6 never reached General Availability, it was still a very widely published and well-known project conducted by php.net that will share absolutely nothing with the version that is under discussion now.  Anybody who knew what PHP 6 is (and there are many) will have a strong misconception in his or her mind as to the contents and features of this new upcoming version (essentially, that it&#039;s all about Unicode).</div>
+                                    </li>
+                                    <li class="level1"><div class="li"> PHP 6, the original PHP 6, has been discussed in detail in many PHP conferences.  It was taught to users as a done-deal, including detailed explanations about features and behavior (by php.net developers, not &#039;evil&#039; book authors).</div>
+                                    </li>
+                                    <li class="level1"><div class="li"> PHP 6 was widely known not only within the Internals community, but around the PHP community at large.  It was a high profile project that many - if not most - PHP community members knew about.</div>
+                                    </li>
+                                    <li class="level1"><div class="li"> There&#039;s lots of PHP 6 information, about the original PHP 6, that exists around the web.  Books are the smallest part of the problem.</div>
+                                    </li>
+                                    <li class="level1"><div class="li"> Unlike the &#039;trivia question&#039; of &#039;why did we skip into 7?&#039;, reusing version 6 is likely to call <strong>real</strong> confusion in people&#039;s minds, with ample information on two completely different versions with entirely different feature sets that have the exact same name.</div>
+                                    </li>
+                                    <li class="level1"><div class="li"> Skipping versions isn&#039;t unprecedented or uncommon in both open source projects and commercial products.  MariaDB, jumped all the way up to version 10.0 to avoid confusion, Netscape Communicator skipped version 5.0 directly into 6.0, and Symantec skipped version 13.  Each and every one of those had different reasons for the skipping, but the common denominator is that skipping versions is hardly a big deal.</div>
+                                    </li>
+                                    <li class="level1"><div class="li"> Version 6 is generally associated with failure in the world of dynamic languages.  PHP 6 was a failure;  Perl 6 was a failure. It&#039;s actually associated with failure also outside the dynamic language world - MySQL 6 also existed but never released.  The perception of version 6 as a failure - not as a superstition but as a real world fact (similar to the association of the word &#039;Vista&#039; with failure) - will reflect badly on this PHP version.</div>
+                                    </li>
+                                    <li class="level1"><div class="li"> The case for 6 is mostly a rebuttal of some of the points above, but without providing a strong case for why we *shouldn&#039;t* skip version 6.  If we go with PHP 7, the worst case scenario is that we needlessly skipped a version.  We&#039;d still have an infinite supply of major versions at our disposal for future use.  If, however, we pick 6 instead of 7 - the worst case scenario is widespread confusion in our community and potential negative perception about this version.</div>
+                                    </li>
+                                </ul>
+
+                                <p>
+                                    As a special non serious bonus, 7 is perceived as a lucky number in both the Western world and Chinese culture.  A little bit of luck never hurt anybody.  <a href="http://en.wikipedia.org/wiki/Numbers_in_Chinese_culture" class="urlextern" title="http://en.wikipedia.org/wiki/Numbers_in_Chinese_culture"  rel="nofollow">http://en.wikipedia.org/wiki/Numbers_in_Chinese_culture</a> (no, we&#039;re not truly seeing it as a real advantage - the case for 7 is very strong without it).
+                                </p>
+
+                            </div>
+
+                            <h3 class="sectionedit7" id="summary">Summary</h3>
+                            <div class="level3">
+
+                                <p>
+                                    Version 6 is already taken by a highly publicized project that is in the minds of a very large chunk of PHP developers, internals and general PHP community alike.
+                                </p>
+
+                                <p>
+                                    We risk nothing by calling it PHP 7.  We risk confusion and negative perception if we insist on reusing 6 for a completely different project.
+                                </p>
+
+                                <p>
+                                    Taking a risk that stands to yield absolutely no reward is not a good strategy.
+                                </p>
+
+                            </div>
+
+                            <h2 class="sectionedit8" id="the_case_for_php_6">The Case for PHP 6</h2>
+                            <div class="level2">
+                                <ul>
+                                    <li class="level1"><div class="li"> According to our current release process and semantic versioning, the next major version after PHP 5 should be PHP 6. Unless there are very strong reasons to the contrary, we should not abandon our current version numbering scheme.</div>
+                                    </li>
+                                    <li class="level1"><div class="li"> While there exists a number of resources about the previous attempt at a PHP 6 release, these will be quickly displaced once PHP 6 is actually released. This applies both to blog posts, which will be (and partially already are) displaced by newer content, and books, which will receive negative reviews because they do not actually cover the version of PHP they claim to cover.</div>
+                                    </li>
+                                    <li class="level1"><div class="li"> By now there are also many resources which refer to the next major version as “PHP 6”, without having any relation to the abandoned previous attempt. This includes anything from blog posts and discussions about features for the upcoming version, to RFCs and design documents in this wiki. Calling the next major version “PHP 7” instead will cause confusion in this direction.</div>
+                                    </li>
+                                    <li class="level1"><div class="li"> In OTR discussions about a new major version, it is nearly always referred to as “PHP 6”. Given that the current version is PHP 5, people understandably jump to the conclusion that the next one will be “PHP 6” and refer to it as such. In the minds of many devs “PHP 6” is already deeply ingrained as the name of the next major.</div>
+                                    </li>
+                                    <li class="level1"><div class="li"> While many participants on the internals mailing list were involved in the original PHP 6 effort and as such are acutely aware of its existence, the larger PHP community is not. While discussing this <abbr title="Request for Comments">RFC</abbr> with various developers, many did not really understand why this was even a question, because they were no more than vaguely aware that there was something like PHP 6 in the past. As such wrong expectations due to confusion about the version number should be minimal.</div>
+                                    </li>
+                                    <li class="level1"><div class="li"> While there has certainly been precedent for missing version numbers, this usually occurs in the context of larger changes to the versioning scheme. For example, when Java went from 1.4 to 5.0, it&#039;s clear that the numbering system changed. The existing precedent suggests going to PHP 2016 or something equally distinct, rather than just skipping a version. (No, this is not a serious suggestion.)</div>
+                                    </li>
+                                </ul>
+
+                            </div>
+
+                            <h2 class="sectionedit9" id="vote">Vote</h2>
+                            <div class="level2">
+
+                                <p>
+                                    A 50%+1 (simple majority) vote with two options, “PHP 6” and “PHP 7”, is proposed. If more votes are for PHP 6, that shall be the name of the next major release of PHP. Otherwise, if more of votes are for PHP 7, that shall be its name.
+                                </p>
+
+                                <p>
+                                    Voting started 2014-07-20 but was cancelled.
+                                </p>
+
+                                <p>
+                                    Voting restarted 2014-07-23 afresh and ended 2014-07-30.
+                                </p>
+
+                                <!-- Doodle Plugin -->
+                                <form action="/start" method="post" name="doodle__form" id="doodle__form__shall_the_name_of_php_next_be_php_6_or_php_7" accept-charset="utf-8" >
+
+                                    <input type="hidden" name="sectok" value="85aabd80d0e7de50d5bb7a112c79418d" />
+                                    <input type="hidden" name="do" value="show" >
+                                    <input type="hidden" name="id" value="rfc:php6" >
+                                    <input type="hidden" name="formId" value="doodle__form__shall_the_name_of_php_next_be_php_6_or_php_7" >
+                                    <input type="hidden" name="edit__entry"   value="">
+                                    <input type="hidden" name="delete__entry" value="">
+
+                                    <table class="inline">
+                                        <tbody>
+                                        <tr class="row0">
+                                            <th class="centeralign" colspan="3">
+                                                Shall the name of PHP NEXT be PHP 6, or PHP 7?      </th>
+                                        </tr>
+                                        <tr class="row1">
+                                            <th class="col0">Real name</th>
+                                            <td class="centeralign">PHP 6</td>
+                                            <td class="centeralign">PHP 7</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=ab">ab</a>&nbsp;(ab)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/24 08:33"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=aeoris">aeoris</a>&nbsp;(aeoris)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/25 01:39"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=aharvey">aharvey</a>&nbsp;(aharvey)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 17:30"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=ajf">ajf</a>&nbsp;(ajf)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 15:38"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=amir">amir</a>&nbsp;(amir)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/26 20:49"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=andi">andi</a>&nbsp;(andi)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 15:54"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=ashnazg">ashnazg</a>&nbsp;(ashnazg)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/24 18:59"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=auroraeosrose">auroraeosrose</a>&nbsp;(auroraeosrose)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 17:15"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=Barry Carlyon">Barry Carlyon</a>&nbsp;(barrycarlyon)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 20:49"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=bate">bate</a>&nbsp;(bate)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/24 10:49"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=bishop">bishop</a>&nbsp;(bishop)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/25 13:13"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=brandon">brandon</a>&nbsp;(brandon)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 16:16"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=brianlmoon">brianlmoon</a>&nbsp;(brianlmoon)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 21:08"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=colder">colder</a>&nbsp;(colder)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/24 15:01"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=davey">davey</a>&nbsp;(davey)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 15:52"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=derick">derick</a>&nbsp;(derick)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 15:50"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=dm">dm</a>&nbsp;(dm)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 19:10"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=dmitry">dmitry</a>&nbsp;(dmitry)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 16:44"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=dragoonis">dragoonis</a>&nbsp;(dragoonis)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 18:54"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=ericsten">ericsten</a>&nbsp;(ericsten)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 19:11"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=fa">fa</a>&nbsp;(fa)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 16:00"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=Fabien Potencier">Fabien Potencier</a>&nbsp;(fabpot)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 18:22"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=fmk">fmk</a>&nbsp;(fmk)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 15:56"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=frozenfire">frozenfire</a>&nbsp;(frozenfire)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/26 07:36"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=googleguy">googleguy</a>&nbsp;(googleguy)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/29 22:26"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=guilhermeblanco">guilhermeblanco</a>&nbsp;(guilhermeblanco)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 16:38"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=gwynne">gwynne</a>&nbsp;(gwynne)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 15:44"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=hholzgra">hholzgra</a>&nbsp;(hholzgra)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/28 15:51"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=hradtke">hradtke</a>&nbsp;(hradtke)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 17:36"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=hywan">hywan</a>&nbsp;(hywan)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 16:18"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=ifeghali">ifeghali</a>&nbsp;(ifeghali)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/27 16:18"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=indeyets">indeyets</a>&nbsp;(indeyets)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 15:53"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=itrebal">itrebal</a>&nbsp;(itrebal)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 15:58"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=ivonascimento">ivonascimento</a>&nbsp;(ivonascimento)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 19:59"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=jedibc">jedibc</a>&nbsp;(jedibc)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/24 08:42"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=jmikola">jmikola</a>&nbsp;(jmikola)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 19:04"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=jwage">jwage</a>&nbsp;(jwage)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 18:13"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=kalle">kalle</a>&nbsp;(kalle)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/26 15:07"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=kaplan">kaplan</a>&nbsp;(kaplan)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 21:02"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=kriscraig">kriscraig</a>&nbsp;(kriscraig)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 20:19"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=laruence">laruence</a>&nbsp;(laruence)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/24 03:31"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=leszek">leszek</a>&nbsp;(leszek)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/24 09:42"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=levim">levim</a>&nbsp;(levim)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 22:52"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=lstrojny">lstrojny</a>&nbsp;(lstrojny)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 18:00"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=malukenho">malukenho</a>&nbsp;(malukenho)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 16:19"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=marco">marco</a>&nbsp;(marco)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/26 06:56"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=mattwil">mattwil</a>&nbsp;(mattwil)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 20:40"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=mbeccati">mbeccati</a>&nbsp;(mbeccati)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 16:22"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=mfonda">mfonda</a>&nbsp;(mfonda)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 18:07"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=mgf">mgf</a>&nbsp;(mgf)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/26 09:18"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=mike">mike</a>&nbsp;(mike)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 15:50"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=mikemike">mikemike</a>&nbsp;(mikemike)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/24 14:19"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=mrook">mrook</a>&nbsp;(mrook)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/24 08:01"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=nikic">nikic</a>&nbsp;(nikic)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 15:53"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=pajoye">pajoye</a>&nbsp;(pajoye)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 15:42"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=patrickallaert">patrickallaert</a>&nbsp;(patrickallaert)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/24 16:03"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=peehaa">peehaa</a>&nbsp;(peehaa)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 16:17"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=philstu">philstu</a>&nbsp;(philstu)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 16:04"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=pollita">pollita</a>&nbsp;(pollita)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 18:43"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=preinheimer">preinheimer</a>&nbsp;(preinheimer)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 16:15"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=ramsey">ramsey</a>&nbsp;(ramsey)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 16:15"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=rdlowrey">rdlowrey</a>&nbsp;(rdlowrey)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 16:07"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=rdohms">rdohms</a>&nbsp;(rdohms)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 16:07"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=reywob">reywob</a>&nbsp;(reywob)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 17:40"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=sean">sean</a>&nbsp;(sean)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 15:41"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=sebastian">sebastian</a>&nbsp;(sebastian)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/24 13:52"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=seld">seld</a>&nbsp;(seld)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 15:44"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=sixd">sixd</a>&nbsp;(sixd)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 23:13"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=sobak">sobak</a>&nbsp;(sobak)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/25 22:16"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=stas">stas</a>&nbsp;(stas)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 21:00"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=sthulbourn">sthulbourn</a>&nbsp;(sthulbourn)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 17:36"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=szarkos">szarkos</a>&nbsp;(szarkos)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 23:52"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=thorstenr">thorstenr</a>&nbsp;(thorstenr)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 16:02"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=tony2001">tony2001</a>&nbsp;(tony2001)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/25 15:23"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=treffynnon">treffynnon</a>&nbsp;(treffynnon)        </td>
+                                            <td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 22:51"></td><td  class="centeralign" style="background-color:#FCC">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=tyrael">tyrael</a>&nbsp;(tyrael)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 16:35"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=weierophinney">weierophinney</a>&nbsp;(weierophinney)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 15:47"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=whatthejeff">whatthejeff</a>&nbsp;(whatthejeff)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/24 08:09"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=yohgaki">yohgaki</a>&nbsp;(yohgaki)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/27 09:51"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=yunosh">yunosh</a>&nbsp;(yunosh)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/29 16:03"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=zamolxe">zamolxe</a>&nbsp;(zamolxe)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 18:35"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rightalign">
+                                                <a href="//people.php.net/user.php?username=zeev">zeev</a>&nbsp;(zeev)        </td>
+                                            <td  class="centeralign" style="background-color:#FCC">&nbsp;</td><td  class="centeralign" style="background-color:#AFA"><img src="/lib/images/success.png" title="2014/07/23 15:45"></td>
+                                        </tr>
+
+                                        <!-- Results / sum per column -->
+                                        <tr>
+                                            <th class="rightalign"><b>Final result:</b></th>
+                                            <th class="centeralign"><b>24</b></th>
+                                            <th class="centeralign"><b>58</b></th>
+                                        </tr>
+
+
+
+                                        <tr>
+                                            <td colspan="3">
+                                                This poll has been closed.      </td>
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                </form>
+
+
+
+
+
+                            </div>
+
+                            <h2 class="sectionedit10" id="references">References</h2>
+                            <div class="level2">
+                                <ul>
+                                    <li class="level1"><div class="li"> Internals list: <a href="http://php.markmail.org/thread/t35qo4i6zqkrisgy" class="urlextern" title="http://php.markmail.org/thread/t35qo4i6zqkrisgy"  rel="nofollow">About PHP6</a> (April &#039;14)</div>
+                                    </li>
+                                    <li class="level1"><div class="li"> <a href="http://www.amazon.co.uk/s/ref=sr_pg_1?rh=n%3A266239%2Ck%3APHP+6&amp;keywords=PHP+6&amp;ie=UTF8&amp;qid=1404592989" class="urlextern" title="http://www.amazon.co.uk/s/ref=sr_pg_1?rh=n%3A266239%2Ck%3APHP+6&amp;keywords=PHP+6&amp;ie=UTF8&amp;qid=1404592989"  rel="nofollow">Amazon search for &quot;PHP6&quot; books</a></div>
+                                    </li>
+                                </ul>
+
+                            </div>
+
+                            <!-- wikipage stop -->
+                        </div>
+
+                        <div class="docInfo"><bdi>rfc/php6.txt</bdi> · Last modified: 2014/07/30 01:42 by <bdi>ajf</bdi></div>
+
+                    </div></div><!-- /content -->
+
+                    <hr class="a11y" />
+
+                    <!-- PAGE ACTIONS -->
+                    <div id="dokuwiki__pagetools">
+                        <h3 class="a11y">Page Tools</h3>
+                        <div class="tools">
+                            <ul>
+                                <li><a href="/rfc/php6?do=edit"  class="action source" accesskey="v" rel="nofollow" title="Show pagesource [V]"><span>Show pagesource</span></a></li><li><a href="/rfc/php6?do=revisions"  class="action revs" accesskey="o" rel="nofollow" title="Old revisions [O]"><span>Old revisions</span></a></li><li><a href="/rfc/php6?do=backlink"  class="action backlink" rel="nofollow" title="Backlinks"><span>Backlinks</span></a></li><li><a href="#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]"><span>Back to top</span></a></li>                    </ul>
+                        </div>
+                    </div>
+                </div><!-- /wrapper -->
+
+            </div></div><!-- /site -->
+
+            <div class="no"><img src="/lib/exe/indexer.php?id=rfc%3Aphp6&amp;1427892050" width="2" height="1" alt="" /></div>
+            <div id="screen__mode" class="no"></div>    <!--[if ( lte IE 7 | IE 8 ) ]></div><![endif]-->
+        </section>
+
+        <section class="secondscreen">
+            <!-- TOC START -->
+            <div id="dw__toc">
+                <h3 class="toggle">Table of Contents</h3>
+                <div>
+
+                    <ul class="toc">
+                        <li class="level1"><div class="li"><a href="#php_rfcname_of_next_release_of_php">PHP RFC: Name of Next Release of PHP</a></div>
+                            <ul class="toc">
+                                <li class="level2"><div class="li"><a href="#introduction">Introduction</a></div></li>
+                                <li class="level2"><div class="li"><a href="#historical_context">Historical context</a></div></li>
+                                <li class="level2"><div class="li"><a href="#the_case_for_php_7">The Case for PHP 7</a></div>
+                                    <ul class="toc">
+                                        <li class="level3"><div class="li"><a href="#no_good_reasons_not_to_skip_version_6">No good reasons NOT to skip version 6</a></div></li>
+                                        <li class="level3"><div class="li"><a href="#strong_reasons_of_why_we_actually_should_skip_version_6_into_7">Strong reasons of why we actually should skip version 6 into 7</a></div></li>
+                                        <li class="level3"><div class="li"><a href="#summary">Summary</a></div></li>
+                                    </ul>
+                                </li>
+                                <li class="level2"><div class="li"><a href="#the_case_for_php_6">The Case for PHP 6</a></div></li>
+                                <li class="level2"><div class="li"><a href="#vote">Vote</a></div></li>
+                                <li class="level2"><div class="li"><a href="#references">References</a></div></li>
+                            </ul></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- TOC END -->
+        </section>
+    </section><!-- .fullscreen -->
+    <footer>
+        <nav class="fullscreen">
+            <ul>
+                <li><a href="//php.net/copyright">Copyright © 2001-2015 The PHP Group</a></li>
+                <li><a href="//php.net/sites">Other PHP.net sites</a></li>
+                <li><a href="//php.net/privacy">Privacy policy</a></li>
+            </ul>
+        </nav>
+    </footer>
+
+</div><!-- .wrap -->
+</body>
+</html>
