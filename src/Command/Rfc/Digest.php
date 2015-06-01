@@ -116,13 +116,9 @@ class Digest extends Command
      */
     private function showDetails(Rfc $rfc)
     {
-        $table = $this->getHelper('table');
-
         $this->output->writeln("\n<comment>RFC Details</comment>");
         $this->output->writeln(sprintf("\n<info>%s</info>", $rfc->getName()));
-
-        $table->setRows($this->rfcService->getDetailsAsTableRows($rfc));
-        $table->render($this->output);
+        $this->renderTable($this->rfcService->getDetailsAsTableRows($rfc));
     }
 
     /**
@@ -166,8 +162,6 @@ class Digest extends Command
      */
     private function showChangeLog(Rfc $rfc)
     {
-        $table = $this->getHelper('table');
-
         $this->output->writeln("\n<comment>RFC ChangeLog</comment>");
 
         if (!$rfc->getChangeLog()) {
@@ -175,7 +169,16 @@ class Digest extends Command
             return;
         }
 
-        $table->setRows($this->rfcService->getChangeLogsAsTableRows($rfc));
+        $this->renderTable($this->rfcService->getChangeLogsAsTableRows($rfc));
+    }
+    
+    /**
+     * @param array $rows
+     */
+    private function renderTable(array $rows)
+    {
+        $table = $this->getHelper('table');
+        $table->setRows($rows);
         $table->render($this->output);
     }
 }
