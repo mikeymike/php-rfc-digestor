@@ -4,6 +4,7 @@ namespace MikeyMike\RfcDigestor;
 
 use Symfony\Component\CssSelector\CssSelector;
 use MikeyMike\RfcDigestor\Entity\Rfc;
+use InvalidArgumentException;
 
 /**
  * Class RfcBuilder
@@ -176,19 +177,9 @@ class RfcBuilder
      */
     private function parseDetails()
     {
-        $details = [];
-
-        $xPath = new \DOMXPath($this->document);
-        foreach ($xPath->query(CssSelector::toXPath('.page div:first-of-type li.level1 > div.li')) as $node) {
-            // Get details separately
-            list($key, $value) = explode(':', trim($node->textContent), 2);
-
-            $details[$key] = $value;
-        }
-
-        return $details;
+        return $this->parseChangeLogOrDetails('details');
     }
-
+    
     /**
      * Parse RFC ChangeLog
      *
@@ -196,17 +187,38 @@ class RfcBuilder
      */
     private function parseChangeLog()
     {
-        $changeLog = [];
-
+        return $this->parseChangeLogOrDetails('changeLog');
+    }
+    
+    /**
+     * @param string $changeLogOrDetails
+     * 
+     * @return array
+     */
+    private function parseChangeLogOrDetails($changeLogOrDetails)
+    {
+        $selector = null;
+        switch ($changeLogOrDetails) {
+            case 'changeLog':
+                $selector = 'h2#changelog + div li';
+                break;
+            case 'details':
+                $selector = '.page div:first-of-type li.level1 > div.li';
+                break;
+            default:
+                throw new InvalidArgumentException('Not supported');
+        }
+        
+        $data = [];
         $xPath = new \DOMXPath($this->document);
-        foreach ($xPath->query(CssSelector::toXPath('h2#changelog + div li')) as $node) {
+        foreach ($xPath->query(CssSelector::toXPath($selector)) as $node) {
             // Get details separately
-            list($version, $change) = explode(' ', trim($node->textContent), 2);
+            list($key, $value) = explode(':', trim($node->textContent), 2);
 
-            $changeLog[$version] = rtrim($change, ':');
+            $data[$key] = $value;
         }
 
-        return $changeLog;
+        return $data;
     }
 
     /**
