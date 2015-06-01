@@ -197,7 +197,6 @@ class RfcBuilder
      */
     private function parseChangeLogOrDetails($changeLogOrDetails)
     {
-        $selector = null;
         switch ($changeLogOrDetails) {
             case 'changeLog':
                 $selector = 'h2#changelog + div li';
