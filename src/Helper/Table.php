@@ -48,7 +48,7 @@ class Table
     /**
      * Number of columns cache.
      *
-     * @var array
+     * @var int|null
      */
     private $numberOfColumns;
 
@@ -99,7 +99,7 @@ class Table
      */
     public static function getStyleDefinition($name)
     {
-        if (!self::$styles) {
+        if (empty(self::$styles)) {
             self::$styles = self::initStyles();
         }
 
