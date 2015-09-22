@@ -8,5 +8,8 @@
       "security": "ssl",
       "username": "",
       "password": ""
+   },
+   "app": {
+      "url": "http://www.phprfc.news"
    }
 }

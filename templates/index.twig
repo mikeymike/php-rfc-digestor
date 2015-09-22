@@ -1,0 +1,193 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>PHP RFC Digestor</title>
+
+        <link href="http://fonts.googleapis.com/css?family=Raleway:400,500,700,900" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+        <style>
+            body{ font-family: 'Raleway', sans-serif; background: #222; color: #333; }
+
+            header, main{ margin-top: 50px; }
+            h1,h2,h3{ padding: 0; margin: 0 0 15px 0; }
+
+            main div.data{
+                border-radius: 5px 5px 0 0;
+                background: #f5f5f5;
+            }
+
+            main>div.data{ padding: 0px 0; }
+            main>div.data>section{ display: none; }
+            main>div.data>section:first-child{ display: block; }
+            main div.data div.block:first-child{ border-radius: 5px 5px 0 0; padding-top: 42px; }
+            main div.data div.block:last-child{ padding-bottom: 70px; }
+            main div.data div.block{ padding: 28px 40px 28px 40px; background: #f5f5f5; }
+            div.intro p{ font-size: 24px; font-weight: 400; margin-bottom: 0; line-height: 31px; }
+            div.intro em{ font-weight: 500; color: #df4949; font-style: normal; line-height: 30px; }
+            div.counter h2{ font-weight: 900; font-size: 30px; margin-bottom: 15px; }
+            div.newsletter h3{ font-size: 24px; font-weight: 700; margin-bottom: 20px; }
+
+            ul.countdown li{ margin: 0 15px; }
+            ul.countdown li span{ font-size: 32px; }
+            ul.countdown li p{ font-size: 14px; color: #999; margin-bottom: 0; }
+
+            main div.data div.counter{ background: #f5f5f5; }
+            .newsletter form{ padding: 0 0; text-align: center; }
+            .newsletter form div.input-group{ max-width: 392px; margin: 0 auto; }
+
+            nav ul{ border-radius: 0 0 5px 5px; display: block; float: left; margin-top: 2px; width: 100%;  }
+            nav ul li{ padding: 0; margin: 0; display: block; float: left; width: 33.3334%; }
+            nav ul li a{
+                display: block;
+                color: #f5f5f5;
+                font-size: 14px;
+                font-weight: 700;
+                text-transform: uppercase;
+                padding: 22px 0;
+                background: #df4949;
+                margin-right: 2px;
+                -webkit-transition: all .5s ease-out;
+                transition: all .5s ease-out;
+            }
+            nav ul li a:hover{ background-color: #bf3f3f; text-decoration: none; color: #fff; }
+            nav ul li.selected a{ background: #333; }
+            nav ul li:last-child a{ margin-right: 0; border-radius: 0 0 5px 0 }
+            nav ul li:first-child a{ border-radius: 0 0 0 5px; }
+
+            .btn-default {
+                color: #fff;
+                background-color: #df4949;
+                border-color: #df4949;
+                -webkit-transition: all .5s ease-out;
+                transition: all .5s ease-out;
+                padding: 7px 1.5em;
+                font-weight: 500;
+                font-size: 16px;
+            }
+
+            .btn-default:hover, .btn-default:focus, .btn-default:active {
+                color: #fff;
+                background-color: #bf3f3f;
+                border-color: #bf3f3f;
+            }
+
+            .newsletter .form-control {
+                background-color: #fff;
+                border: 1px solid #ddd;
+                border-right: none;
+                box-shadow: none;
+                height: 38px;
+            }
+
+            .fa-paper-plane {
+                padding-left: .5em;
+            }
+
+            .input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group {
+                margin-left: 0px;
+            }
+
+            #contact address{ margin-bottom: 30px; }
+            #contact form p{ margin-bottom: 20px; font-size: 13px; }
+            #contact form textarea{ height: 133px; }
+
+            footer{ color: #f5f5f5; padding-top: 40px; float: left; width: 100%; }
+            footer p.copyright{ color: #f5f5f5; font-size: 12px; }
+
+            #contact .btn .fa-cog{ opacity: 0; }
+
+            p.bg-warning,p.bg-success{ padding: 10px; margin: 10px; box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.1) }
+
+            .mask{
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 1080px;
+                width: 100%;
+                background: #222;
+                z-index: 1000;
+                text-align: center;
+                color: #f5f5f5;
+            }
+
+            .bg-warning i, .bg-success i {
+                padding-right: .5em;
+            }
+
+            .btn-primary {
+                color: #fff;
+                background-color: #df4949;
+                border-color: #df4949;
+            }
+
+            a {
+                color: #df4949;
+                text-decoration: none;
+            }
+
+            footer li a{
+                color: #fff;
+                font-size:16px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="raw">
+                <div class="col-md-6 col-sm-8 col-sm-offset-2 col-md-offset-3 text-center">
+                    <header><img src="http://php.net/images/logos/php-med-trans.png" alt="PHP RFC Digestor"></header>
+                    <main>
+                        <div class="data">
+                            <section id="subscribe">
+
+                                {% for message in app.session.getFlashBag.get('message') %}
+
+                                    <div class="alert alert-success" role="alert">{{ message|e }}</div>
+                                {% endfor %}
+
+                                <div class="intro block">
+                                    <p>
+                                        Are you that much of a nerd that you need to know whenever some information on a PHP RFC changes
+                                        or whenever someone voted on an RFC?
+                                    </p>
+                                </div>
+
+                                <div class="counter block">
+                                    <h2>Well you have come to the right place!</h2>
+                                </div>
+
+                                <div class="block newsletter">
+                                    <h3>Subscribe to get notified</h3>
+                                    <form role="form" id="mc-form" method="post" action="#">
+                                        {{ form_errors(form) }}
+                                        {{ form_errors(form.email) }}
+                                        {{ form_widget(form._token) }}
+                                        <div class="input-group">
+                                            {{ form_widget(form.email,  {'attr': {'class': 'form-control'}}) }}
+                                            <span class="input-group-btn">
+                                                <button type="submit" class="btn btn-default" id="mc-subscribe" value="Subscribe" name="subscribe">Submit</button>
+                                            </span>
+                                        </div>
+                                    </form>
+                                    <p id="mc-notification"></p>
+                                </div>
+                            </section>
+                        </div>
+                        <nav>
+                            <ul class="list-unstyled">
+                                <li><a href="#about">About</a></li>
+                                <li class="selected"><a style="padding:16px" href="https://github.com/mikeymike/php-rfc-digestor" alt="Fork me on GitHub"><img src="images/github.png" alt="" height="32px"></a></li>
+                                <li><a href="https://wiki.php.net/rfc">PHP RFC's</a></li>
+                            </ul>
+                        </nav>
+                    </main>
+                </div>
+            </div>
+        </div>
+        <a href="https://github.com/mikeymike/php-rfc-digestor"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+    </body>
+</html>

@@ -3,6 +3,7 @@
 
 namespace MikeyMike\RfcDigestor\Command\Notify;
 
+use Doctrine\Common\Persistence\ObjectRepository;
 use Noodlehaus\Config;
 use MikeyMike\RfcDigestor\Service\DiffService;
 use MikeyMike\RfcDigestor\Service\RfcService;
@@ -45,23 +46,32 @@ class Rfc extends Command
     protected $twig;
 
     /**
-     * @param Config        $config
-     * @param RfcService    $rfcService
-     * @param DiffService   $diffService
+     * @var ObjectRepository
+     */
+    private $subscriberRepository;
+
+    /**
+     * @param Config $config
+     * @param RfcService $rfcService
+     * @param DiffService $diffService
      * @param \Swift_Mailer $mailer
+     * @param \Twig_Environment $twig
+     * @param ObjectRepository $subscriberRepository
      */
     public function __construct(
         Config $config,
         RfcService $rfcService,
         DiffService $diffService,
         \Swift_Mailer $mailer,
-        \Twig_Environment $twig
+        \Twig_Environment $twig,
+        ObjectRepository $subscriberRepository
     ) {
-        $this->config      = $config;
-        $this->rfcService  = $rfcService;
-        $this->diffService = $diffService;
-        $this->mailer      = $mailer;
-        $this->twig        = $twig;
+        $this->config               = $config;
+        $this->rfcService           = $rfcService;
+        $this->diffService          = $diffService;
+        $this->mailer               = $mailer;
+        $this->twig                 = $twig;
+        $this->subscriberRepository = $subscriberRepository;
 
         parent::__construct();
     }
@@ -74,8 +84,7 @@ class Rfc extends Command
         $this
             ->setName('notify:rfc')
             ->setDescription('Get notifications of RFC changes')
-            ->addArgument('rfc', InputArgument::REQUIRED, 'RFC Code e.g. scalar_type_hints')
-            ->addArgument('email', InputArgument::REQUIRED, 'Email to notify');
+            ->addArgument('rfc', InputArgument::REQUIRED, 'RFC Code e.g. scalar_type_hints');
     }
 
     /**
@@ -124,21 +133,28 @@ class Rfc extends Command
             return;
         }
 
-        $email = $this->twig->render('rfc.twig', [
-            'rfcName'     => $currentRfc->getName(),
-            'details'     => $diffs['details'],
-            'changeLog'   => $diffs['changeLog'],
-            'voteDiffs'   => $diffs['votes'],
-            'rfcVotes'    => $currentRfc->getVotes()
-        ]);
+        foreach ($this->subscriberRepository->findAll() as $subscriber) {
+            $email = $this->twig->render('rfc.twig', [
+                'rfcName'           => $currentRfc->getName(),
+                'details'           => $diffs['details'],
+                'changeLog'         => $diffs['changeLog'],
+                'voteDiffs'         => $diffs['votes'],
+                'rfcVotes'          => $currentRfc->getVotes(),
+                'unsubscribeUrl'    => sprintf(
+                    '%s/unsubscribe/%s',
+                    $this->config->get('app.url'),
+                    $subscriber->getUnsubscribeToken()
+                )
+            ]);
 
-        $message = $this->mailer->createMessage()
-            ->setSubject(sprintf('%s updated!', $currentRfc->getName()))
-            ->setFrom('notifier@php-rfc-digestor.com')
-            ->setTo($input->getArgument('email'))
-            ->setBody($email, 'text/html');
+            $message = $this->mailer->createMessage()
+                ->setSubject(sprintf('%s updated!', $currentRfc->getName()))
+                ->setFrom('notifier@php-rfc-digestor.com')
+                ->setTo($subscriber->getEmail())
+                ->setBody($email, 'text/html');
 
-        $this->mailer->send($message);
+            $this->mailer->send($message);
+        }
 
         file_put_contents($oldRfcPath, $currentRfc->getRawContent());
     }
