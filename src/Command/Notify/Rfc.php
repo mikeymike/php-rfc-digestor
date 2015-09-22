@@ -133,7 +133,7 @@ class Rfc extends Command
         ]);
 
         $message = $this->mailer->createMessage()
-            ->setSubject(sprintf('%s updated!', $currentRfc->getName()))
+            ->setSubject(sprintf('Re: %s updated!', $currentRfc->getName()))
             ->setFrom('notifier@php-rfc-digestor.com')
             ->setTo($input->getArgument('email'))
             ->setBody($email, 'text/html');
