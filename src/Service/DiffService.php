@@ -43,9 +43,19 @@ class DiffService
         // Split them into new and updated
         $splitVotesDiffs = [];
         foreach ($voteDiffs as $key => $votes) {
-            $rfc2Votes    = $comparisonVotes;
-            $newVotes     = array_diff_key($votes['votes'], $rfc2Votes[$key]['votes']);
-            $updatedVotes = array_intersect_key($votes['votes'], $rfc2Votes[$key]['votes']);
+
+            if (array_key_exists($key, $comparisonVotes)) {
+                $newVotes = array_diff_key($votes['votes'], $comparisonVotes[$key]['votes']);
+            } else {
+                $newVotes = $votes['votes'];
+            }
+
+            if (array_key_exists($key, $comparisonVotes)) {
+                $updatedVotes = array_intersect_key($votes['votes'], $comparisonVotes[$key]['votes']);
+            } else {
+                $updatedVotes = [];
+            }
+
 
             /**
              * Quick function to get vote

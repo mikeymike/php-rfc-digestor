@@ -105,15 +105,15 @@ class Rfc extends Command
         // Store current RFC if no old RFC exists
         if (!file_exists($oldRfcPath)) {
             file_put_contents($oldRfcPath, $currentRfc->getRawContent());
-            return;
-        }
-
-        try {
-            // Get oldRfc
-            $oldRfc = $this->rfcService->getRfcFromStorage($rfcCode);
-        } catch (\InvalidArgumentException $e) {
-            $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
-            return;
+            $oldRfc = new \MikeyMike\RfcDigestor\Entity\Rfc();
+        } else {
+            try {
+                // Get oldRfc
+                $oldRfc = $this->rfcService->getRfcFromStorage($rfcCode);
+            } catch (\InvalidArgumentException $e) {
+                $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
+                return;
+            }
         }
 
         // Get diffs
