@@ -134,9 +134,12 @@ $app->post('/', function (Request $request) use ($app) {
         $em->persist($subscriber);
         $em->flush();
         $app['session']->getFlashBag()->add('message', sprintf('You successfully subscribed with %s', $email));
+        return $app->redirect('/');
     }
 
-    return $app->redirect('/');
+    return $app['twig']->render('index.twig',
+        ['form' => $form->createView()]
+    );
 });
 
 $app->get('/unsubscribe/{token}', function ($token)  use ($app) {
