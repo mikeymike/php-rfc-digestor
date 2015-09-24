@@ -40,7 +40,13 @@ class SlackRfcNotifier implements RfcNotifierInterface
      */
     public function notify(Rfc $rfc, array $voteDiff)
     {
-        $attachments = [];
+        $attachments = [
+            [
+                'title'         => $rfc->getName(),
+                'title_link'    => $rfc->getUrl(),
+                'color'         => 'good',
+            ]
+        ];
         foreach ($voteDiff['votes'] as $title => $voteDiffs) {
             $attachment = [
                 'text'      => $title,
@@ -89,9 +95,8 @@ class SlackRfcNotifier implements RfcNotifierInterface
         }
 
         $message = [
-            'text'          => sprintf("*PHP RFC Updates for %s*", $rfc->getName()),
             'username'      => 'PHP RFC Digestor',
-            'icon_url'      => 'http://php.net/images/logos/php.ico',
+            'icon_url'      => 'http://php.net/images/logos/php-icon.png',
             'attachments'   => json_encode($attachments),
         ];
 

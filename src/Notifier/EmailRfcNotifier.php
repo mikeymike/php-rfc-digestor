@@ -63,6 +63,7 @@ class EmailRfcNotifier implements RfcNotifierInterface
             foreach ($subscribers as $subscriber) {
                 $email = $this->twig->render('rfc.twig', [
                     'rfcName'           => $rfc->getName(),
+                    'rfcUrl'            => $rfc->getUrl(),
                     'details'           => $voteDiff['details'],
                     'changeLog'         => $voteDiff['changeLog'],
                     'voteDiffs'         => $voteDiff['votes'],

@@ -11,6 +11,11 @@ namespace MikeyMike\RfcDigestor\Entity;
 class Rfc
 {
     /**
+     * @var string URL
+     */
+    protected $url;
+
+    /**
      * @var string
      */
     protected $code = '';
@@ -43,6 +48,22 @@ class Rfc
      * @var string
      */
     protected $rawContent = '';
+
+    /**
+     * @param string $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
 
     /**
      * @param string $code

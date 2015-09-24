@@ -22,6 +22,15 @@ class RfcTest extends \PHPUnit_Framework_TestCase
         $this->rfc = new Rfc();
     }
 
+    public function testSetUrlAndGetUrl()
+    {
+        $this->assertSame(null, $this->rfc->getUrl());
+
+        $this->rfc->setUrl('https://wiki.php.net/rfc/short_closures');
+
+        $this->assertSame('https://wiki.php.net/rfc/short_closures', $this->rfc->getUrl());
+    }
+
     public function testSetCodeAndGetCode()
     {
         $this->assertSame('', $this->rfc->getCode());
