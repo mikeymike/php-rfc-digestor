@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ef139bbf83c8b541145af1994589a00e",
-    "content-hash": "b13ecf2a297d26015f7d4d5154b80c13",
+    "hash": "ff8f869e7f7568bcbb68970b27f86c36",
+    "content-hash": "c1d099cc7f7cfad70c86285d32685668",
     "packages": [
         {
             "name": "dflydev/doctrine-orm-service-provider",
@@ -668,6 +668,49 @@
                 "orm"
             ],
             "time": "2015-08-31 12:59:39"
+        },
+        {
+            "name": "frlnc/php-slack",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Frlnc/php-slack.git",
+                "reference": "b73a6b6ea1282a3f70d29d7c2c77e2d3dc89c88d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Frlnc/php-slack/zipball/b73a6b6ea1282a3f70d29d7c2c77e2d3dc89c88d",
+                "reference": "b73a6b6ea1282a3f70d29d7c2c77e2d3dc89c88d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9",
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Frlnc\\Slack\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Connor Parks",
+                    "email": "connor@connorvg.tv"
+                }
+            ],
+            "description": "A lightweight PHP implementation of Slack's API.",
+            "keywords": [
+                "slack"
+            ],
+            "time": "2015-04-17 18:43:15"
         },
         {
             "name": "noodlehaus/config",

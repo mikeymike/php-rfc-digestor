@@ -30,6 +30,7 @@
             div.intro em{ font-weight: 500; color: #df4949; font-style: normal; line-height: 30px; }
             div.counter h2{ font-weight: 900; font-size: 30px; margin-bottom: 15px; }
             div.newsletter h3{ font-size: 24px; font-weight: 700; margin-bottom: 20px; }
+            div.slack h3{ font-size: 24px; font-weight: 700; margin-bottom: 20px; }
 
             ul.countdown li{ margin: 0 15px; }
             ul.countdown li span{ font-size: 32px; }
@@ -38,6 +39,9 @@
             main div.data div.counter{ background: #f5f5f5; }
             .newsletter form{ padding: 0 0; text-align: center; }
             .newsletter form div.input-group{ max-width: 392px; margin: 0 auto; }
+            .slack form{ padding: 0 0; text-align: center; }
+            .slack form div.input-group{ max-width: 392px; margin: 0 auto; }
+
 
             nav ul{ border-radius: 0 0 5px 5px; display: block; float: left; margin-top: 2px; width: 100%;  }
             nav ul li{ padding: 0; margin: 0; display: block; float: left; width: 33.3334%; }
@@ -81,6 +85,20 @@
                 border-right: none;
                 box-shadow: none;
                 height: 38px;
+            }
+
+            .slack .form-control {
+                margin: 2px 0px;
+                border-radius: 4px !important;
+            }
+
+            #slack-subscribe {
+                width: 300px;
+                margin: 4px;
+            }
+
+            .slack .input-group {
+                width: 300px;
             }
 
             .fa-paper-plane {
@@ -163,8 +181,8 @@
                                 <img style="width:200px;" src="images/iphone-6-flat-comp.png">
 
                                 <div class="block newsletter">
-                                    <h3>Subscribe to get notified</h3>
-                                    <form role="form" id="mc-form" method="post" action="#">
+                                    <h3>Subscribe to get notified by e-mail</h3>
+                                    <form role="form" id="mc-form" method="post" action="/email-subscribe">
                                         {{ form_errors(form) }}
                                         {{ form_errors(form.email) }}
                                         {{ form_widget(form._token) }}
@@ -173,6 +191,30 @@
                                             <span class="input-group-btn">
                                                 <button type="submit" class="btn btn-default" id="mc-subscribe" value="Subscribe" name="subscribe">Submit</button>
                                             </span>
+                                        </div>
+                                    </form>
+                                    <p id="mc-notification"></p>
+                                </div>
+
+                                <div class="block slack">
+                                    <h3>Subscribe to get notified in your slack channel</h3>
+                                    <form role="form" id="mc-form" method="post" action="/slack-subscribe">
+                                        {{ form_errors(slack_form) }}
+                                        {{ form_errors(slack_form.email) }}
+                                        {{ form_errors(slack_form.token) }}
+                                        {{ form_errors(slack_form.channel) }}
+                                        {{ form_widget(slack_form._token) }}
+                                        <div class="input-group">
+                                            {{ form_widget(slack_form.email,  {'attr': {'class': 'form-control'}}) }}
+                                        </div>
+                                        <div class="input-group">
+                                            {{ form_widget(slack_form.token,  {'attr': {'class': 'form-control'}}) }}
+                                        </div>
+                                        <div class="input-group">
+                                            {{ form_widget(slack_form.channel,  {'attr': {'class': 'form-control'}}) }}
+                                        </div>
+                                        <div class="input-group">
+                                            <button type="submit" class="btn btn-default form-control" id="slack-subscribe" value="Subscribe" name="subscribe">Submit</button>
                                         </div>
                                     </form>
                                     <p id="mc-notification"></p>

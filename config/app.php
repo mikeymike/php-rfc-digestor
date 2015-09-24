@@ -20,7 +20,12 @@ switch (true) {
 }
 
 use Dflydev\Silex\Provider\DoctrineOrm\DoctrineOrmServiceProvider;
+use Frlnc\Slack\Core\Commander;
+use Frlnc\Slack\Http\CurlInteractor;
+use Frlnc\Slack\Http\SlackResponseFactory;
+use MikeyMike\RfcDigestor\Entity\SlackSubscriber;
 use MikeyMike\RfcDigestor\Entity\Subscriber;
+use MikeyMike\RfcDigestor\Notifier\SlackRfcNotifier;
 use Silex\Provider\DoctrineServiceProvider;
 use Silex\Provider\FormServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
@@ -93,6 +98,22 @@ $app['subscribe-form'] = $app['form.factory']
     ->add('subscribe', 'submit', ['attr' => ['class' => 'btn-default']])
     ->getForm();
 
+$app['slack-subscribe-form'] = $app['form.factory']
+    ->createBuilder('form')
+    ->add('email', 'text', [
+        'attr' => ['placeholder' => 'Your email'],
+        'constraints' => new Assert\Email
+    ])
+    ->add('token', 'text', [
+        'attr' => ['placeholder' => 'Your slack token'],
+        'constraints' => new Assert\NotBlank
+    ])
+    ->add('channel', 'text', [
+        'attr' => ['placeholder' => 'The slack channel to post to'],
+        'constraints' => new Assert\NotBlank
+    ])
+    ->getForm();
+
 $app->register(new DoctrineServiceProvider, array(
     "db.options" => array(
         'driver' => 'pdo_sqlite',
@@ -115,14 +136,15 @@ $app->register(new DoctrineOrmServiceProvider, [
 ]);
 
 $app->get('/', function () use ($app) {
-    $form = $app['subscribe-form'];
+    $form       = $app['subscribe-form'];
+    $slackForm  = $app['slack-subscribe-form'];
     return $app['twig']->render('index.twig',
-        ['form' => $form->createView()]
+        ['form' => $form->createView(), 'slack_form' => $slackForm->createView()]
     );
 });
 
-$app->post('/', function (Request $request) use ($app) {
-    $form = $form = $app['subscribe-form'];
+$app->post('/email-subscribe', function (Request $request) use ($app) {
+    $form = $app['subscribe-form'];
     $form->handleRequest($request);
 
     if ($form->isValid()) {
@@ -138,7 +160,34 @@ $app->post('/', function (Request $request) use ($app) {
     }
 
     return $app['twig']->render('index.twig',
-        ['form' => $form->createView()]
+        ['form' => $form->createView(), 'slack_form' => $app['slack-subscribe-form']->createView()]
+    );
+});
+
+$app->post('/slack-subscribe', function (Request $request) use ($app) {
+    $slackForm = $app['slack-subscribe-form'];
+    $slackForm->handleRequest($request);
+
+    if ($slackForm->isValid()) {
+        $email      = $slackForm->getData()['email'];
+        $token      = $slackForm->getData()['token'];
+        $channel    = $slackForm->getData()['channel'];
+        $subscriber = new SlackSubscriber;
+        $subscriber->setEmail($email);
+        $subscriber->setToken($token);
+        $subscriber->setChannel($channel);
+        $em = $app['orm.em'];
+        $em->persist($subscriber);
+        $em->flush();
+        $app['session']->getFlashBag()->add(
+            'message',
+            sprintf('You successfully subscribed to slack updates on channel %s', $channel)
+        );
+        return $app->redirect('/');
+    }
+
+    return $app['twig']->render('index.twig',
+        ['form' => $app['subscribe-form']->createView(), 'slack_form' => $slackForm->createView()]
     );
 });
 
@@ -180,18 +229,42 @@ $app['diff.service'] = function ($app) {
     return new DiffService;
 };
 
+$app['slack.api'] = function ($app) {
+    $interactor = new CurlInteractor;
+    $interactor->setResponseFactory(new SlackResponseFactory);
+    return new Commander(null, $interactor);
+};
+
+$app['notifier.rfc.notifiers'] = function ($app) {
+    return [
+        new SlackRfcNotifier(
+            $app['orm.em']->getRepository('MikeyMike\RfcDigestor\Entity\SlackSubscriber'),
+            $app['slack.api']
+        ),
+        new \MikeyMike\RfcDigestor\Notifier\EmailRfcNotifier(
+            $app['orm.em']->getRepository('MikeyMike\RfcDigestor\Entity\Subscriber'),
+            $app['swift'],
+            $app['twig'],
+            $app['config']
+        )
+    ];
+};
+
+$app['notifier.rfc'] = function ($app) {
+    return new \MikeyMike\RfcDigestor\RfcNotifier(
+        $app['config'],
+        $app['rfc.service'],
+        $app['diff.service'],
+        $app['notifier.rfc.notifiers']
+    );
+};
+
 $app['cli'] = new Application('PHP RFC Digestor', '0.1.0');
 $app['cli']->addCommands(array(
     new Rfc\Digest($app['rfc.service']),
     new Rfc\Summary($app['rfc.service']),
     new Rfc\RfcList($app['rfc.service']),
-    new Notify\Rfc(
-        $app['config'],
-        $app['rfc.service'],
-        $app['diff.service'],
-        $app['swift'],
-        $app['twig'],
-        $app['orm.em']->getRepository('MikeyMike\RfcDigestor\Entity\Subscriber')),
+    new Notify\Rfc($app['notifier.rfc']),
     new Notify\Voting($app['config'], $app['rfc.service']),
     new Notify\RfcList(
         $app['config'],
