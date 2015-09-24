@@ -15,7 +15,16 @@
         "noodlehaus/config": "dev-master",
         "swiftmailer/swiftmailer": "~5.3",
         "openbuildings/swiftmailer-css-inliner": "~0.2",
-        "twig/twig": "~1.0"
+        "twig/twig": "~1.0",
+        "silex/silex": "~1.3",
+        "symfony/form": "^2.7",
+        "symfony/security-csrf": "^2.7",
+        "symfony/validator": "^2.7",
+        "symfony/config": "^2.7",
+        "symfony/twig-bridge": "^2.7",
+        "symfony/translation": "^2.7",
+        "doctrine/dbal": "~2.2",
+        "dflydev/doctrine-orm-service-provider": "~1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.1",

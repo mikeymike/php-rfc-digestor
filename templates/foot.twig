@@ -9,5 +9,10 @@
     <img class="center" src="https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png" alt="" height="80px"/>
     <h3 class="center">Fork me on GitHub</h3>
 </a>
+
+{% if unsubscribeUrl is defined and unsubscribeUrl is not empty %}
+    <a href="{{ unsubscribeUrl }}"><h6 class="center" style="color:blue;">Unsubscribe</h6></a>
+{% endif %}
+
 </body>
 </html>

@@ -48,8 +48,7 @@ class Voting extends Command
     {
         $this
             ->setName('notify:voting')
-            ->setDescription('Get notifications of RFC vote changes for actively voting RFCs')
-            ->addArgument('email', InputArgument::REQUIRED, 'Email to notify');
+            ->setDescription('Get notifications of RFC vote changes for actively voting RFCs');
     }
 
     /**
@@ -69,10 +68,7 @@ class Voting extends Command
 
         // Call notify:rfc for each one in voting list
         $command = $this->getApplication()->find('notify:rfc');
-        $args    = [
-            'command' => 'notify:rfc',
-            'email'   => $input->getArgument('email')
-        ];
+        $args    = ['command' => 'notify:rfc'];
 
         foreach (reset($list) as $name => $listing) {
             $args['rfc'] =  array_pop($listing);
