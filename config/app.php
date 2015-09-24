@@ -81,8 +81,8 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => $app['config']->get('templatePath'),
 ));
 
-$app['subscribe-form'] = $app['form.factory']
-    ->createBuilder('form')
+$app['email-form'] = $app['form.factory']
+    ->createNamedBuilder('email', 'form')
     ->add('email', 'text', [
         'attr' => ['placeholder' => 'Your email'],
         'constraints' => [
@@ -98,8 +98,8 @@ $app['subscribe-form'] = $app['form.factory']
     ->add('subscribe', 'submit', ['attr' => ['class' => 'btn-default']])
     ->getForm();
 
-$app['slack-subscribe-form'] = $app['form.factory']
-    ->createBuilder('form')
+$app['slack-form'] = $app['form.factory']
+    ->createNamedBuilder('slack', 'form')
     ->add('email', 'text', [
         'attr' => ['placeholder' => 'Your email'],
         'constraints' => new Assert\Email
@@ -135,61 +135,72 @@ $app->register(new DoctrineOrmServiceProvider, [
     ],
 ]);
 
-$app->get('/', function () use ($app) {
-    $form       = $app['subscribe-form'];
-    $slackForm  = $app['slack-subscribe-form'];
-    return $app['twig']->render('index.twig',
-        ['form' => $form->createView(), 'slack_form' => $slackForm->createView()]
-    );
-});
+$app->match('/', function (Request $request) use ($app) {
+    $emailForm  = $app['email-form'];
+    $slackForm  = $app['slack-form'];
+    if ('POST' === $request->getMethod()) {
 
-$app->post('/email-subscribe', function (Request $request) use ($app) {
-    $form = $app['subscribe-form'];
-    $form->handleRequest($request);
+        if ($request->request->has('email')) {
+            $emailForm->handleRequest($request);
 
-    if ($form->isValid()) {
-        $email = $form->getData()['email'];
-        $subscriber = new Subscriber;
-        $subscriber->setEmail($email);
-        $subscriber->setUnsubscribeToken(bin2hex(openssl_random_pseudo_bytes(16)));
-        $em = $app['orm.em'];
-        $em->persist($subscriber);
-        $em->flush();
-        $app['session']->getFlashBag()->add('message', sprintf('You successfully subscribed with %s', $email));
-        return $app->redirect('/');
+            if ($emailForm->isValid()) {
+                $email = $emailForm->getData()['email'];
+                $subscriber = new Subscriber;
+                $subscriber->setEmail($email);
+                $subscriber->setUnsubscribeToken(bin2hex(openssl_random_pseudo_bytes(16)));
+                $em = $app['orm.em'];
+                $em->persist($subscriber);
+                $em->flush();
+                $app['session']->getFlashBag()->add('message', sprintf('You successfully subscribed with %s', $email));
+                return $app->redirect('/');
+            }
+        }
+
+        if ($request->request->has('slack')) {
+            $slackForm->handleRequest($request);
+
+            if ($slackForm->isValid()) {
+                $email      = $slackForm->getData()['email'];
+                $token      = $slackForm->getData()['token'];
+                $channel    = $slackForm->getData()['channel'];
+                $subscriber = new SlackSubscriber;
+                $subscriber->setEmail($email);
+                $subscriber->setToken($token);
+                $subscriber->setChannel($channel);
+                $em = $app['orm.em'];
+                $em->persist($subscriber);
+                $em->flush();
+                $app['session']->getFlashBag()->add(
+                    'message',
+                    sprintf('You successfully subscribed to slack updates on channel %s', $channel)
+                );
+                return $app->redirect('/');
+            }
+        }
     }
 
-    return $app['twig']->render('index.twig',
-        ['form' => $form->createView(), 'slack_form' => $app['slack-subscribe-form']->createView()]
-    );
-});
+    $numEmailSubscribers = (int) $app['orm.em']->createQueryBuilder()
+        ->select('COUNT(s.id)')
+        ->from('MikeyMike\RfcDigestor\Entity\Subscriber', 's')
+        ->getQuery()
+        ->getSingleScalarResult();
 
-$app->post('/slack-subscribe', function (Request $request) use ($app) {
-    $slackForm = $app['slack-subscribe-form'];
-    $slackForm->handleRequest($request);
-
-    if ($slackForm->isValid()) {
-        $email      = $slackForm->getData()['email'];
-        $token      = $slackForm->getData()['token'];
-        $channel    = $slackForm->getData()['channel'];
-        $subscriber = new SlackSubscriber;
-        $subscriber->setEmail($email);
-        $subscriber->setToken($token);
-        $subscriber->setChannel($channel);
-        $em = $app['orm.em'];
-        $em->persist($subscriber);
-        $em->flush();
-        $app['session']->getFlashBag()->add(
-            'message',
-            sprintf('You successfully subscribed to slack updates on channel %s', $channel)
-        );
-        return $app->redirect('/');
-    }
+    $numSlackSubscribers = (int) $app['orm.em']->createQueryBuilder()
+        ->select('COUNT(s.id)')
+        ->from('MikeyMike\RfcDigestor\Entity\SlackSubscriber', 's')
+        ->getQuery()
+        ->getSingleScalarResult();
 
     return $app['twig']->render('index.twig',
-        ['form' => $app['subscribe-form']->createView(), 'slack_form' => $slackForm->createView()]
+        [
+            'email_form' => $emailForm->createView(),
+            'slack_form' => $slackForm->createView(),
+            'email_subscribers' => $numEmailSubscribers,
+            'slack_subscribers' => $numSlackSubscribers
+        ]
     );
-});
+
+})->method('GET|POST');
 
 $app->get('/unsubscribe/{token}', function ($token)  use ($app) {
     $repo = $app['orm.em']->getRepository('MikeyMike\RfcDigestor\Entity\Subscriber');
