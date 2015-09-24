@@ -102,7 +102,7 @@ class SlackRfcNotifier implements RfcNotifierInterface
 
         $limit  = 50;
         $offset = 0;
-        while ($slackSubscribers = $this->slackSubscriberRepository->findAll([], null, $limit, $offset)) {
+        while ($slackSubscribers = $this->slackSubscriberRepository->findBy([], null, $limit, $offset)) {
             foreach ($slackSubscribers as $slackSubscriber) {
                 $this->commander->setToken($slackSubscriber->getToken());
                 $message['channel'] = '#' . $slackSubscriber->getChannel();
