@@ -84,6 +84,7 @@ class RfcBuilder
 
     /**
      * @param string $rfcLocation
+     * @param string $rfcCode
      */
     private function loadRfc($rfcLocation, $rfcCode)
     {
@@ -97,6 +98,7 @@ class RfcBuilder
         libxml_use_internal_errors(false);
 
         $this->rfc = new Rfc();
+        $this->rfc->setUrl($rfcLocation);
         $this->rfc->setCode($rfcCode);
         $this->rfc->setRawContent($this->document->saveHTML());
     }

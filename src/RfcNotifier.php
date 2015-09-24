@@ -2,6 +2,7 @@
 
 namespace MikeyMike\RfcDigestor;
 
+use MikeyMike\RfcDigestor\Entity\Rfc;
 use MikeyMike\RfcDigestor\Notifier\RfcNotifierInterface;
 use Noodlehaus\Config;
 use MikeyMike\RfcDigestor\Service\RfcService;
@@ -67,7 +68,7 @@ class RfcNotifier
 
         if (!file_exists($oldRfcPath)) {
             file_put_contents($oldRfcPath, $currentRfc->getRawContent());
-            $oldRfc = new \MikeyMike\RfcDigestor\Entity\Rfc();
+            $oldRfc = new Rfc();
         } else {
             try {
                 // Get oldRfc
