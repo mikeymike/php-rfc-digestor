@@ -93,12 +93,17 @@
             }
 
             #slack-subscribe {
-                width: 300px;
-                margin: 4px;
+                width: 100%;
             }
 
-            .slack .input-group {
-                width: 300px;
+            @media (min-width: 480px) {
+                #slack-subscribe {
+                    width: 300px;
+                    margin: 4px;
+                }
+                .slack .input-group {
+                    width: 300px;
+                }
             }
 
             .fa-paper-plane {
