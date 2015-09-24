@@ -72,7 +72,7 @@ class EmailRfcNotifier implements RfcNotifierInterface
             ]);
 
             $message = $this->mailer->createMessage()
-                ->setSubject(sprintf('%s updated!', $rfc->getName()))
+                ->setSubject(sprintf('Re: %s updated!', $rfc->getName()))
                 ->setFrom('notifier@php-rfc-digestor.com')
                 ->setTo($subscriber->getEmail())
                 ->setBody($email, 'text/html');
