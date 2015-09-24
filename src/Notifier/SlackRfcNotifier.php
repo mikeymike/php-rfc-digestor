@@ -95,10 +95,15 @@ class SlackRfcNotifier implements RfcNotifierInterface
             'attachments'   => json_encode($attachments),
         ];
 
-        foreach ($this->slackSubscriberRepository->findAll() as $slackSubscriber) {
-            $this->commander->setToken($slackSubscriber->getToken());
-            $message['channel'] = '#' . $slackSubscriber->getChannel();
-            $this->commander->execute('chat.postMessage', $message);
+        $limit  = 50;
+        $offset = 0;
+        while ($slackSubscribers = $this->slackSubscriberRepository->findAll([], null, $limit, $offset)) {
+            foreach ($slackSubscribers as $slackSubscriber) {
+                $this->commander->setToken($slackSubscriber->getToken());
+                $message['channel'] = '#' . $slackSubscriber->getChannel();
+                $this->commander->execute('chat.postMessage', $message);
+            }
+            $offset += $limit;
         }
     }
 }

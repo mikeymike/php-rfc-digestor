@@ -57,27 +57,33 @@ class EmailRfcNotifier implements RfcNotifierInterface
      */
     public function notify(Rfc $rfc, array $voteDiff)
     {
-        foreach ($this->emailSubscriberRepository->findAll() as $subscriber) {
-            $email = $this->twig->render('rfc.twig', [
-                'rfcName'           => $rfc->getName(),
-                'details'           => $voteDiff['details'],
-                'changeLog'         => $voteDiff['changeLog'],
-                'voteDiffs'         => $voteDiff['votes'],
-                'rfcVotes'          => $rfc->getVotes(),
-                'unsubscribeUrl'    => sprintf(
-                    '%s/unsubscribe/%s',
-                    $this->config->get('app.url'),
-                    $subscriber->getUnsubscribeToken()
-                )
-            ]);
+        $limit  = 50;
+        $offset = 0;
+        while ($subscribers = $this->emailSubscriberRepository->findBy([], null, $limit, $offset)) {
+            foreach ($subscribers as $subscriber) {
+                $email = $this->twig->render('rfc.twig', [
+                    'rfcName'           => $rfc->getName(),
+                    'details'           => $voteDiff['details'],
+                    'changeLog'         => $voteDiff['changeLog'],
+                    'voteDiffs'         => $voteDiff['votes'],
+                    'rfcVotes'          => $rfc->getVotes(),
+                    'unsubscribeUrl'    => sprintf(
+                        '%s/unsubscribe/%s',
+                        $this->config->get('app.url'),
+                        $subscriber->getUnsubscribeToken()
+                    )
+                ]);
 
-            $message = $this->mailer->createMessage()
-                ->setSubject(sprintf('Re: %s updated!', $rfc->getName()))
-                ->setFrom('notifier@php-rfc-digestor.com')
-                ->setTo($subscriber->getEmail())
-                ->setBody($email, 'text/html');
+                $message = $this->mailer->createMessage()
+                    ->setSubject(sprintf('Re: %s updated!', $rfc->getName()))
+                    ->setFrom('notifier@php-rfc-digestor.com')
+                    ->setTo($subscriber->getEmail())
+                    ->setBody($email, 'text/html');
 
-            $this->mailer->send($message);
+                $this->mailer->send($message);
+            }
+
+            $offset += $limit;
         }
     }
 }
