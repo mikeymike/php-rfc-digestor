@@ -42,6 +42,7 @@ class SlackRfcNotifier implements RfcNotifierInterface
     {
         $attachments = [
             [
+                'fallback'      => sprintf('%s updates', $rfc->getName()),
                 'title'         => $rfc->getName(),
                 'title_link'    => $rfc->getUrl(),
                 'color'         => 'good',
